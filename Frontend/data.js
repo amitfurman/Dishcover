@@ -20,7 +20,7 @@ export const restaurants = [
     {
         name: "Emesh",
         rating: 4.4,
-        location: "Tel Aviv. lilinblum 30",
+        location: "Tel Aviv, lilinblum 30",
         image: require("./assets/1.png"),
     },
 ];

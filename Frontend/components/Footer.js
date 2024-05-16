@@ -3,14 +3,14 @@ import React from 'react'
 import Button from './Button';
 
 const COLORS = {
-    like: "00eda6",
-    nope: "ff006f",
+    like: "#00eda6",
+    nope: "#ff006f",
 }
 const Footer = ({handleChoice}) => {
   return (
     <View style={{
         position: "absolute", 
-        bottom: 15,
+        bottom: 60,
         width:240,
         flexDirection: "row",
         justifyContent: "space-between",

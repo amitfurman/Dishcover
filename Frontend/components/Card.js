@@ -16,13 +16,13 @@ const Card = ({ name, rating, location, image, isFirst, swipe, titleSign, ...res
     };
 
     const likeOpacity = swipe.x.interpolate({
-        inputRange: [0, width / 2],
+        inputRange: [0, 100], /////////
         outputRange: [0, 1],
         extrapolate: 'clamp',
     });
 
     const nopeOpacity = swipe.x.interpolate({
-        inputRange: [-width / 2, 0],
+        inputRange: [-100, 0], ////////////
         outputRange: [1, 0],
         extrapolate: 'clamp',
     });
@@ -45,13 +45,13 @@ const Card = ({ name, rating, location, image, isFirst, swipe, titleSign, ...res
         isFirst && animatedCardStyle,
       ]}{...rest} >
           <Image source={image} style={styles.image}/>
-          <LinearGradient colors={['transparent', 'black']} style={styles.gradient}>
-              <View style={styles.restaurantContainer} >
-                  <Text style={styles.name}>{name}</Text>
-                  <Text style={styles.rating}>{rating}</Text>
-                  <Text style={styles.location}>{location}</Text>
-              </View>
-          </LinearGradient>
+          {/* <LinearGradient colors={['black']} style={styles.gradient}> */}
+            <View style={styles.restaurantContainer} >
+                <Text style={styles.name}>{name}</Text>
+                <Text style={styles.rating}>{rating}</Text>
+                <Text style={styles.location}>{location}</Text>
+            </View>
+          {/* </LinearGradient> */}
         {isFirst && renderChoice()}
       </Animated.View>
     );
@@ -65,10 +65,12 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         position: 'absolute',
         top: 30,
+        paddingTop: 100,
+        paddingBottom: 50
     },
     image: {
         width: width * 0.9,
-        height: height * 0.6,
+        height: height * 0.65,
         borderRadius: 20,
         resizeMode: 'cover',
     },
@@ -80,17 +82,24 @@ const styles = StyleSheet.create({
         height: 100,
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
+        paddingTop: 100,
+        paddingBottom: 50
     },
     restaurantContainer: {
         position: 'absolute',
-        bottom: 25,
+        bottom: 60,
         left: 25,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Black with 20% opacity
+        paddingHorizontal: 10, // Adjust as needed
+        paddingVertical: 5, // Adjust as needed
+        borderRadius: 10, // Adjust as needed
+ 
     },
     name: {
         color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
-    },
+    },    
     rating: {
         color: 'white',
         fontSize: 16,
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
     },
     choiceContainer: {
         position: 'absolute',
-        top: 100,
+        top: 50,
         zIndex: 999,
     },
     likeContainer: {

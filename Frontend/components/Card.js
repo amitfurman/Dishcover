@@ -2,10 +2,12 @@ import { View, Text, Image, StyleSheet, Dimensions, Animated } from 'react-nativ
 import React, { Fragment, useCallback } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import Choice from './Choice';
+import StarRating from './StarRating'; // Import StarRating
+
 
 const {width, height} = Dimensions.get("screen");
 
-const Card = ({ name, rating, location, image, isFirst, swipe, titleSign, ...rest }) => {
+const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, titleSign, ...rest }) => {
     const rotate = Animated.multiply(swipe.x, titleSign).interpolate({
         inputRange: [-width, 0, width],
         outputRange: ["10deg", "0deg", "-10deg"],
@@ -41,22 +43,36 @@ const Card = ({ name, rating, location, image, isFirst, swipe, titleSign, ...res
     }, [likeOpacity, nopeOpacity])
 
     return (
-      <Animated.View style={[styles.container,
-        isFirst && animatedCardStyle,
-      ]}{...rest} >
-          <Image source={image} style={styles.image}/>
-          {/* <LinearGradient colors={['black']} style={styles.gradient}> */}
-            <View style={styles.restaurantContainer} >
+        <Animated.View style={[styles.container, isFirst && animatedCardStyle]} {...rest}>
+          <View style={styles.imageContainer}>
+            <Image source={image} style={styles.image} />
+            <LinearGradient
+              colors={['transparent', 'rgba(255, 255, 255, 1)']}
+              style={styles.imageGradient}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 0, y: 1 }}
+            />
+          </View>
+        <LinearGradient 
+            colors={['transparent', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']} 
+            style={styles.gradient} 
+            start={{ x: 0, y: 0.5 }} 
+            end={{ x: 0, y: 1 }}
+        />
+        <View style={styles.infoContainer}>
+            <View style={styles.restaurantContainer}>
+            <View style={styles.nameRatingContainer}>
                 <Text style={styles.name}>{name}</Text>
-                <Text style={styles.rating}>{rating}</Text>
-                <Text style={styles.location}>{location}</Text>
+                <StarRating rating={rating} />
             </View>
-          {/* </LinearGradient> */}
-        {isFirst && renderChoice()}
-      </Animated.View>
-    );
-  };
-  
+            <Text style={styles.priceLevel}>{priceLevel}</Text>
+            <Text style={styles.location}>{location}</Text>
+            </View>
+        </View>
+          {isFirst && renderChoice()}
+        </Animated.View>
+      );
+    };
 
 const styles = StyleSheet.create({
     container: {
@@ -64,51 +80,83 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 10,
         position: 'absolute',
-        top: 30,
-        paddingTop: 100,
-        paddingBottom: 50
+        top: 100,
+        paddingBottom: 80,
+        backgroundColor: 'white',
+    },
+    imageContainer: {
+        overflow: 'hidden',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
     image: {
         width: width * 0.9,
-        height: height * 0.65,
-        borderRadius: 20,
+        height: height * 0.62,
         resizeMode: 'cover',
     },
-    gradient: {
+    imageGradient: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        height: 100,
+        height: '70%',
+      },
+    gradient: {
+        position: 'absolute',
+        // bottom: 100,
+        // left: 0,
+        // right: 0,
+        height: '50%',
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
         paddingTop: 100,
         paddingBottom: 50
     },
+    infoContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '80%',
+        justifyContent: 'flex-end',
+        },
     restaurantContainer: {
         position: 'absolute',
-        bottom: 60,
+        bottom: 1,
         left: 25,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Black with 20% opacity
         paddingHorizontal: 10, // Adjust as needed
         paddingVertical: 5, // Adjust as needed
         borderRadius: 10, // Adjust as needed
- 
+        
+    },
+    nameRatingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     name: {
-        color: 'white',
+        fontFamily: 'Messapia-Bold',
+        color: 'black',
         fontSize: 24,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        marginRight: 10,
     },    
-    rating: {
-        color: 'white',
+    // rating: {
+    //     color: 'white',
+    //     fontSize: 16,
+    //     fontWeight: 'bold',
+    //     marginLeft: 10,
+    // },
+    priceLevel: {
+        color: 'black',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontFamily: 'Bricolage-Medium',
         marginLeft: 10,
+        marginTop: 5,
     },
     location: {
-        color: 'white',
+        color: 'gray',
         fontSize: 16,
+        fontFamily: 'Bricolage-Medium',
         fontWeight: 'bold',
         marginLeft: 10,
     },
@@ -125,6 +173,5 @@ const styles = StyleSheet.create({
         left: 20,
         transform: [{ rotate: '-30deg' }],
     },  
-
 })
 export default Card

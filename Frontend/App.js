@@ -3,9 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useState, useEffect } from 'react';
+
 import SigninScreen from './screens/SigninScreen';
 import SignupScreen from './screens/SignupScreen';
 import SwipeRestaurants from './screens/SwipeRestaurants';
+
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 function HomeScreen() {
   return (
@@ -26,6 +31,27 @@ function HomeScreen() {
 const Stack = createNativeStackNavigator();
 
 function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Messapia-Bold': require('./assets/fonts/Messapia-Bold.otf'),
+        'Messapia-Regular': require('./assets/fonts/Messapia-Regular.otf'),
+        'Bricolage-Bold': require('./assets/fonts/Bricolage/BricolageExtraBold.ttf'),
+        'Bricolage-Medium': require('./assets/fonts/Bricolage/BricolageMedium.ttf'),
+        'Bricolage-Regular': require('./assets/fonts/Bricolage/BricolageRegular.ttf'),
+
+      });
+      setFontsLoaded(true);
+      SplashScreen.hideAsync();
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null; // Render nothing while waiting for fonts to load
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown: false}}>

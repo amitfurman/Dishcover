@@ -81,6 +81,7 @@ export default function SwipeRestaurants() {
                             name={restaurant.name}
                             rating={restaurant.rating}
                             location={restaurant.location}
+                            priceLevel={restaurant.priceLevel}
                             image={restaurant.image}
                             isFirst={isFirst}
                             swipe={swipe}

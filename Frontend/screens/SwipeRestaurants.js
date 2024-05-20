@@ -86,6 +86,9 @@ export default function SwipeRestaurants() {
                             isFirst={isFirst}
                             swipe={swipe}
                             titleSign={titleSign}
+                            isVeganFriendly={restaurant.isVeganFriendly}
+                            isWheelchairAccessible={restaurant.isWheelchairAccessible}
+                            isGlutenFree={restaurant.isGlutenFree}
                             {...dragHandlers}
                         />
                     );

@@ -5,6 +5,9 @@ export const restaurants = [
         location: "Ramat Gan, Bialik 12",
         priceLevel: "$-$$",
         image: require("./assets/4.png"),
+        isVeganFriendly: false,
+        isWheelchairAccessible: true,
+        isGlutenFree: false,
     },
     {
         name: "Moon Sushi",
@@ -12,6 +15,9 @@ export const restaurants = [
         location: "Tel Aviv, bograshov 58", 
         priceLevel: "$$-$$$",
         image: require("./assets/3.png"),
+        isVeganFriendly: true,
+        isWheelchairAccessible: true,
+        isGlutenFree: true,
     },
     {
         name: "OCD",
@@ -19,6 +25,9 @@ export const restaurants = [
         location: "Tel Aviv",
         priceLevel: "$$$-$$$$",
         image: require("./assets/2.png"),
+        isVeganFriendly: true,
+        isWheelchairAccessible: false,
+        isGlutenFree: false,
     },
     {
         name: "Emesh",
@@ -26,5 +35,8 @@ export const restaurants = [
         location: "Tel Aviv, lilinblum 30",
         priceLevel: "$$-$$$",
         image: require("./assets/1.png"),
+        isVeganFriendly: true,
+        isWheelchairAccessible: false,
+        isGlutenFree: true,
     },
 ];

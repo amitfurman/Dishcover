@@ -7,7 +7,7 @@ import StarRating from './StarRating'; // Import StarRating
 
 const {width, height} = Dimensions.get("screen");
 
-const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, titleSign, ...rest }) => {
+const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, titleSign,  isVeganFriendly, isWheelchairAccessible,isGlutenFree, ...rest }) => {
     const rotate = Animated.multiply(swipe.x, titleSign).interpolate({
         inputRange: [-width, 0, width],
         outputRange: ["10deg", "0deg", "-10deg"],
@@ -53,6 +53,23 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
               end={{ x: 0, y: 1 }}
             />
           </View>
+          <View style={styles.symbolsContainer}>
+                {isVeganFriendly && (
+                <View style={styles.symbol}>
+                    <Image source={require('../assets/symbols/veganfriendly.png')} style={styles.symbolImage} />
+                </View>
+                )}
+                {isWheelchairAccessible && (
+                <View style={styles.symbol}>
+                    <Image source={require('../assets/symbols/wheelchairaccessibility.png')} style={styles.symbolImage} />
+                </View>
+                )}
+                {isGlutenFree && (
+                <View style={styles.symbol}>
+                    <Image source={require('../assets/symbols/glutenfree.png')} style={styles.symbolImage} />
+                </View>
+                )}
+          </View>
         <LinearGradient 
             colors={['transparent', 'rgba(255, 255, 255, 0.9)', 'rgba(255, 255, 255, 1)']} 
             style={styles.gradient} 
@@ -81,17 +98,19 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         position: 'absolute',
         top: 100,
-        paddingBottom: 80,
+        // paddingBottom: 80,
         backgroundColor: 'white',
     },
     imageContainer: {
         overflow: 'hidden',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     image: {
         width: width * 0.9,
-        height: height * 0.62,
+        height: height * 0.7,
         resizeMode: 'cover',
     },
     imageGradient: {
@@ -122,7 +141,7 @@ const styles = StyleSheet.create({
         },
     restaurantContainer: {
         position: 'absolute',
-        bottom: 1,
+        bottom: 10,
         left: 25,
         paddingHorizontal: 10, // Adjust as needed
         paddingVertical: 5, // Adjust as needed
@@ -134,21 +153,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     name: {
-        fontFamily: 'Messapia-Bold',
+        fontFamily: 'Bricolage-Bold',
         color: 'black',
         fontSize: 24,
-        // fontWeight: 'bold',
         marginRight: 10,
     },    
-    // rating: {
-    //     color: 'white',
-    //     fontSize: 16,
-    //     fontWeight: 'bold',
-    //     marginLeft: 10,
-    // },
     priceLevel: {
         color: 'black',
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'Bricolage-Medium',
         marginLeft: 10,
         marginTop: 5,
@@ -173,5 +185,21 @@ const styles = StyleSheet.create({
         left: 20,
         transform: [{ rotate: '-30deg' }],
     },  
+    symbolsContainer: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        flexDirection: 'row',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        borderRadius: 30,
+        padding: 5,
+      },
+      symbol: {
+        // marginRight: 5,
+      },
+      symbolImage: {
+        width: 30,
+        height: 30,
+      },
 })
 export default Card

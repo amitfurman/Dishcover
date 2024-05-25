@@ -2,12 +2,14 @@ export const restaurants = [
     {
         name: "McDonald's",
         rating: 4.5,
-        location: "Ramat Gan, Bialik 12",
+        location: "Ramat Gan",
         priceLevel: "$-$$",
         image: require("./assets/4.png"),
         isVeganFriendly: false,
         isWheelchairAccessible: true,
         isGlutenFree: false,
+        type: "fast-food",
+        
     },
     {
         name: "Moon Sushi",

@@ -7,6 +7,22 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState, useEffect } from 'react';
 
+import {
+  useFonts,
+  PlayfairDisplay_400Regular,
+  PlayfairDisplay_500Medium,
+  PlayfairDisplay_600SemiBold,
+  PlayfairDisplay_700Bold,
+  PlayfairDisplay_800ExtraBold,
+  PlayfairDisplay_900Black,
+  PlayfairDisplay_400Regular_Italic,
+  PlayfairDisplay_500Medium_Italic,
+  PlayfairDisplay_600SemiBold_Italic,
+  PlayfairDisplay_700Bold_Italic,
+  PlayfairDisplay_800ExtraBold_Italic,
+  PlayfairDisplay_900Black_Italic,
+} from '@expo-google-fonts/playfair-display';
+
 import SigninScreen from './screens/SigninScreen';
 import SignupScreen from './screens/SignupScreen';
 import SwipeRestaurants from './screens/SwipeRestaurants';
@@ -31,26 +47,22 @@ function HomeScreen() {
 const Stack = createNativeStackNavigator();
 
 function App() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadFonts() {
-      await Font.loadAsync({
-        'Messapia-Bold': require('./assets/fonts/Messapia-Bold.otf'),
-        'Messapia-Regular': require('./assets/fonts/Messapia-Regular.otf'),
-        'Bricolage-Bold': require('./assets/fonts/Bricolage/BricolageExtraBold.ttf'),
-        'Bricolage-Medium': require('./assets/fonts/Bricolage/BricolageMedium.ttf'),
-        'Bricolage-Regular': require('./assets/fonts/Bricolage/BricolageRegular.ttf'),
-
-      });
-      setFontsLoaded(true);
-      SplashScreen.hideAsync();
-    }
-    loadFonts();
-  }, []);
-
+  let [fontsLoaded] = useFonts({
+    PlayfairDisplay_400Regular,
+    PlayfairDisplay_500Medium,
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_700Bold,
+    PlayfairDisplay_800ExtraBold,
+    PlayfairDisplay_900Black,
+    PlayfairDisplay_400Regular_Italic,
+    PlayfairDisplay_500Medium_Italic,
+    PlayfairDisplay_600SemiBold_Italic,
+    PlayfairDisplay_700Bold_Italic,
+    PlayfairDisplay_800ExtraBold_Italic,
+    PlayfairDisplay_900Black_Italic,
+  });
   if (!fontsLoaded) {
-    return null; // Render nothing while waiting for fonts to load
+    return <View></View>;
   }
   return (
     <NavigationContainer>

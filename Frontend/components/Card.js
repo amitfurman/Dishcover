@@ -1,8 +1,9 @@
-import { View, Text, Image, StyleSheet, Dimensions, Animated } from 'react-native'
+import { View, Text, Image, StyleSheet, Dimensions, Animated,TouchableOpacity } from 'react-native'
 import React, { Fragment, useCallback } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import Choice from './Choice';
 import StarRating from './StarRating'; // Import StarRating
+
 
 
 const {width, height} = Dimensions.get("screen");
@@ -53,6 +54,7 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
               end={{ x: 0, y: 1 }}
             />
           </View>
+
           <View style={styles.symbolsContainer}>
                 {isVeganFriendly && (
                 <View style={styles.symbol}>
@@ -79,7 +81,6 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
         <View style={styles.infoContainer}>
             <View style={styles.restaurantContainer}>
             <StarRating rating={rating} />
-
             <View style={styles.nameRatingContainer}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.separator}>|</Text>
@@ -102,8 +103,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginHorizontal: 20,
         marginVertical: 10,
-        position: 'absolute',
-        top: 100,
+        // position: 'absolute',
+        // top: 100,
         paddingBottom: 90,
         backgroundColor: 'white',
         shadowColor: '#000',
@@ -119,8 +120,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        // borderBottomRightRadius: 20,
-        // borderBottomLeftRadius: 20,
     },
     image: {
         width: width * 0.9,
@@ -227,10 +226,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
         borderRadius: 30,
-        // paddingLeft: 5,
-      },
-      symbol: {
-        // marginRight: 5,
       },
       symbolImage: {
         width: 30,

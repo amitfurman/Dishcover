@@ -5,6 +5,8 @@ import { restaurants as restaurantsArray} from '../data';
 import Card from '../components/Card';
 import Footer from '../components/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
+
 
 
 export default function SwipeRestaurants() {
@@ -14,13 +16,21 @@ export default function SwipeRestaurants() {
     const swipe = useRef(new Animated.ValueXY()).current;
     const titleSign = useRef(new Animated.Value(1)).current;
 
+    // Animated value to control flip button opacity
+    const flipButtonOpacity = useRef(new Animated.Value(1)).current;
+
     //panResponder config
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderMove: (_, {dx, dy, y0}) => {
             swipe.setValue({ x:dx, y:dy });
             titleSign.setValue(y0 > (height*0.9) / 2 ? 1 : -1);
-
+            // Hide the flip button when the card starts to move
+            Animated.timing(flipButtonOpacity, {
+                toValue: 0,
+                duration: 20,
+                useNativeDriver: true,
+            }).start();
         },
         onPanResponderRelease: (_, {dx, dy}) => {
             const direction = Math.sign(dx);
@@ -46,7 +56,13 @@ export default function SwipeRestaurants() {
                     },
                     useNativeDriver: true,
                     friction: 5,
-                }).start();
+                }).start(() => {
+                    Animated.timing(flipButtonOpacity, {
+                        toValue: 1,
+                        duration: 0,
+                        useNativeDriver: true,
+                    }).start();
+                });
             }
         }
     });
@@ -54,7 +70,13 @@ export default function SwipeRestaurants() {
     const removeTopCard = useCallback(() => {
         setRestaurants((prev) => prev.slice(1));
         swipe.setValue({ x:0, y:0 });
-    }, [swipe]);
+        // Ensure flip button is visible for the next card
+        Animated.timing(flipButtonOpacity, {
+            toValue: 1,
+            duration: 10,
+            useNativeDriver: true,
+        }).start();
+    }, [swipe,flipButtonOpacity]);
 
     const handleChoice = useCallback((direction) => {
         Animated.timing(swipe.x, {
@@ -63,6 +85,10 @@ export default function SwipeRestaurants() {
             useNativeDriver: true,
         }).start(removeTopCard);
     }, [removeTopCard, swipe.x]);
+
+    const flipCard = useCallback(() => {
+        // logic to flip the card
+    }, []);
 
     useEffect(() => {
         if (!restaurants.length) {
@@ -81,22 +107,29 @@ export default function SwipeRestaurants() {
                     const isFirst = index == 0;
                     const dragHandlers = isFirst ? panResponder.panHandlers : {};
                     return (
-                        <Card
-                            key={restaurant.name}
-                            name={restaurant.name}
-                            rating={restaurant.rating}
-                            location={restaurant.location}
-                            priceLevel={restaurant.priceLevel}
-                            image={restaurant.image}
-                            isFirst={isFirst}
-                            swipe={swipe}
-                            titleSign={titleSign}
-                            isVeganFriendly={restaurant.isVeganFriendly}
-                            isWheelchairAccessible={restaurant.isWheelchairAccessible}
-                            isGlutenFree={restaurant.isGlutenFree}
-                            type={restaurant.type}
-                            {...dragHandlers}
-                        />
+                        <View key={restaurant.name} style={styles.cardWrapper}>
+                            <Animated.View style={{ ...styles.flipButton, opacity: flipButtonOpacity }}>
+                                <TouchableOpacity onPress={flipCard}>
+                                    <MaterialCommunityIcons name="swap-horizontal" size={32} color="black" />
+                                </TouchableOpacity>
+                            </Animated.View>
+                            <Card
+                                key={restaurant.name}
+                                name={restaurant.name}
+                                rating={restaurant.rating}
+                                location={restaurant.location}
+                                priceLevel={restaurant.priceLevel}
+                                image={restaurant.image}
+                                isFirst={isFirst}
+                                swipe={swipe}
+                                titleSign={titleSign}
+                                isVeganFriendly={restaurant.isVeganFriendly}
+                                isWheelchairAccessible={restaurant.isWheelchairAccessible}
+                                isGlutenFree={restaurant.isGlutenFree}
+                                type={restaurant.type}
+                                {...dragHandlers}
+                            />
+                        </View>
                     );
                 }).reverse()
             }
@@ -115,5 +148,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    cardWrapper: {
+        position: 'absolute',
+    },
+    flipButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: 20,
+        padding: 5,
+    }
 });
 

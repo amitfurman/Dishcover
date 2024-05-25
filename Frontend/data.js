@@ -14,12 +14,13 @@ export const restaurants = [
     {
         name: "Moon Sushi",
         rating: 4.7,
-        location: "Tel Aviv, bograshov 58", 
+        location: "Tel Aviv", 
         priceLevel: "$$-$$$",
         image: require("./assets/3.png"),
         isVeganFriendly: true,
         isWheelchairAccessible: true,
         isGlutenFree: true,
+        type: "asian",
     },
     {
         name: "OCD",
@@ -30,15 +31,17 @@ export const restaurants = [
         isVeganFriendly: true,
         isWheelchairAccessible: false,
         isGlutenFree: false,
+        type: "fancy",
     },
     {
         name: "Emesh",
         rating: 4.4,
-        location: "Tel Aviv, lilinblum 30",
+        location: "Tel Aviv",
         priceLevel: "$$-$$$",
         image: require("./assets/1.png"),
         isVeganFriendly: true,
         isWheelchairAccessible: false,
         isGlutenFree: true,
+        type: "middle-eastern",
     },
 ];

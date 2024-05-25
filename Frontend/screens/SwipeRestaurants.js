@@ -1,9 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, Animated, Dimensions, PanResponder} from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Animated, Dimensions, PanResponder, StyleSheet} from 'react-native'
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { restaurants as restaurantsArray} from '../data';
 import Card from '../components/Card';
 import Footer from '../components/Footer';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function SwipeRestaurants() {
@@ -69,7 +70,11 @@ export default function SwipeRestaurants() {
         }
     }, [restaurants.length]);
     return (
-        <View style={{flex:1, alignItems: "center"}}>
+        <LinearGradient
+        colors={['#F5F5DC', '#E4E5E6']}
+        style={styles.background}
+    >
+        <View style={styles.container}>
             <StatusBar style="auto" />
             {
                 restaurants.map((restaurant, index) => {
@@ -89,6 +94,7 @@ export default function SwipeRestaurants() {
                             isVeganFriendly={restaurant.isVeganFriendly}
                             isWheelchairAccessible={restaurant.isWheelchairAccessible}
                             isGlutenFree={restaurant.isGlutenFree}
+                            type={restaurant.type}
                             {...dragHandlers}
                         />
                     );
@@ -96,5 +102,18 @@ export default function SwipeRestaurants() {
             }
             <Footer handleChoice={handleChoice}  />
         </View>
-    );
+    </LinearGradient>
+    );    
 }
+
+const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+

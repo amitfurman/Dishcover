@@ -7,7 +7,7 @@ import StarRating from './StarRating'; // Import StarRating
 
 const {width, height} = Dimensions.get("screen");
 
-const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, titleSign,  isVeganFriendly, isWheelchairAccessible,isGlutenFree, ...rest }) => {
+const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, titleSign,  isVeganFriendly, isWheelchairAccessible,isGlutenFree,type, ...rest }) => {
     const rotate = Animated.multiply(swipe.x, titleSign).interpolate({
         inputRange: [-width, 0, width],
         outputRange: ["10deg", "0deg", "-10deg"],
@@ -78,12 +78,18 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
         />
         <View style={styles.infoContainer}>
             <View style={styles.restaurantContainer}>
+            <StarRating rating={rating} />
+
             <View style={styles.nameRatingContainer}>
                 <Text style={styles.name}>{name}</Text>
-                <StarRating rating={rating} />
+                <Text style={styles.separator}>|</Text>
+                <Text style={styles.name}>{location}</Text>
             </View>
-            <Text style={styles.priceLevel}>{priceLevel}</Text>
-            <Text style={styles.location}>{location}</Text>
+            <View style={styles.priceTypeContainer}>
+                <Text style={styles.priceLevel}>{priceLevel}</Text>
+                <Text style={styles.type}>{type}</Text>
+                {/* <StarRating rating={rating} /> */}
+            </View>
             </View>
         </View>
           {isFirst && renderChoice()}
@@ -98,8 +104,16 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         position: 'absolute',
         top: 100,
-        paddingBottom: 80,
+        paddingBottom: 90,
         backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 10,
+        },
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 5,
     },
     imageContainer: {
         overflow: 'hidden',
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         position: 'absolute',
-        top: 200,
+        top: 215,
         // bottom: 0,
         left: 0,
         right: 0,
@@ -153,18 +167,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    priceTypeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     name: {
-        fontFamily: "PlayfairDisplay_900Black" ,
+        fontFamily: 'Poppins_700Bold',
         color: 'black',
         fontSize: 24,
-        marginRight: 10,
+        marginRight: 5,
     },    
+    separator: {
+        fontFamily: 'Poppins_700Bold',
+        color: 'black',
+        fontSize: 24,
+        marginHorizontal: 5,
+    },
     priceLevel: {
         color: 'black',
-        fontSize: 14,
-        fontFamily: 'PlayfairDisplay_500Medium',
-        marginLeft: 10,
-        marginTop: 5,
+        fontSize: 20,
+        fontFamily: 'Roboto_500Medium',
+        marginRight: 10,
+    },
+    dot: {
+        color: 'black',
+        fontSize: 20,
+        marginHorizontal: 5,
     },
     location: {
         color: 'gray',
@@ -172,6 +200,12 @@ const styles = StyleSheet.create({
         fontFamily: 'PlayfairDisplay_600SemiBold',
         fontWeight: 'bold',
         marginLeft: 10,
+    },
+    type: {
+        color: 'gray',
+        fontSize: 18,
+        fontFamily: 'Roboto_400Regular',
+        marginVertical: 5,
     },
     choiceContainer: {
         position: 'absolute',
@@ -193,7 +227,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
         borderRadius: 30,
-        padding: 5,
+        // paddingLeft: 5,
       },
       symbol: {
         // marginRight: 5,

@@ -6,15 +6,18 @@ import Card from '../components/Card';
 import Footer from '../components/Footer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
+import CardBack from '../components/CardBack';
 
 
 
 export default function SwipeRestaurants() {
     const [restaurants, setRestaurants] = useState(restaurantsArray);
+    const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
     const { width, height } = Dimensions.get("screen");
     //for swipe
     const swipe = useRef(new Animated.ValueXY()).current;
     const titleSign = useRef(new Animated.Value(1)).current;
+    const flipAnim = useRef(new Animated.Value(0)).current; // Animated value for flipping
 
     // Animated value to control flip button opacity
     const flipButtonOpacity = useRef(new Animated.Value(1)).current;
@@ -87,56 +90,116 @@ export default function SwipeRestaurants() {
     }, [removeTopCard, swipe.x]);
 
     const flipCard = useCallback(() => {
-        // logic to flip the card
-    }, []);
+        if (flipped) {
+            // Flip back to the front side
+            Animated.timing(flipAnim, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            // Flip to the back side
+            Animated.timing(flipAnim, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        }
+        setFlipped(!flipped);
+    }, [flipped, flipAnim]);
 
     useEffect(() => {
         if (!restaurants.length) {
             setRestaurants(restaurantsArray);
         }
     }, [restaurants.length]);
-    return (
-        <LinearGradient
-        colors={['#F5F5DC', '#E4E5E6']}
-        style={styles.background}
-    >
-        <View style={styles.container}>
-            <StatusBar style="auto" />
-            {
-                restaurants.map((restaurant, index) => {
-                    const isFirst = index == 0;
-                    const dragHandlers = isFirst ? panResponder.panHandlers : {};
-                    return (
-                        <View key={restaurant.name} style={styles.cardWrapper}>
-                            <Animated.View style={{ ...styles.flipButton, opacity: flipButtonOpacity }}>
-                                <TouchableOpacity onPress={flipCard}>
-                                    <MaterialCommunityIcons name="swap-horizontal" size={32} color="black" />
-                                </TouchableOpacity>
-                            </Animated.View>
-                            <Card
-                                key={restaurant.name}
-                                name={restaurant.name}
-                                rating={restaurant.rating}
-                                location={restaurant.location}
-                                priceLevel={restaurant.priceLevel}
-                                image={restaurant.image}
-                                isFirst={isFirst}
-                                swipe={swipe}
-                                titleSign={titleSign}
-                                isVeganFriendly={restaurant.isVeganFriendly}
-                                isWheelchairAccessible={restaurant.isWheelchairAccessible}
-                                isGlutenFree={restaurant.isGlutenFree}
-                                type={restaurant.type}
-                                {...dragHandlers}
-                            />
-                        </View>
-                    );
-                }).reverse()
-            }
-            <Footer handleChoice={handleChoice}  />
-        </View>
+
+  // Interpolate the animated value to get rotation in degrees
+  const frontInterpolate = flipAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const backInterpolate = flipAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['180deg', '360deg'],
+  });
+
+
+  return (
+    <LinearGradient colors={['#F5F5DC', '#E4E5E6']} style={styles.background}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        {restaurants
+          .map((restaurant, index) => {
+            const isFirst = index === 0;
+            const dragHandlers = isFirst ? panResponder.panHandlers : {};
+            return (
+              <View key={restaurant.name} style={styles.cardWrapper}>
+                <Animated.View style={{ ...styles.flipButton, opacity: flipButtonOpacity }}>
+                  <TouchableOpacity onPress={flipCard}>
+                    <MaterialCommunityIcons name="swap-horizontal" size={32} color="black" />
+                  </TouchableOpacity>
+                </Animated.View>
+                <Animated.View
+                  style={{
+                    transform: [{ rotateY: frontInterpolate }],
+                    backfaceVisibility: 'hidden',
+                    // position: 'absolute',
+                    // width: '100%',
+                    // height: '100%',
+                  }}
+                >
+                  <Card
+                    name={restaurant.name}
+                    rating={restaurant.rating}
+                    location={restaurant.location}
+                    priceLevel={restaurant.priceLevel}
+                    image={restaurant.image}
+                    isFirst={isFirst}
+                    swipe={swipe}
+                    titleSign={titleSign}
+                    isVeganFriendly={restaurant.isVeganFriendly}
+                    isWheelchairAccessible={restaurant.isWheelchairAccessible}
+                    isGlutenFree={restaurant.isGlutenFree}
+                    type={restaurant.type}
+                    {...dragHandlers}
+                  />
+                </Animated.View>
+                <Animated.View
+                  style={{
+                    transform: [{ rotateY: backInterpolate }],
+                    backfaceVisibility: 'hidden',
+                    position: 'absolute',
+                    // width: '100%',
+                    // height: '100%',
+                  }}
+                >
+                  <CardBack
+                    name={restaurant.name}
+                    rating={restaurant.rating}
+                    location={restaurant.location}
+                    priceLevel={restaurant.priceLevel}
+                    images={restaurant.images}
+                    menuLink={restaurant.menuLink}
+                    description={restaurant.description}
+                    openingHours={restaurant.openingHours}
+                    rankingString={restaurant.rankingString}
+                    isFirst={isFirst}
+                    swipe={swipe}
+                    titleSign={titleSign}
+                    type={restaurant.type}
+                    {...dragHandlers}
+                  />
+                </Animated.View>
+              </View>
+            );
+          })
+          .reverse()}
+        <Footer handleChoice={handleChoice} />
+      </View>
     </LinearGradient>
-    );    
+  );
 }
 
 const styles = StyleSheet.create({
@@ -159,6 +222,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: 20,
         padding: 5,
-    }
+    },
 });
 

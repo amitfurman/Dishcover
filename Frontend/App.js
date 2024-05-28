@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-nativ
 import { NavigationContainer, useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Video } from 'expo-av';
-
+import HomePageButton from './components/HomePageButton';
 import {
   useFonts,
   PlayfairDisplay_400Regular,
@@ -63,6 +63,7 @@ import SwipeRestaurants from './screens/SwipeRestaurants';
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 function HomeScreen() {
+  const navigation = useNavigation();
   return (
     <View  className="bg-white h-full w-full">
     <View style={styles.container}>
@@ -77,10 +78,19 @@ function HomeScreen() {
       />
     </View>
       {/* Buttons */}
-      <View className=" flex-1 items-center justify-center p-5">
-        <SignInButton />
-        <SignUpButton />
-
+      <View style={styles.buttonContainer}>
+      <HomePageButton
+          text="Sign Up"
+          textColor="#235857"
+          backgroundColor="#fffff3"
+          onPress={() => navigation.navigate('Signup')}
+        />
+        <HomePageButton
+          text="Sign In"
+          textColor="#fffff3"
+          backgroundColor="#235857"
+          onPress={() => navigation.navigate('SwipeRestaurants')}
+        />
       </View>
     </View> 
   );
@@ -149,25 +159,6 @@ function App() {
   );
 }
 
-
-function SignInButton() {
-  const navigation = useNavigation(); // useNavigation hook here
-  return (
-    <TouchableOpacity className="p-3 rounded-2xl mb-3" onPress={() => navigation.navigate('SwipeRestaurants')} style={styles.button}>
-      <Text>Sign In</Text>
-    </TouchableOpacity>
-  );
-}
-
-function SignUpButton() {
-  const navigation = useNavigation(); // useNavigation hook here
-  return (
-    <TouchableOpacity className="p-3 rounded-2xl mb-3" onPress={() => navigation.navigate('Signup')} style={styles.button}>
-      <Text className="font-bold">Sign Up</Text>
-    </TouchableOpacity>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -175,10 +166,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    marginVertical: 5, // Adjust the vertical spacing between the buttons
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    bottom: 60,
   },
   video: {
     position: 'absolute',

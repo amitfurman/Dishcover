@@ -81,14 +81,14 @@ function HomeScreen() {
       <View style={styles.buttonContainer}>
       <HomePageButton
           text="Sign Up"
-          textColor="#235857"
-          backgroundColor="#fffff3"
+          textColor="#FF5959"
+          backgroundColor="#f8f7f4"
           onPress={() => navigation.navigate('Signup')}
         />
         <HomePageButton
           text="Sign In"
-          textColor="#fffff3"
-          backgroundColor="#235857"
+          textColor="#f8f7f4"
+          backgroundColor="#FF5959"
           onPress={() => navigation.navigate('SwipeRestaurants')}
         />
       </View>

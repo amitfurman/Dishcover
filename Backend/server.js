@@ -8,8 +8,10 @@ const mongoose = require("mongoose");
 require("./UserDetails");
 const User = mongoose.model("UserInfo");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const mongoUrl = process.env.MONGODB_URI;
+const JWET_SECRET = process.env.JWT_SECRET;
 
 mongoose
   .connect(mongoUrl)
@@ -55,6 +57,29 @@ app.post("/signup", async (req, res) => {
     res.send({ status: "ok", data: "User created successfully" });
   } catch (e) {
     res.send({ status: "error", data: e.message });
+  }
+});
+
+app.post("/signin", async (req, res) => {
+  const { id, password } = req.body;
+  const oldUser = await User.findOne({ $or: [{ email: id }, { name: id }] });
+
+  if (!oldUser) {
+    return res.send({ status: "error", data: "User doesn't exists." });
+  }
+
+  if (await bcrypt.compare(password, oldUser.password)) {
+    const token = jwt.sign(
+      { id: oldUser._id, email: oldUser.email },
+      JWET_SECRET
+    );
+    if (res.status(201)) {
+      return res.send({ status: "ok", data: token });
+    } else {
+      return res.send({ status: "error", data: "Error" });
+    }
+  } else {
+    return res.send({ status: "error", data: "Invalid Password" });
   }
 });
 

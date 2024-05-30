@@ -1,10 +1,15 @@
-
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
-import { NavigationContainer, useNavigation } from '@react-navigation/native'; // Import useNavigation hook
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Video } from 'expo-av';
-import HomePageButton from './components/HomePageButton';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Video } from "expo-av";
+import HomePageButton from "./components/HomePageButton";
 import {
   useFonts,
   PlayfairDisplay_400Regular,
@@ -19,7 +24,7 @@ import {
   PlayfairDisplay_700Bold_Italic,
   PlayfairDisplay_800ExtraBold_Italic,
   PlayfairDisplay_900Black_Italic,
-} from '@expo-google-fonts/playfair-display';
+} from "@expo-google-fonts/playfair-display";
 
 import {
   Roboto_100Thin,
@@ -34,7 +39,7 @@ import {
   Roboto_700Bold_Italic,
   Roboto_900Black,
   Roboto_900Black_Italic,
-} from '@expo-google-fonts/roboto';
+} from "@expo-google-fonts/roboto";
 
 import {
   Poppins_100Thin,
@@ -55,47 +60,49 @@ import {
   Poppins_800ExtraBold_Italic,
   Poppins_900Black,
   Poppins_900Black_Italic,
-} from '@expo-google-fonts/poppins';
+} from "@expo-google-fonts/poppins";
 
-import SigninScreen from './screens/SigninScreen';
-import SignupScreen from './screens/SignupScreen';
-import SwipeRestaurants from './screens/SwipeRestaurants';
+import SigninScreen from "./screens/SigninScreen";
+import SignupScreen from "./screens/SignupScreen";
+import SwipeRestaurants from "./screens/SwipeRestaurants";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+
 function HomeScreen() {
   const navigation = useNavigation();
   return (
-    <View  className="bg-white h-full w-full">
-    <View style={styles.container}>
-      <Video
-        source={require('./assets/Homepage.mp4')}
-        rate={1.0}
-        volume={0.0}
-        isMuted={true}
-        resizeMode="cover"
-        shouldPlay
-        style={styles.video}
-      />
-    </View>
+    <View className="bg-white h-full w-full">
+      <View style={styles.container}>
+        <Video
+          source={require("./assets/Homepage.mp4")}
+          rate={1.0}
+          volume={0.0}
+          isMuted={true}
+          resizeMode="cover"
+          shouldPlay
+          style={styles.video}
+        />
+      </View>
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-      <HomePageButton
+        <HomePageButton
           text="Sign Up"
           textColor="#FF5959"
           backgroundColor="#f8f7f4"
-          onPress={() => navigation.navigate('Signup')}
+          onPress={() => navigation.navigate("Signup")}
         />
         <HomePageButton
           text="Sign In"
           textColor="#f8f7f4"
           backgroundColor="#FF5959"
-          onPress={() => navigation.navigate('SwipeRestaurants')}
+          onPress={() => navigation.navigate("Signin")}
+          //onPress={() => navigation.navigate('SwipeRestaurants')}
         />
       </View>
-    </View> 
+    </View>
   );
 }
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const Stack = createNativeStackNavigator();
 
@@ -149,7 +156,10 @@ function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home' screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
@@ -162,23 +172,23 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     bottom: 60,
   },
   video: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
     width: width,
-    height: height*0.9,
+    height: height * 0.9,
   },
 });
 

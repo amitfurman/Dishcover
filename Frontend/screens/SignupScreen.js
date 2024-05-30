@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { React, useState } from "react";
+import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import tw from "tailwind-react-native-classnames";
 import { Octicons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
@@ -15,6 +16,7 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 
 export default function SignupScreen({ props }) {
+  const navigation = useNavigation();
   const [name, setName] = useState("");
   const [nameVerified, setNameVerified] = useState(false);
   const [email, setEmail] = useState("");
@@ -36,7 +38,7 @@ export default function SignupScreen({ props }) {
         .then((res) => {
           if (res.data.status === "ok") {
             Alert.alert("User created successfully");
-            ////////////////add navigation to the next screen
+            navigation.navigate("FirstIntro");
           } else {
             Alert.alert(res.data.data);
           }

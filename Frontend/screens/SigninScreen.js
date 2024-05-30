@@ -25,8 +25,9 @@ export default function SigninScreen() {
     if (id.length != 0 && password.length != 0) {
       axios.post("http://10.100.102.4:3000/signin", userData).then((res) => {
         if (res.data.status === "ok") {
-          Alert.alert("User logged in successfully");
+          //Alert.alert("User logged in successfully");
           ////////////////add navigation to the next screen
+          navigation.navigate("FirstIntro");
         } else {
           Alert.alert(res.data.data);
         }

@@ -65,6 +65,9 @@ import {
 import SigninScreen from "./screens/SigninScreen";
 import SignupScreen from "./screens/SignupScreen";
 import SwipeRestaurants from "./screens/SwipeRestaurants";
+import FirstIntroScreen from "./screens/FirstIntroScreen";
+import CopyAndPasteScreen from "./screens/CopyAndPasteScreen";
+import SecondIntroScreen from "./screens/SecondIntroScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -164,6 +167,9 @@ function App() {
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="SwipeRestaurants" component={SwipeRestaurants} />
+        <Stack.Screen name="FirstIntro" component={FirstIntroScreen} />
+        <Stack.Screen name="CopyAndPaste" component={CopyAndPasteScreen} />
+        <Stack.Screen name="SecondIntro" component={SecondIntroScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

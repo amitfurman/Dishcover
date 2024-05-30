@@ -9,9 +9,7 @@ require("./UserDetails");
 const User = mongoose.model("UserInfo");
 const bcrypt = require("bcryptjs");
 
-//const mongoUrl = process.env.MONGODB_URI;
-const mongoUrl =
-  "mongodb+srv://sadna20232024:sadna2024@cluster0.ulirpbk.mongodb.net/dishcover_db?retryWrites=true&w=majority";
+const mongoUrl = process.env.MONGODB_URI;
 
 mongoose
   .connect(mongoUrl)

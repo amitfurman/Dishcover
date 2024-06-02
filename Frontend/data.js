@@ -12,7 +12,7 @@ export const restaurants = [
             "https://media-cdn.tripadvisor.com/media/photo-o/08/b1/02/42/nono.jpg",
             "https://media-cdn.tripadvisor.com/media/photo-o/07/52/cb/f8/tiramiso.jpg"
           ], 
-        menuLink:"https://www.nonorest.com/", 
+        menuLink:"https://nonomimi.com/branch/%D7%94%D7%95%D7%93-%D7%94%D7%A9%D7%A8%D7%95%D7%9F-%D7%A0%D7%95%D7%A0%D7%95/", 
         description: "Best italian restaurant in town! We serve pasta, pizza, salads and more. Come and enjoy our delicious food!", 
         openingHours: "Sunday - Thursday: 12:00 - 23:00, Friday: 12:00 - 15:00, Saturday: 19:00 - 23:00",
         rankingString: "#1 of 43 Restaurants in Hod Hasharon", 

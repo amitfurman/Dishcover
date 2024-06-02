@@ -46,7 +46,7 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
     return (
         <Animated.View style={[styles.container, isFirst && animatedCardStyle]} {...rest}>
           <View style={styles.imageContainer}>
-            <Image source={image} style={styles.image} />
+            <Image source={{ uri: image }} style={styles.image} />
             <LinearGradient
               colors={['transparent', 'rgba(255, 255, 255, 1)']}
               style={styles.imageGradient}
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     type: {
-        color: 'gray',
+        color: '#FF5959',
         fontSize: 18,
         fontFamily: 'Roboto_400Regular',
         marginVertical: 5,

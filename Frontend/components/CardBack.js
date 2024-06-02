@@ -1,10 +1,10 @@
 // CardBack.js
-import { View, Text, StyleSheet, Image, Dimensions, Animated,Linking} from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions,Animated, Linking} from 'react-native';
 import React, { Fragment, useCallback } from 'react'
 import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import {GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Choice from './Choice';
-
+import Carousel from 'react-native-reanimated-carousel';
 
 
 const {width, height} = Dimensions.get("screen");
@@ -57,31 +57,45 @@ const CardBack = ({
             </Fragment>
         );
     }, [likeOpacity, nopeOpacity])
+
+    const renderItem = ({ item, index }) => (
+      <View key={index} style={styles.imageContainer}>
+        <Image source={{ uri: item }} style={styles.image} />
+      </View>
+    );
+  
     return (
         <GestureHandlerRootView>
             <Animated.View style={[styles.card, isFirst && animatedCardStyle]} {...rest}>
             <View style={styles.infoContainer}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.location}>{location}</Text>
-                
-                <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.imageSlider}>
-                {images.map((image, index) => (
-                    <Image key={index} source={image} style={styles.image} />
-                ))}
-                </ScrollView>
-        
-                <Text style={styles.description}>{description}</Text>
-                <Text style={styles.openingHours}>{`Opening Hours: ${openingHours}`}</Text>
-                <Text style={styles.rankingString}>{rankingString}</Text>
 
-                
-                <View style={styles.priceTypeContainer}>
-                    <Text style={styles.priceLevel}>{priceLevel}</Text>
-                    <Text style={styles.type}>{type}</Text>
-                    <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
-                        <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
-                        <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
-                    </TouchableOpacity>
+                <View style={styles.carouselContainer}>
+                        <Carousel
+                            loop
+                            width={width * 0.8}
+                            height={height * 0.25}
+                            autoPlay
+                            autoPlayInterval={3000}
+                            data={images}
+                            renderItem={renderItem}                        
+                        />
+                    </View>
+                <View>
+                  <Text style={styles.description}>{description}</Text>
+                  <Text style={styles.openingHours}>{`Opening Hours: ${openingHours}`}</Text>
+                  <Text style={styles.rankingString}>{rankingString}</Text>
+
+                  
+                  <View style={styles.priceTypeContainer}>
+                      <Text style={styles.priceLevel}>{priceLevel}</Text>
+                      <Text style={styles.type}>{type}</Text>
+                      <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
+                          <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
+                          <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
+                      </TouchableOpacity>
+                  </View>
                 </View>
         
             </View>
@@ -111,13 +125,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'beige',
     width: width * 0.9,
     height: height * 0.7,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
 },
 infoContainer: {
     padding: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
+    flex: 1,
   },
   name: {
     fontFamily: 'Poppins_700Bold',
@@ -130,15 +145,30 @@ infoContainer: {
     fontSize: 16,
     marginBottom: 10,
   },
-  imageSlider: {
-    height: 200,
+  carouselContainer: {
+    width: width * 0.8,
+    height: height * 0.25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // flex: 1,
     marginBottom: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
+  imageContainer: {
+    width: width * 0.8,
+    height: height * 0.25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    overflow: 'hidden'
+},
   image: {
-    width: width * 0.9,
-    height: 200,
+    width: width * 0.8,
+    height: height * 0.25,
     resizeMode: 'cover',
     borderRadius: 10,
+
   },
   menuLink: {
     alignSelf: 'flex-start',
@@ -153,7 +183,7 @@ infoContainer: {
     alignItems: 'center',
     marginBottom: 10,
     justifyContent: 'space-between',
-    top: 130,
+    top: 110,
 },
   priceLevel: {
     color: 'black',

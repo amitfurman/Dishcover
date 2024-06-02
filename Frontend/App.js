@@ -98,8 +98,8 @@ function HomeScreen() {
           text="Sign In"
           textColor="#f8f7f4"
           backgroundColor="#FF5959"
-          onPress={() => navigation.navigate("Signin")}
-          //onPress={() => navigation.navigate('SwipeRestaurants')}
+          // onPress={() => navigation.navigate("Signin")}
+          onPress={() => navigation.navigate('SwipeRestaurants')}
         />
       </View>
     </View>

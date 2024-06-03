@@ -68,6 +68,7 @@ import SwipeRestaurants from "./screens/SwipeRestaurants";
 import FirstIntroScreen from "./screens/FirstIntroScreen";
 import CopyAndPasteScreen from "./screens/CopyAndPasteScreen";
 import SecondIntroScreen from "./screens/SecondIntroScreen";
+import ReviewScreen from "./screens/ReviewScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -92,14 +93,15 @@ function HomeScreen() {
           text="Sign Up"
           textColor="#FF5959"
           backgroundColor="#f8f7f4"
-          onPress={() => navigation.navigate("Signup")}
+          // onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("CopyAndPaste")}
         />
         <HomePageButton
           text="Sign In"
           textColor="#f8f7f4"
           backgroundColor="#FF5959"
           // onPress={() => navigation.navigate("Signin")}
-          onPress={() => navigation.navigate('SwipeRestaurants')}
+          onPress={() => navigation.navigate("SwipeRestaurants")}
         />
       </View>
     </View>
@@ -168,8 +170,9 @@ function App() {
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="SwipeRestaurants" component={SwipeRestaurants} />
         <Stack.Screen name="FirstIntro" component={FirstIntroScreen} />
-        <Stack.Screen name="CopyAndPaste" component={CopyAndPasteScreen} />
         <Stack.Screen name="SecondIntro" component={SecondIntroScreen} />
+        <Stack.Screen name="CopyAndPaste" component={CopyAndPasteScreen} />
+        <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

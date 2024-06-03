@@ -3,24 +3,25 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 require("dotenv").config();
-const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
-require("./UserDetails");
-const User = mongoose.model("UserInfo");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const mongoUrl = process.env.MONGODB_URI;
-const JWET_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 
+// Import the schemas/models
+require("./UserDetails");
+require("./RestaurantsDetails");
+
+const User = mongoose.model("UserInfo");
+const Restaurants = mongoose.model("restaurants");
+
+// Connect to MongoDB using Mongoose
 mongoose
-  .connect(mongoUrl)
-  .then(() => {
-    console.log("Connected to the database");
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connected to the database"))
+  .catch((err) => console.error("Could not connect to MongoDB...", err));
 
 // Defining a route for handling client communication
 app.get("/", (req, res) => {
@@ -80,6 +81,35 @@ app.post("/signin", async (req, res) => {
     }
   } else {
     return res.send({ status: "error", data: "Invalid Password" });
+  }
+});
+
+app.get("/image", async (req, res) => {
+  const { restaurantNames } = req.query;
+  console.log(`Received request for restaurant: ${restaurantNames}`); // Log the received parameter
+
+  try {
+    const restaurantsData = await Restaurants.find(
+      {
+        name: { $in: restaurantNames },
+      },
+      { name: 1, image: 1 } // Projection to include only the name and image fields
+    );
+
+    if (restaurantsData && restaurantsData.length > 0) {
+      console.log(`Database query result: ${restaurantsData}`); // Log the query result
+      res.send({ status: "ok", data: restaurantsData });
+    } else {
+      res.send({
+        status: "error",
+        data: "No listings found with the given names.",
+      });
+    }
+  } catch (e) {
+    res.send({
+      status: "error",
+      data: e.message,
+    });
   }
 });
 

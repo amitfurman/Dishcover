@@ -8,8 +8,10 @@ import {
   Keyboard,
   Button,
 } from "react-native";
+import axios from "axios";
+import qs from "qs";
 
-const CopyAndPasteScreen = () => {
+const CopyAndPasteScreen = ({ navigation }) => {
   const [value, onChangeText] = useState("");
 
   useEffect(() => {
@@ -32,8 +34,41 @@ const CopyAndPasteScreen = () => {
     }
   };
 
-  const handleContinueButton = () => {
-    // Handle continue button press
+  const handleContinueButton = async () => {
+    const lines = value
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line !== "");
+
+    console.log("Sending data to server:", lines);
+    try {
+      const response = await axios.get("http://10.100.102.4:3000/image", {
+        params: { restaurantNames: lines },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: "repeat" });
+        },
+      });
+
+      const { status, data } = response.data;
+
+      if (status === "ok") {
+        console.log("Data received successfully:", data);
+        navigation.navigate("ReviewScreen", { data: data });
+      } else {
+        console.error("Error from server:", data);
+      }
+    } catch (error) {
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        console.error("Server responded with an error:", error.response.data);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("No response received:", error.request);
+      } else {
+        // Something else happened in setting up the request
+        console.error("Error setting up the request:", error.message);
+      }
+    }
   };
 
   return (
@@ -43,9 +78,6 @@ const CopyAndPasteScreen = () => {
       </View>
       <View style={styles.textInputContainer}>
         <TextInput
-          ref={(input) => {
-            this.textInput = input;
-          }}
           editable
           multiline
           numberOfLines={8}
@@ -55,15 +87,15 @@ const CopyAndPasteScreen = () => {
           placeholder={
             "Paste list here! \nOne restaurant per line.\n\nFor example:\nEmesh\nMalka"
           }
-          placeholderTextColor="rgba(0, 0, 0, 0.6)" // Set placeholder text color with light opacity
-          style={styles.textInputStyle} // Add border styles
-          autoFocus={true} // Focus the text input on component mount
+          placeholderTextColor="rgba(0, 0, 0, 0.6)"
+          style={styles.textInputStyle}
+          autoFocus={true}
         />
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" onPress={handleContinueButton} />
         <Button title="Clear Text" onPress={handleClearTextButton} />
+        <Button title="Continue" onPress={handleContinueButton} />
       </View>
     </SafeAreaView>
   );
@@ -81,7 +113,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   titleText: {
-    fontFamily: "Cochin",
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
@@ -105,23 +136,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "80%",
     paddingBottom: 350,
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 11,
-    paddingHorizontal: 32,
-    borderRadius: 20, // Adjust this value to make the corners rounder
-    elevation: 3,
-    backgroundColor: "black",
-    marginBottom: 10, // Add margin bottom to create space between buttons
-  },
-  text: {
-    //fontFamily: 'Cochin',
-    fontSize: 16,
-    lineHeight: 15,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
   },
 });

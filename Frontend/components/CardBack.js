@@ -213,9 +213,6 @@ navigationButtonText: {
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 40,
-    // position: 'absolute',
-    // bottom: -60, // Adjust this value as needed
-    // zIndex: 1, // Ensure it's above other content
   },
   
   priceLevel: {

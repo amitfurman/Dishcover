@@ -70,7 +70,7 @@ const CardBack = ({
             <View style={styles.infoContainer}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.location}>{location}</Text>
-
+                <Text style={styles.rankingString}>{rankingString}</Text>
                 <View style={styles.carouselContainer}>
                         <Carousel
                             loop
@@ -79,15 +79,24 @@ const CardBack = ({
                             autoPlay
                             autoPlayInterval={3000}
                             data={images}
-                            renderItem={renderItem}                        
+                            renderItem={renderItem}                    
                         />
                     </View>
-                <View>
+                <View style={styles.textInfo}>
                   <Text style={styles.description}>{description}</Text>
-                  <Text style={styles.openingHours}>{`Opening Hours: ${openingHours}`}</Text>
-                  <Text style={styles.rankingString}>{rankingString}</Text>
+                  <View style={styles.openingHoursContainer}>
+                  <Text style={styles.openingHoursTitle}>Opening Hours</Text>
+                  {openingHours.split(', ').map((slot, index) => {
+                      // Split each time slot into day and time
+                      const [day, time] = slot.split(': ');
+                      return (
+                          <Text key={index}>
+                              <Text style={styles.day}>{day}</Text>: <Text style={styles.time}>{time}</Text>
+                          </Text>
+                      );
+                  })}
+                 </View>
 
-                  
                   <View style={styles.priceTypeContainer}>
                       <Text style={styles.priceLevel}>{priceLevel}</Text>
                       <Text style={styles.type}>{type}</Text>
@@ -122,9 +131,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 5,
-    backgroundColor: 'beige',
+    backgroundColor: "#f9f2eb",
     width: width * 0.9,
     height: height * 0.7,
+    position: 'relative',
+    flex: 1,
     // borderTopLeftRadius: 20,
     // borderTopRightRadius: 20,
 },
@@ -133,17 +144,21 @@ infoContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
+    
   },
+  // textInfo: {
+  //   justifyContent: 'flex-end', // Align items at the bottom
+  // },
   name: {
     fontFamily: 'Poppins_700Bold',
-    color: 'black',
+    color: '#010057',
+    // color: '#f9f2eb',
     fontSize: 26,
   },
   location: {
     fontFamily: 'Poppins_400Regular',
-    color: 'gray',
+    color: '#FF5959',
     fontSize: 16,
-    marginBottom: 10,
   },
   carouselContainer: {
     width: width * 0.8,
@@ -153,8 +168,21 @@ infoContainer: {
     // flex: 1,
     marginBottom: 10,
     borderRadius: 10,
+    position: 'relative',
     overflow: 'hidden',
   },
+  navigationButton: {
+    position: 'absolute',
+    top: '50%',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 10,
+    zIndex: 1,
+},
+navigationButtonText: {
+    color: 'white',
+},
   imageContainer: {
     width: width * 0.8,
     height: height * 0.25,
@@ -172,7 +200,7 @@ infoContainer: {
   },
   menuLink: {
     alignSelf: 'flex-start',
-    marginVertical: 10,
+    // marginVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -181,15 +209,17 @@ infoContainer: {
   priceTypeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
     justifyContent: 'space-between',
-    top: 110,
-},
+    position: 'absolute',
+    bottom: -60, // Adjust this value as needed
+    zIndex: 1, // Ensure it's above other content
+  },
+  
   priceLevel: {
     color: 'black',
     fontSize: 20,
     fontFamily: 'Roboto_500Medium',
-    marginRight: 10,
+    // marginRight: 10,
     marginLeft: 20,
     flex: 1, // Takes up available space
   },
@@ -197,26 +227,43 @@ infoContainer: {
     color: 'gray',
     fontSize: 18,
     fontFamily: 'Roboto_400Regular',
-    flex: 1, // Takes up available space
-
+    flex: 1,
   },
   description: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'black',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  openingHours: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'black',
-    fontSize: 16,
-    marginBottom: 10,
-  },
+    fontFamily: 'Poppins_400Regular',
+    color: '#333',
+    fontSize: 15, 
+    lineHeight: 22, 
+    // marginBottom: 5,
+    textAlign: 'center',
+},
+openingHoursTitle: {
+  fontFamily: 'Poppins_600SemiBold',
+  fontSize: 20,
+  marginBottom: 5,
+  color: '#FF5959',
+},
+day: {
+  color: '#010057', // Change the color as desired
+  fontFamily: 'Poppins_600SemiBold_Italic',
+  fontSize: 16,
+},
+time: {
+  fontFamily: 'Poppins_400Regular',
+  fontSize: 16,
+},
+openingHoursContainer: {
+  top: 20, // Adjust this value as needed
+  zIndex: 1, // Ensure the text is above the image
+},
+openingHoursText: {
+  lineHeight: 20, // Adjust line height to reduce space between lines
+},
   rankingString: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'gold',
-    fontSize: 20,
+    fontFamily: 'Poppins_300Light_Italic',
+    color: 'gray',
     marginBottom: 10,
+    textAlign: 'center',
   },
   choiceContainer: {
     position: 'absolute',

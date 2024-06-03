@@ -172,13 +172,13 @@ const styles = StyleSheet.create({
     },
     name: {
         fontFamily: 'Poppins_700Bold',
-        color: 'black',
+        color: '#010057',
         fontSize: 24,
         marginRight: 5,
     },    
     separator: {
         fontFamily: 'Poppins_700Bold',
-        color: 'black',
+        color: '#010057',
         fontSize: 24,
         marginHorizontal: 5,
     },

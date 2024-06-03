@@ -127,7 +127,7 @@ export default function SwipeRestaurants() {
 
 
   return (
-    <LinearGradient colors={['#F5F5DC', '#E4E5E6']} style={styles.background}>
+    <LinearGradient colors={['#ffffff', '#ffffff']} style={styles.background}>
       <View style={styles.container}>
         <StatusBar style="auto" />
         {restaurants

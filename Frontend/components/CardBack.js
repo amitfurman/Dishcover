@@ -68,36 +68,48 @@ const CardBack = ({
         <GestureHandlerRootView>
             <Animated.View style={[styles.card, isFirst && animatedCardStyle]} {...rest}>
             <View style={styles.infoContainer}>
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.location}>{location}</Text>
-
-                <View style={styles.carouselContainer}>
-                        <Carousel
-                            loop
-                            width={width * 0.8}
-                            height={height * 0.25}
-                            autoPlay
-                            autoPlayInterval={3000}
-                            data={images}
-                            renderItem={renderItem}                        
-                        />
-                    </View>
-                <View>
-                  <Text style={styles.description}>{description}</Text>
-                  <Text style={styles.openingHours}>{`Opening Hours: ${openingHours}`}</Text>
+              <View style={styles.contentContainer}>
+                  <View style={styles.Container}>
+                  <Text style={styles.name}>{name}</Text>
+                  <Text style={styles.location}>{location}</Text>
                   <Text style={styles.rankingString}>{rankingString}</Text>
-
-                  
-                  <View style={styles.priceTypeContainer}>
-                      <Text style={styles.priceLevel}>{priceLevel}</Text>
-                      <Text style={styles.type}>{type}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
-                          <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
-                          <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
-                      </TouchableOpacity>
+                  <View style={styles.carouselContainer}>
+                          <Carousel
+                              loop
+                              width={width * 0.8}
+                              height={height * 0.25}
+                              autoPlay
+                              autoPlayInterval={3000}
+                              data={images}
+                              renderItem={renderItem}                    
+                          />
+                    </View>
+                    <Text style={styles.description}>{description}</Text>
                   </View>
-                </View>
-        
+                  <View style={styles.openingHoursContainer}>
+                    <Text style={styles.openingHoursTitle}>Opening Hours</Text>
+                    <View style={styles.openingHoursTextContainer}>
+                        {openingHours.split(', ').map((slot, index) => {
+                            // Split each time slot into day and time
+                            const [day, time] = slot.split(': ');
+                            return (
+                                <Text key={index} style={styles.openingHoursText}>
+                                    <Text style={styles.day}>{day}</Text>: <Text style={styles.time}>{time}</Text>
+                                </Text>
+                            );
+                        })}
+                    </View>
+                  </View>
+
+              </View>
+              <View style={styles.priceTypeContainer}>
+                  <Text style={styles.priceLevel}>{priceLevel}</Text>
+                  <Text style={styles.type}>{type}</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
+                      <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
+                      <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
+                  </TouchableOpacity>
+              </View>        
             </View>
 
             {isFirst && renderChoice()}
@@ -113,7 +125,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     // position: 'absolute',
     // top: 100,
-    paddingBottom: 90,
+    // paddingBottom: 90,
     shadowColor: '#000',
     shadowOffset: {
         width: 0,
@@ -122,39 +134,57 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 5,
-    backgroundColor: 'beige',
+    backgroundColor: "#f9f2eb",
     width: width * 0.9,
     height: height * 0.7,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
+    position: 'relative',
+    flex: 1,
+},
+Container: {
+  flex: 1,
 },
 infoContainer: {
     padding: 15,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    flex: 1,
+  },
+  contentContainer: {
     flex: 1,
   },
   name: {
     fontFamily: 'Poppins_700Bold',
-    color: 'black',
+    color: '#010057',
     fontSize: 26,
+    textAlign: 'center',
   },
   location: {
     fontFamily: 'Poppins_400Regular',
-    color: 'gray',
+    color: '#FF5959',
     fontSize: 16,
-    marginBottom: 10,
+    textAlign: 'center',
   },
   carouselContainer: {
     width: width * 0.8,
     height: height * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
-    // flex: 1,
     marginBottom: 10,
     borderRadius: 10,
+    position: 'relative',
     overflow: 'hidden',
   },
+  navigationButton: {
+    position: 'absolute',
+    top: '50%',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 10,
+    zIndex: 1,
+},
+navigationButtonText: {
+    color: 'white',
+},
   imageContainer: {
     width: width * 0.8,
     height: height * 0.25,
@@ -172,7 +202,7 @@ infoContainer: {
   },
   menuLink: {
     alignSelf: 'flex-start',
-    marginVertical: 10,
+    // marginVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -181,42 +211,60 @@ infoContainer: {
   priceTypeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
     justifyContent: 'space-between',
-    top: 110,
-},
+    height: 40,
+  },
+  
   priceLevel: {
     color: 'black',
     fontSize: 20,
     fontFamily: 'Roboto_500Medium',
-    marginRight: 10,
     marginLeft: 20,
-    flex: 1, // Takes up available space
+    flex: 1, 
   },
   type: {
     color: 'gray',
     fontSize: 18,
     fontFamily: 'Roboto_400Regular',
-    flex: 1, // Takes up available space
-
+    flex: 1,
   },
-  description: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'black',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  openingHours: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'black',
-    fontSize: 16,
-    marginBottom: 10,
-  },
+description: {
+  fontFamily: 'Poppins_400Regular',
+  color: '#333',
+  fontSize: 15, 
+  lineHeight: 22, 
+  textAlign: 'center',
+},
+openingHoursTitle: {
+  fontFamily: 'Poppins_600SemiBold',
+  fontSize: 20,
+  marginBottom: 5,
+  color: '#FF5959',
+  marginLeft: 10,
+},
+day: {
+  color: '#010057', // Change the color as desired
+  fontFamily: 'Poppins_600SemiBold_Italic',
+  fontSize: 16,
+},
+time: {
+  fontFamily: 'Poppins_400Regular',
+  fontSize: 16,
+},
+openingHoursContainer: {
+  height: 130,
+},
+openingHoursText: {
+  lineHeight: 20, 
+},
+openingHoursTextContainer: {
+  marginLeft: 20,
+},
   rankingString: {
-    fontFamily: 'Roboto_400Regular',
-    color: 'gold',
-    fontSize: 20,
+    fontFamily: 'Poppins_300Light_Italic',
+    color: 'gray',
     marginBottom: 10,
+    textAlign: 'center',
   },
   choiceContainer: {
     position: 'absolute',

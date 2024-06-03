@@ -22,6 +22,53 @@ export const restaurants = [
         isGlutenFree: false,
 
     },
+    {
+    name: "Dok",
+    rating: 4.5, 
+    image: "https://media-cdn.tripadvisor.com/media/photo-o/0d/ef/47/96/photo1jpg.jpg",
+    location: "Tel Aviv",
+    priceLevel: "$$-$$$", 
+    images: [
+        "https://media-cdn.tripadvisor.com/media/photo-o/0a/b5/d8/13/ta-img-20160326-180102.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/07/47/f7/3f/huge-pizza.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/1b/02/26/3e/photo0jpg.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/08/b1/02/42/nono.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/07/52/cb/f8/tiramiso.jpg"
+      ], 
+    menuLink:"https://nonomimi.com/branch/%D7%94%D7%95%D7%93-%D7%94%D7%A9%D7%A8%D7%95%D7%9F-%D7%A0%D7%95%D7%A0%D7%95/", 
+    description: null, 
+    openingHours: "Sunday - Thursday: 12:00 - 23:00, Friday: 12:00 - 15:00, Saturday: 19:00 - 23:00",    
+    rankingString: "#214 of 1,928 places to eat in Tel Aviv", 
+    type: "Mediterranean", 
+    isVeganFriendly: true,
+    isWheelchairAccessible: true,
+    isGlutenFree: true,
+},  
+    {
+    name: "Market TLV",
+    rating: 4.5,
+    image: "https://media-cdn.tripadvisor.com/media/photo-o/07/f7/2f/19/market.jpg",
+    location: "Tel Aviv",
+    priceLevel: "$$-$$$",
+    description: "at Market we celebrate the Market fresh produce, the changing seasons and weather. The most important things to us are good tasting food, freshness of ingredients, Healthy choices and of course the ambiance."
+    ,
+    rankingString: "#169 of 1,186 Restaurants in Tel Aviv",
+    images: [
+        "https://media-cdn.tripadvisor.com/media/photo-o/17/9f/f9/3d/photo0jpg.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/07/f7/2f/19/market.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/08/13/a8/06/market.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/07/f8/2e/7a/market.jpg",
+        "https://media-cdn.tripadvisor.com/media/photo-o/18/5d/3b/b6/20190718-123107-largejpg.jpg"
+      ],
+    menuLink: "https://www.market-tlv.com/",
+    openingHours: "Sunday - Wednesday : 12:00 - 23:00, Thursday 13:00 - 00:00, Friday: 12:00 - 15:00, Saturday: 19:00 - 23:00",  
+    type: "International",
+    isVeganFriendly: true,
+    isWheelchairAccessible: true,
+    isGlutenFree: false,
+    },
+    
+    
     // {
     //     name: "McDonald's",
     //     rating: 4.5,

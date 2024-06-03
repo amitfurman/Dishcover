@@ -127,7 +127,7 @@ export default function SwipeRestaurants() {
 
 
   return (
-    <LinearGradient colors={['#F5F5DC', '#E4E5E6']} style={styles.background}>
+    <LinearGradient colors={['#ffffff', '#ffffff']} style={styles.background}>
       <View style={styles.container}>
         <StatusBar style="auto" />
         {restaurants
@@ -138,7 +138,7 @@ export default function SwipeRestaurants() {
               <View key={restaurant.name} style={styles.cardWrapper}>
                 <Animated.View style={{ ...styles.flipButton, opacity: flipButtonOpacity }}>
                   <TouchableOpacity onPress={flipCard}>
-                    <MaterialCommunityIcons name="swap-horizontal" size={32} color="black" />
+                    <MaterialCommunityIcons name="swap-horizontal" size={32} color="#010057" />
                   </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
         zIndex: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: 'rgba(255, 89, 89, 0.9)',
         borderRadius: 20,
         padding: 5,
     },

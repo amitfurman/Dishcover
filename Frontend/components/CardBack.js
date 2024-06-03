@@ -68,45 +68,48 @@ const CardBack = ({
         <GestureHandlerRootView>
             <Animated.View style={[styles.card, isFirst && animatedCardStyle]} {...rest}>
             <View style={styles.infoContainer}>
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.location}>{location}</Text>
-                <Text style={styles.rankingString}>{rankingString}</Text>
-                <View style={styles.carouselContainer}>
-                        <Carousel
-                            loop
-                            width={width * 0.8}
-                            height={height * 0.25}
-                            autoPlay
-                            autoPlayInterval={3000}
-                            data={images}
-                            renderItem={renderItem}                    
-                        />
+              <View style={styles.contentContainer}>
+                  <View style={styles.Container}>
+                  <Text style={styles.name}>{name}</Text>
+                  <Text style={styles.location}>{location}</Text>
+                  <Text style={styles.rankingString}>{rankingString}</Text>
+                  <View style={styles.carouselContainer}>
+                          <Carousel
+                              loop
+                              width={width * 0.8}
+                              height={height * 0.25}
+                              autoPlay
+                              autoPlayInterval={3000}
+                              data={images}
+                              renderItem={renderItem}                    
+                          />
                     </View>
-                <View style={styles.textInfo}>
-                  <Text style={styles.description}>{description}</Text>
-                  <View style={styles.openingHoursContainer}>
-                  <Text style={styles.openingHoursTitle}>Opening Hours</Text>
-                  {openingHours.split(', ').map((slot, index) => {
-                      // Split each time slot into day and time
-                      const [day, time] = slot.split(': ');
-                      return (
-                          <Text key={index}>
-                              <Text style={styles.day}>{day}</Text>: <Text style={styles.time}>{time}</Text>
-                          </Text>
-                      );
-                  })}
-                 </View>
-
-                  <View style={styles.priceTypeContainer}>
-                      <Text style={styles.priceLevel}>{priceLevel}</Text>
-                      <Text style={styles.type}>{type}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
-                          <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
-                          <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
-                      </TouchableOpacity>
+                    <Text style={styles.description}>{description}</Text>
                   </View>
-                </View>
-        
+                  <View style={styles.openingHoursContainer}>
+                    <Text style={styles.openingHoursTitle}>Opening Hours</Text>
+                    <View style={styles.openingHoursTextContainer}>
+                        {openingHours.split(', ').map((slot, index) => {
+                            // Split each time slot into day and time
+                            const [day, time] = slot.split(': ');
+                            return (
+                                <Text key={index} style={styles.openingHoursText}>
+                                    <Text style={styles.day}>{day}</Text>: <Text style={styles.time}>{time}</Text>
+                                </Text>
+                            );
+                        })}
+                    </View>
+                  </View>
+
+              </View>
+              <View style={styles.priceTypeContainer}>
+                  <Text style={styles.priceLevel}>{priceLevel}</Text>
+                  <Text style={styles.type}>{type}</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL(menuLink)} style={styles.menuLink}>
+                      <Image source={require('../assets/symbols/menu.png')} style={styles.icon} />
+                      <MaterialCommunityIcons name="arrow-top-right" size={24} color="#4900D9" />
+                  </TouchableOpacity>
+              </View>        
             </View>
 
             {isFirst && renderChoice()}
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     // position: 'absolute',
     // top: 100,
-    paddingBottom: 90,
+    // paddingBottom: 90,
     shadowColor: '#000',
     shadowOffset: {
         width: 0,
@@ -136,36 +139,35 @@ const styles = StyleSheet.create({
     height: height * 0.7,
     position: 'relative',
     flex: 1,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
+},
+Container: {
+  flex: 1,
 },
 infoContainer: {
     padding: 15,
     alignItems: 'center',
-    justifyContent: 'space-between',
     flex: 1,
-    
   },
-  // textInfo: {
-  //   justifyContent: 'flex-end', // Align items at the bottom
-  // },
+  contentContainer: {
+    flex: 1,
+  },
   name: {
     fontFamily: 'Poppins_700Bold',
     color: '#010057',
-    // color: '#f9f2eb',
     fontSize: 26,
+    textAlign: 'center',
   },
   location: {
     fontFamily: 'Poppins_400Regular',
     color: '#FF5959',
     fontSize: 16,
+    textAlign: 'center',
   },
   carouselContainer: {
     width: width * 0.8,
     height: height * 0.25,
     justifyContent: 'center',
     alignItems: 'center',
-    // flex: 1,
     marginBottom: 10,
     borderRadius: 10,
     position: 'relative',
@@ -210,18 +212,18 @@ navigationButtonText: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    position: 'absolute',
-    bottom: -60, // Adjust this value as needed
-    zIndex: 1, // Ensure it's above other content
+    height: 40,
+    // position: 'absolute',
+    // bottom: -60, // Adjust this value as needed
+    // zIndex: 1, // Ensure it's above other content
   },
   
   priceLevel: {
     color: 'black',
     fontSize: 20,
     fontFamily: 'Roboto_500Medium',
-    // marginRight: 10,
     marginLeft: 20,
-    flex: 1, // Takes up available space
+    flex: 1, 
   },
   type: {
     color: 'gray',
@@ -229,19 +231,19 @@ navigationButtonText: {
     fontFamily: 'Roboto_400Regular',
     flex: 1,
   },
-  description: {
-    fontFamily: 'Poppins_400Regular',
-    color: '#333',
-    fontSize: 15, 
-    lineHeight: 22, 
-    // marginBottom: 5,
-    textAlign: 'center',
+description: {
+  fontFamily: 'Poppins_400Regular',
+  color: '#333',
+  fontSize: 15, 
+  lineHeight: 22, 
+  textAlign: 'center',
 },
 openingHoursTitle: {
   fontFamily: 'Poppins_600SemiBold',
   fontSize: 20,
   marginBottom: 5,
   color: '#FF5959',
+  marginLeft: 10,
 },
 day: {
   color: '#010057', // Change the color as desired
@@ -253,11 +255,13 @@ time: {
   fontSize: 16,
 },
 openingHoursContainer: {
-  top: 20, // Adjust this value as needed
-  zIndex: 1, // Ensure the text is above the image
+  height: 130,
 },
 openingHoursText: {
-  lineHeight: 20, // Adjust line height to reduce space between lines
+  lineHeight: 20, 
+},
+openingHoursTextContainer: {
+  marginLeft: 20,
 },
   rankingString: {
     fontFamily: 'Poppins_300Light_Italic',

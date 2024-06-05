@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from 'react-native-vector-icons';
 import {GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Choice from './Choice';
 import Carousel from 'react-native-reanimated-carousel';
+import { COLORS } from '../colors';
 
 
 const {width, height} = Dimensions.get("screen");

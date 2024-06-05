@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { React, useState } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
@@ -14,6 +16,7 @@ import { Octicons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
 import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
+import {COLORS} from '../colors';
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -82,8 +85,12 @@ export default function SignupScreen({ props }) {
   }
 
   return (
+    <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View className="h-full w-full flex justify-around pt-40 pb-10">
+      <View style={{ backgroundColor: '#f9f2eb', height: '100%', width: '100%', flex: 1, justifyContent: 'space-around', paddingTop: 40, paddingBottom: 10 }}>
         <View className="flex items-center justify-center">
           <Text style={styles.createAcountText}>Create an account</Text>
         </View>
@@ -200,6 +207,7 @@ export default function SignupScreen({ props }) {
         </View>
       </View>
     </ScrollView>
+  </KeyboardAvoidingView>
   );
 }
 
@@ -208,7 +216,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 12, // converted p-3 to 12 for padding in React Native
     borderRadius: 20, // rounded-2xl roughly converts to 20 in React Native
-    backgroundColor: "#FF5959",
+    backgroundColor: COLORS.blue,
     marginBottom: 12, // mb-3 converts to 12 for margin in React Native
   },
   buttonText: {
@@ -219,6 +227,6 @@ const styles = StyleSheet.create({
   createAcountText: {
     fontSize: 30, // text-2xl converts to 24 in React Native
     fontWeight: "bold", // font-bold converts to bold in React Native
-    color: "#FF5959",
+    color: COLORS.pink, // assuming you want blue text for contrast
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const HomePageButton = ({ text, textColor, backgroundColor, onPress }) => {
+const HomePageButton = ({ text, textColor, backgroundColor, borderColor, onPress }) => {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor }]}
+      style={[styles.button, { backgroundColor, borderColor }]}
       onPress={onPress}
     >
       <Text style={[styles.text, { color: textColor }]}>{text}</Text>
@@ -16,9 +16,8 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     margin: 5,
+    borderWidth: 1.2,
     borderRadius: 10,
-    borderColor: 'black',
-    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
     width: 200,

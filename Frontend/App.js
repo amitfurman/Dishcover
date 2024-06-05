@@ -10,6 +10,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native"; /
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Video } from "expo-av";
 import HomePageButton from "./components/HomePageButton";
+import { COLORS } from "./colors"; // Adjust the path as necessary
 import {
   useFonts,
   PlayfairDisplay_400Regular,
@@ -91,17 +92,19 @@ function HomeScreen() {
       <View style={styles.buttonContainer}>
         <HomePageButton
           text="Sign Up"
-          textColor="#FF5959"
+          textColor={COLORS.blue}
           backgroundColor="#f8f7f4"
+          borderColor={COLORS.pink}
           onPress={() => navigation.navigate("Signup")}
-          //onPress={() => navigation.navigate("CopyAndPaste")}
+          // onPress={() => navigation.navigate("CopyAndPaste")}
         />
         <HomePageButton
           text="Sign In"
           textColor="#f8f7f4"
-          backgroundColor="#FF5959"
+          backgroundColor={COLORS.pink}
+          borderColor={COLORS.blue}
           onPress={() => navigation.navigate("Signin")}
-          //onPress={() => navigation.navigate("SwipeRestaurants")}
+          // onPress={() => navigation.navigate("SwipeRestaurants")}
         />
       </View>
     </View>

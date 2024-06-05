@@ -16,7 +16,6 @@ import { Octicons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
 import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import { API_BASE_URL } from "@env";
 import { COLORS } from "../colors";
 
 export default function SignupScreen({ props }) {
@@ -38,7 +37,7 @@ export default function SignupScreen({ props }) {
 
     if (nameVerified && emailVerified && passwordVerified) {
       axios
-        .post(`${API_BASE_URL}/signup`, userData)
+        .post(`http://10.100.102.4:3000/signup`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
             Alert.alert("User created successfully");

@@ -11,7 +11,6 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
-import { API_BASE_URL } from "@env";
 
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here
@@ -26,7 +25,7 @@ export default function SigninScreen() {
     };
 
     if (id.length != 0 && password.length != 0) {
-      axios.post(`${API_BASE_URL}/signin`, userData).then((res) => {
+      axios.post(`http://10.100.102.4:3000/signin`, userData).then((res) => {
         if (res.data.status === "ok") {
           Alert.alert("User logged in successfully");
           ////////////////add navigation to the next screen

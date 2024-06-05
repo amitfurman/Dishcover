@@ -120,14 +120,12 @@ export default function SignupScreen({ props }) {
             )}
           </View>
           {name.length < 1 ? null : nameVerified ? null : (
-            <Text
-              style={{
-                color: "red",
-                fontSize: 12,
-              }}
-            >
-              Name should be more than 1 character
-            </Text>
+            <View style={styles.errorContainer}>
+              <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
+              <Text style={styles.errorText}>
+                Oops! Your name should be longer than one character
+              </Text>
+            </View>
           )}
           <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
             <Octicons
@@ -153,15 +151,14 @@ export default function SignupScreen({ props }) {
             )}
           </View>
           {email.length < 1 ? null : emailVerified ? null : (
-            <Text
-              style={{
-                color: "red",
-                fontSize: 12,
-              }}
-            >
-              Enter proper Email address
-            </Text>
+            <View style={styles.errorContainer}>
+              <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
+              <Text style={styles.errorText}>
+                Enter a valid email address
+              </Text>
+            </View>
           )}
+
 
           <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
             <Octicons
@@ -185,18 +182,21 @@ export default function SignupScreen({ props }) {
               )}
             </TouchableOpacity>
           </View>
-          <View className="w-full">
+          <View style={{ width: '100%', paddingHorizontal: 20 }}>
             {password.length < 1 ? null : passwordVerified ? null : (
-              <Text
-                style={{
-                  color: "red",
-                  fontSize: 12,
-                }}
-              >
-                Uppercase, Lowercase, Number and min 6 characters
-              </Text>
+              <View style={styles.errorContainer}>
+                <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
+                <Text style={styles.errorText}>
+                Password must contain:
+                {"\n\u2022"} At least 1 uppercase letter
+                {"\n\u2022"} At least 1 lowercase letter
+                {"\n\u2022"} At least 1 number
+                {"\n\u2022"} Be at least 6 characters             
+                 </Text>
+              </View>
             )}
-
+          </View>
+          <View className="w-full">
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleSignup()}
@@ -228,5 +228,17 @@ const styles = StyleSheet.create({
     fontSize: 30, // text-2xl converts to 24 in React Native
     fontWeight: "bold", // font-bold converts to bold in React Native
     color: COLORS.pink, // assuming you want blue text for contrast
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFE6E6', // Light red background color for the error message
+    borderRadius: 5,
+    padding: 5,
+    marginBottom: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
   },
 });

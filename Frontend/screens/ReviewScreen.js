@@ -23,7 +23,7 @@ const ReviewScreen = ({ route }) => {
 
   const handleContinueButton = () => {
     // Implement continue button handling logic here
-    console.log("Continue button pressed");
+    //console.log("Continue button pressed");
   };
 
   return (

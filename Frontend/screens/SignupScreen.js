@@ -18,7 +18,7 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-const url = "http://10.100.102.4:3000";
+const url = "http://10.0.0.138:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-
+import { COLORS } from "../colors";
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
 
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: "#000",
+    backgroundColor: COLORS.pink,
   },
   contentContainer: {
     flex: 1,

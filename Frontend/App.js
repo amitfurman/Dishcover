@@ -69,7 +69,8 @@ import SwipeRestaurants from "./screens/SwipeRestaurants";
 import FirstIntroScreen from "./screens/FirstIntroScreen";
 import CopyAndPasteScreen from "./screens/CopyAndPasteScreen";
 import SecondIntroScreen from "./screens/SecondIntroScreen";
-import ReviewScreen from "./screens/ReviewScreen";
+import PasteListScreen from "./screens/PasteListScreen";
+import ReviewPlaceScreen from "./screens/ReviewPlaceScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -95,8 +96,8 @@ function HomeScreen() {
           textColor={COLORS.blue}
           backgroundColor="#f8f7f4"
           borderColor={COLORS.pink}
-          onPress={() => navigation.navigate("Signup")}
-          // onPress={() => navigation.navigate("CopyAndPaste")}
+          //onPress={() => navigation.navigate("Signup")}
+          onPress={() => navigation.navigate("CopyAndPaste")}
         />
         <HomePageButton
           text="Sign In"
@@ -175,7 +176,8 @@ function App() {
         <Stack.Screen name="FirstIntro" component={FirstIntroScreen} />
         <Stack.Screen name="SecondIntro" component={SecondIntroScreen} />
         <Stack.Screen name="CopyAndPaste" component={CopyAndPasteScreen} />
-        <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+        <Stack.Screen name="PasteListScreen" component={PasteListScreen} />
+        <Stack.Screen name="ReviewPlaceScreen" component={ReviewPlaceScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

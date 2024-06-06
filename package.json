@@ -1,11 +1,13 @@
 {
   "dependencies": {
+    "apify": "^3.2.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.6.2",
     "mongoose": "^8.4.0",
     "nodemon": "^3.1.2",
+    "react-native-star-rating": "^1.1.0",
     "react-native-star-rating-widget": "^1.8.0",
     "react-native-vector-icons": "^10.1.0"
   }

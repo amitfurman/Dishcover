@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apify": "^3.2.3",
+    "apify-client": "^2.9.3",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "mongodb": "^6.7.0",

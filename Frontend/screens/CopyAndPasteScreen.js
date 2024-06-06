@@ -8,10 +8,12 @@ import {
   Keyboard,
   Button,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import axios from "axios";
 import qs from "qs";
 
-const CopyAndPasteScreen = ({ navigation }) => {
+const CopyAndPasteScreen = () => {
+  const navigation = useNavigation(); // useNavigation hook here
   const [value, onChangeText] = useState("");
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const CopyAndPasteScreen = ({ navigation }) => {
 
       if (status === "ok") {
         console.log("Data received successfully:", data);
-        navigation.navigate("ReviewScreen", { data: data });
+        navigation.navigate("PasteListScreen", { data: data });
       } else {
         console.error("Error from server:", data);
       }
@@ -80,8 +82,8 @@ const CopyAndPasteScreen = ({ navigation }) => {
         <TextInput
           editable
           multiline
-          numberOfLines={8}
-          maxLength={40}
+          numberOfLines={50}
+          maxLength={500}
           onChangeText={(text) => onChangeText(text)}
           value={value}
           placeholder={

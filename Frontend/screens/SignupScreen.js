@@ -18,12 +18,16 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
+const url = "http://10.100.102.4:3000";
+
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [nameVerified, setNameVerified] = useState(false);
+  const [nameError, setNameError] = useState("");
   const [email, setEmail] = useState("");
   const [emailVerified, setEmailVerified] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVerified, setPasswordVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +41,7 @@ export default function SignupScreen({ props }) {
 
     if (nameVerified && emailVerified && passwordVerified) {
       axios
-        .post(`http://10.100.102.4:3000/signup`, userData)
+        .post(`${url}/signup`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
             Alert.alert("User created successfully");
@@ -52,17 +56,36 @@ export default function SignupScreen({ props }) {
     }
   }
 
-  function handleName(e) {
+  function checkIfNameValid(e) {
     const nameVar = e.nativeEvent.text;
     setName(nameVar);
     setNameVerified(false);
 
     if (nameVar.length > 1) {
       setNameVerified(true);
+    } else {
+      setNameError("Oops! Your name should be longer than one character");
     }
   }
 
-  function handleEmail(e) {
+  function checkIfNameExists() {
+    // Check if the name already exists in the database
+
+    axios
+      .get(`${url}/checkUserByName?name=${name}`)
+      .then((res) => {
+        if (res.data.exists) {
+          // Name already exists in the database
+          setNameVerified(false);
+          setNameError("Name already exists in the database");
+        }
+      })
+      .catch((error) => {
+        console.log("Error checking name. Please try again.");
+      });
+  }
+
+  function checkIfEmailValid(e) {
     const emailVar = e.nativeEvent.text;
     setEmail(emailVar);
     setEmailVerified(false);
@@ -70,7 +93,25 @@ export default function SignupScreen({ props }) {
     if (/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(emailVar)) {
       setEmail(emailVar);
       setEmailVerified(true);
+    } else {
+      setEmailError("Enter a valid email address");
     }
+  }
+
+  function checkIfEmailExists() {
+    // Check if the email already exists in the database
+    axios
+      .get(`${url}/checkUserByEmail?email=${email}`)
+      .then((res) => {
+        if (res.data.exists) {
+          // Email already exists in the database
+          setEmailVerified(false);
+          setEmailError("Email already exists in the database");
+        }
+      })
+      .catch((error) => {
+        console.log("Error checking email. Please try again.");
+      });
   }
 
   function handlePassword(e) {
@@ -117,7 +158,8 @@ export default function SignupScreen({ props }) {
                 placeholder="User Name"
                 placeholderTextColor={"gray"}
                 className="flex-1"
-                onChange={(e) => handleName(e)}
+                onChange={(e) => checkIfNameValid(e)}
+                onEndEditing={() => checkIfNameExists()}
               />
               {name.length < 1 ? null : nameVerified ? (
                 <Feather
@@ -136,9 +178,7 @@ export default function SignupScreen({ props }) {
                   size={20}
                   style={{ color: "red", marginRight: 5 }}
                 />
-                <Text style={styles.errorText}>
-                  Oops! Your name should be longer than one character
-                </Text>
+                <Text style={styles.errorText}>{nameError} </Text>
               </View>
             )}
             <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
@@ -152,7 +192,8 @@ export default function SignupScreen({ props }) {
                 placeholder="Email "
                 placeholderTextColor={"gray"}
                 className="flex-1"
-                onChange={(e) => handleEmail(e)}
+                onChange={(e) => checkIfEmailValid(e)}
+                onEndEditing={() => checkIfEmailExists()}
               />
               {email.length < 1 ? null : emailVerified ? (
                 <Feather
@@ -171,9 +212,7 @@ export default function SignupScreen({ props }) {
                   size={20}
                   style={{ color: "red", marginRight: 5 }}
                 />
-                <Text style={styles.errorText}>
-                  Enter a valid email address
-                </Text>
+                <Text style={styles.errorText}>{emailError}</Text>
               </View>
             )}
 

@@ -12,6 +12,8 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native"; /
 import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
 
+const url = "http://10.100.102.4:3000";
+
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here
   const [id, setId] = useState("");
@@ -25,7 +27,7 @@ export default function SigninScreen() {
     };
 
     if (id.length != 0 && password.length != 0) {
-      axios.post(`http://10.100.102.4:3000/signin`, userData).then((res) => {
+      axios.post(`${url}/signin`, userData).then((res) => {
         if (res.data.status === "ok") {
           Alert.alert("User logged in successfully");
           ////////////////add navigation to the next screen

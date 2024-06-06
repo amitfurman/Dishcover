@@ -16,7 +16,7 @@ import { Octicons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
 import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import {COLORS} from '../colors';
+import { COLORS } from "../colors";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -37,7 +37,7 @@ export default function SignupScreen({ props }) {
 
     if (nameVerified && emailVerified && passwordVerified) {
       axios
-        .post("http://10.100.102.4:3000/signup", userData)
+        .post(`http://10.100.102.4:3000/signup`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
             Alert.alert("User created successfully");
@@ -86,128 +86,153 @@ export default function SignupScreen({ props }) {
 
   return (
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-  >
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={{ backgroundColor: '#f9f2eb', height: '100%', width: '100%', flex: 1, justifyContent: 'space-around', paddingTop: 40, paddingBottom: 10 }}>
-        <View className="flex items-center justify-center">
-          <Text style={styles.createAcountText}>Create an account</Text>
-        </View>
-        {/* form */}
-        <View className="flex items-center mx-4 space-y-4">
-          <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
-            <Octicons
-              name="person"
-              size={18}
-              color="gray"
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              placeholder="User Name"
-              placeholderTextColor={"gray"}
-              className="flex-1"
-              onChange={(e) => handleName(e)}
-            />
-            {name.length < 1 ? null : nameVerified ? (
-              <Feather
-                name="check-circle"
-                size={20}
-                style={{ color: "green" }}
-              />
-            ) : (
-              <Error name="error" size={20} style={{ color: "red" }} />
-            )}
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View
+          style={{
+            backgroundColor: "#f9f2eb",
+            height: "100%",
+            width: "100%",
+            flex: 1,
+            justifyContent: "space-around",
+            paddingTop: 40,
+            paddingBottom: 10,
+          }}
+        >
+          <View className="flex items-center justify-center">
+            <Text style={styles.createAcountText}>Create an account</Text>
           </View>
-          {name.length < 1 ? null : nameVerified ? null : (
-            <View style={styles.errorContainer}>
-              <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
-              <Text style={styles.errorText}>
-                Oops! Your name should be longer than one character
-              </Text>
-            </View>
-          )}
-          <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
-            <Octicons
-              name="mail"
-              size={18}
-              color="gray"
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              placeholder="Email "
-              placeholderTextColor={"gray"}
-              className="flex-1"
-              onChange={(e) => handleEmail(e)}
-            />
-            {email.length < 1 ? null : emailVerified ? (
-              <Feather
-                name="check-circle"
-                size={20}
-                style={{ color: "green" }}
+          {/* form */}
+          <View className="flex items-center mx-4 space-y-4">
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+              <Octicons
+                name="person"
+                size={18}
+                color="gray"
+                style={{ marginRight: 10 }}
               />
-            ) : (
-              <Error name="error" size={20} style={{ color: "red" }} />
-            )}
-          </View>
-          {email.length < 1 ? null : emailVerified ? null : (
-            <View style={styles.errorContainer}>
-              <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
-              <Text style={styles.errorText}>
-                Enter a valid email address
-              </Text>
-            </View>
-          )}
-
-
-          <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
-            <Octicons
-              name="lock"
-              size={18}
-              color="gray"
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor={"gray"}
-              className="flex-1"
-              onChange={(e) => handlePassword(e)}
-              secureTextEntry={showPassword}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              {password.length < 1 ? null : !showPassword ? (
-                <Feather name="eye-off" size={20} style={{ color: "green" }} />
+              <TextInput
+                placeholder="User Name"
+                placeholderTextColor={"gray"}
+                className="flex-1"
+                onChange={(e) => handleName(e)}
+              />
+              {name.length < 1 ? null : nameVerified ? (
+                <Feather
+                  name="check-circle"
+                  size={20}
+                  style={{ color: "green" }}
+                />
               ) : (
-                <Feather name="eye" size={20} style={{ color: "green" }} />
+                <Error name="error" size={20} style={{ color: "red" }} />
               )}
-            </TouchableOpacity>
-          </View>
-          <View style={{ width: '100%', paddingHorizontal: 20 }}>
-            {password.length < 1 ? null : passwordVerified ? null : (
+            </View>
+            {name.length < 1 ? null : nameVerified ? null : (
               <View style={styles.errorContainer}>
-                <Error name="error" size={20} style={{ color: 'red', marginRight: 5 }} />
+                <Error
+                  name="error"
+                  size={20}
+                  style={{ color: "red", marginRight: 5 }}
+                />
                 <Text style={styles.errorText}>
-                Password must contain:
-                {"\n\u2022"} At least 1 uppercase letter
-                {"\n\u2022"} At least 1 lowercase letter
-                {"\n\u2022"} At least 1 number
-                {"\n\u2022"} Be at least 6 characters             
-                 </Text>
+                  Oops! Your name should be longer than one character
+                </Text>
               </View>
             )}
-          </View>
-          <View className="w-full">
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleSignup()}
-            >
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+              <Octicons
+                name="mail"
+                size={18}
+                color="gray"
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                placeholder="Email "
+                placeholderTextColor={"gray"}
+                className="flex-1"
+                onChange={(e) => handleEmail(e)}
+              />
+              {email.length < 1 ? null : emailVerified ? (
+                <Feather
+                  name="check-circle"
+                  size={20}
+                  style={{ color: "green" }}
+                />
+              ) : (
+                <Error name="error" size={20} style={{ color: "red" }} />
+              )}
+            </View>
+            {email.length < 1 ? null : emailVerified ? null : (
+              <View style={styles.errorContainer}>
+                <Error
+                  name="error"
+                  size={20}
+                  style={{ color: "red", marginRight: 5 }}
+                />
+                <Text style={styles.errorText}>
+                  Enter a valid email address
+                </Text>
+              </View>
+            )}
+
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+              <Octicons
+                name="lock"
+                size={18}
+                color="gray"
+                style={{ marginRight: 10 }}
+              />
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor={"gray"}
+                className="flex-1"
+                onChange={(e) => handlePassword(e)}
+                secureTextEntry={showPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                {password.length < 1 ? null : !showPassword ? (
+                  <Feather
+                    name="eye-off"
+                    size={20}
+                    style={{ color: "green" }}
+                  />
+                ) : (
+                  <Feather name="eye" size={20} style={{ color: "green" }} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: "100%", paddingHorizontal: 20 }}>
+              {password.length < 1 ? null : passwordVerified ? null : (
+                <View style={styles.errorContainer}>
+                  <Error
+                    name="error"
+                    size={20}
+                    style={{ color: "red", marginRight: 5 }}
+                  />
+                  <Text style={styles.errorText}>
+                    Password must contain:
+                    {"\n\u2022"} At least 1 uppercase letter
+                    {"\n\u2022"} At least 1 lowercase letter
+                    {"\n\u2022"} At least 1 number
+                    {"\n\u2022"} Be at least 6 characters
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View className="w-full">
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleSignup()}
+              >
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
-  </KeyboardAvoidingView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -230,15 +255,15 @@ const styles = StyleSheet.create({
     color: COLORS.pink, // assuming you want blue text for contrast
   },
   errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFE6E6', // Light red background color for the error message
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFE6E6", // Light red background color for the error message
     borderRadius: 5,
     padding: 5,
     marginBottom: 10,
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 14,
   },
 });

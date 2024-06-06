@@ -9,12 +9,14 @@ import {
 import { React, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
 
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleSignin() {
     const userData = {
@@ -23,9 +25,9 @@ export default function SigninScreen() {
     };
 
     if (id.length != 0 && password.length != 0) {
-      axios.post("http://10.100.102.4:3000/signin", userData).then((res) => {
+      axios.post(`http://10.100.102.4:3000/signin`, userData).then((res) => {
         if (res.data.status === "ok") {
-          //Alert.alert("User logged in successfully");
+          Alert.alert("User logged in successfully");
           ////////////////add navigation to the next screen
           navigation.navigate("FirstIntro");
         } else {
@@ -62,10 +64,17 @@ export default function SigninScreen() {
             <TextInput
               placeholder="Password"
               placeholderTextColor={"gray"}
-              secureTextEntry
               className="flex-1"
               onChange={(e) => setPassword(e.nativeEvent.text)}
+              secureTextEntry={showPassword}
             />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              {password.length < 1 ? null : !showPassword ? (
+                <Feather name="eye-off" size={20} style={{ color: "green" }} />
+              ) : (
+                <Feather name="eye" size={20} style={{ color: "green" }} />
+              )}
+            </TouchableOpacity>
           </View>
           <TouchableOpacity className="self-start mb-4">
             <Text className="text-orange-300 text-left ">Forgot Password?</Text>

@@ -18,7 +18,7 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-const url = "http://10.0.0.138:3000";
+const url = "http://192.168.68.117:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -81,7 +81,7 @@ export default function SignupScreen({ props }) {
         }
       })
       .catch((error) => {
-        console.log("Error checking name. Please try again.");
+        console.log("Error checking name. Please try again. ", error.message);
       });
   }
 
@@ -110,7 +110,7 @@ export default function SignupScreen({ props }) {
         }
       })
       .catch((error) => {
-        console.log("Error checking email. Please try again.");
+        console.log("Error checking email. Please try again.", error.message);
       });
   }
 

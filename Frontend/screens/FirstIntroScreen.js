@@ -4,7 +4,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Button,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -26,6 +26,9 @@ function FirstIntroScreen() {
           <Text style={styles.titleText}>
             Do you have a list of restaurants you've already visited?
           </Text>
+        </View>
+        <View style={styles.imageContainer}>
+            <Image source={require("../assets/copyListFromIphone.png")} style={styles.image} />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -62,11 +65,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: "80%",
     width: "90%",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.beige,
   },
   paginationContainer: {
     alignItems: "center",
-    marginTop: 100, // Adjust this value to move the dots higher or lower
+    marginTop: 80, // Adjust this value to move the dots higher or lower
   },
   pagination: {
     flexDirection: "row",
@@ -87,11 +90,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    fontFamily: "Cochin",
+    fontFamily: "Poppins_800ExtraBold",
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
-    padding: 20,
+    padding: 10,
+    lineHeight: 45,
   },
   text: {
     //fontFamily: 'Cochin',
@@ -102,28 +106,43 @@ const styles = StyleSheet.create({
     color: "white",
   },
   CopyAndPasteButton: {
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.pink,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 10,
+    marginBottom: 10,
   },
   buttonContainer: {
     alignItems: "center",
-    marginBottom: 20, // Adjust this value for spacing between the buttons and the content
+    marginBottom: 10,
+    marginTop: 10,
   },
   maybeLaterButtonContainer: {
     alignItems: "center",
-    marginBottom: 20, // Adjust this value for spacing between the button and the bottom of the card
+    marginBottom: 30, 
   },
   CopyAndPasteButtonText: {
+    fontFamily: 'Poppins_500Medium',
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
   },
   maybeLaterButtonText: {
-    color: COLORS.pink,
-    fontSize: 20,
+    fontFamily: 'Poppins_700Bold',
+    color: COLORS.blue,
+    fontSize: 18,
     textAlign: 'center',
+  },
+  image: {
+    height: "100%",
+    width: "100%",
+    resizeMode: "contain",
+  },
+  imageContainer: {
+    width: "100%",
+    height: "40%",
+    alignItems: "center",
+
   },
 });

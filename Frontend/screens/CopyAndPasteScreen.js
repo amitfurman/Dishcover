@@ -40,7 +40,7 @@ const CopyAndPasteScreen = () => {
 
     console.log("Sending data to server:", lines);
     try {
-      const response = await axios.get("http://81.199.60.191:3000/image", {
+      const response = await axios.get("http://79.178.113.127:3000/image", {
         params: { restaurantNames: lines },
         paramsSerializer: (params) => {
           return qs.stringify(params, { arrayFormat: "repeat" });

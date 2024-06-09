@@ -8,6 +8,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Modal
 } from "react-native";
 import { React, useState } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
@@ -18,7 +19,7 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-const url = "http://192.168.68.117:3000";
+const url = "http://79.178.113.127:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -31,6 +32,8 @@ export default function SignupScreen({ props }) {
   const [password, setPassword] = useState("");
   const [passwordVerified, setPasswordVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   function handleSignup() {
     const userData = {
@@ -44,16 +47,22 @@ export default function SignupScreen({ props }) {
         .post(`${url}/signup`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
-            Alert.alert("User created successfully");
-            navigation.navigate("FirstIntro");
-          } else {
-            Alert.alert(res.data.data);
-          }
+            setModalMessage("User created successfully");
+            setModalVisible(true);
+            setTimeout(() => {
+              setModalVisible(false);
+              navigation.navigate("FirstIntro");
+            }, 2000); // Close the modal after 2 seconds          } else {
+              setModalMessage(res.data.data);
+              setModalVisible(true);          }
         })
-        .catch((e) => console.log(e.message));
+        .catch((e) => {
+          setModalMessage(e.message);
+          setModalVisible(true);
+        });
     } else {
-      Alert.alert("Please fill all the mandatory details");
-    }
+      setModalMessage("Please fill all the mandatory details");
+      setModalVisible(true);    }
   }
 
   function checkIfNameValid(e) {
@@ -270,6 +279,26 @@ export default function SignupScreen({ props }) {
             </View>
           </View>
         </View>
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={isModalVisible}
+          onRequestClose={() => {
+            setModalVisible(!isModalVisible);
+          }}
+        >
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalText}>{modalMessage}</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -304,5 +333,43 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 14,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    
+  },
+  modalContainer: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalText: {
+    fontFamily: "Poppins_500Medium_Italic",
+    fontSize: 16,
+    marginBottom: 20,
+    color: COLORS.blue,
+  },
+  modalButton: {
+    backgroundColor: COLORS.pink,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  modalButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
   },
 });

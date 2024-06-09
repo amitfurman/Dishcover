@@ -97,7 +97,7 @@ function HomeScreen() {
           backgroundColor="#f8f7f4"
           borderColor={COLORS.pink}
           // onPress={() => navigation.navigate("Signup")}
-          onPress={() => navigation.navigate("FirstIntro")}
+          onPress={() => navigation.navigate("CopyAndPaste")}
         />
         <HomePageButton
           text="Sign In"

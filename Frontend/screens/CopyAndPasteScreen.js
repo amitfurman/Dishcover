@@ -24,13 +24,11 @@ const CopyAndPasteScreen = () => {
       .map((line) => line.replace(/^\s*-\s*\[\s*[x ]\s*\]\s*/, "").trim())
       .join("\n");
     setValue(cleanedText);
-
-    console.log("Text changed:", cleanedText);
   };
 
   const handleClearTextButton = () => {
     if (value.trim() !== "") {
-      onChangeText("");
+      setValue("");
     }
   };
 

@@ -6,7 +6,7 @@ const restaurantsDetailsSchema = new mongoose.Schema(
     image: { type: String, unique: true },
   },
   {
-    collection: "restaurants", // Specify the collection name as "restaurants"
+    collection: "restaurants_transformed", // Specify the collection name as "restaurants"
   }
 );
 

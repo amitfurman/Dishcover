@@ -7,10 +7,12 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 function FirstIntroScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { username } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,11 +30,18 @@ function FirstIntroScreen() {
       <View style={styles.buttonContainer}>
         <Button
           title="Yes, Copy & Paste List"
-          onPress={() => navigation.navigate("CopyAndPaste")}
+          onPress={() =>
+            navigation.navigate("CopyAndPaste", {
+              fromScreen: "FirstScreen",
+              username: username,
+            })
+          }
         />
         <Button
           title="Maybe Later"
-          onPress={() => navigation.navigate("SecondIntro")}
+          onPress={() =>
+            navigation.navigate("SecondIntro", { username: username })
+          }
         />
       </View>
     </SafeAreaView>

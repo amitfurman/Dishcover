@@ -71,6 +71,7 @@ import CopyAndPasteScreen from "./screens/CopyAndPasteScreen";
 import SecondIntroScreen from "./screens/SecondIntroScreen";
 import PasteListScreen from "./screens/PasteListScreen";
 import ReviewPlaceScreen from "./screens/ReviewPlaceScreen";
+import MainScreen from "./screens/MainScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -96,8 +97,8 @@ function HomeScreen() {
           textColor={COLORS.blue}
           backgroundColor="#f8f7f4"
           borderColor={COLORS.pink}
-          //onPress={() => navigation.navigate("Signup")}
-          onPress={() => navigation.navigate("CopyAndPaste")}
+          onPress={() => navigation.navigate("Signup")}
+          //onPress={() => navigation.navigate("CopyAndPaste")}
         />
         <HomePageButton
           text="Sign In"
@@ -178,6 +179,7 @@ function App() {
         <Stack.Screen name="CopyAndPaste" component={CopyAndPasteScreen} />
         <Stack.Screen name="PasteListScreen" component={PasteListScreen} />
         <Stack.Screen name="ReviewPlaceScreen" component={ReviewPlaceScreen} />
+        <Stack.Screen name="MainScreen" component={MainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -31,7 +31,8 @@ export default function SigninScreen() {
         if (res.data.status === "ok") {
           Alert.alert("User logged in successfully");
           ////////////////add navigation to the next screen
-          navigation.navigate("FirstIntro");
+          //navigation.navigate("MainScreen", { username: id });
+          navigation.navigate("FirstIntro", { username: id });
         } else {
           Alert.alert(res.data.data);
         }

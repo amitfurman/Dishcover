@@ -8,27 +8,28 @@ import {
   Keyboard,
   Button,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import { useNavigation, useRoute } from "@react-navigation/native"; // Import useNavigation hook
 import axios from "axios";
 import qs from "qs";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation(); // useNavigation hook here
+  const route = useRoute();
+  const { fromScreen, username } = route.params;
   const [value, onChangeText] = useState("");
 
-  useEffect(() => {
+  /* useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => {
         // Add any additional actions when keyboard shows up
       }
     );
-
-    // Cleanup function
-    return () => {
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+*/
+  // Clear restaurantsText whenever fromScreen changes
+  useEffect(() => {
+    onChangeText("");
+  }, [fromScreen]);
 
   const handleClearTextButton = () => {
     if (value.trim() !== "") {
@@ -43,32 +44,62 @@ const CopyAndPasteScreen = () => {
       .filter((line) => line !== "");
 
     console.log("Sending data to server:", lines);
-    try {
-      const response = await axios.get("http://10.100.102.4:3000/image", {
-        params: { restaurantNames: lines },
-        paramsSerializer: (params) => {
-          return qs.stringify(params, { arrayFormat: "repeat" });
-        },
-      });
 
-      const { status, data } = response.data;
+    if (fromScreen === "FirstScreen") {
+      try {
+        const response = await axios.post(
+          "http://10.100.102.4:3000/placesUserVisit",
+          { username, placesVisited: [...new Set(lines)] }
+        );
 
-      if (status === "ok") {
-        console.log("Data received successfully:", data);
-        navigation.navigate("PasteListScreen", { data: data });
-      } else {
-        console.error("Error from server:", data);
+        const { status, data } = response.data;
+
+        if (status === "ok") {
+          console.log("Data received successfully:", data);
+          navigation.navigate("PasteListScreen", {
+            username: username,
+            data: data,
+          });
+        } else {
+          console.error("Error from server:", data);
+        }
+      } catch (error) {
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error("Server responded with an error:", error.response.data);
+        } else if (error.request) {
+          // Request was made but no response was received
+          console.error("No response received:", error.request);
+        } else {
+          // Something else happened in setting up the request
+          console.error("Error setting up the request:", error.message);
+        }
       }
-    } catch (error) {
-      if (error.response) {
-        // Server responded with a status other than 200 range
-        console.error("Server responded with an error:", error.response.data);
-      } else if (error.request) {
-        // Request was made but no response was received
-        console.error("No response received:", error.request);
-      } else {
-        // Something else happened in setting up the request
-        console.error("Error setting up the request:", error.message);
+    } else if (fromScreen === "SecondScreen") {
+      try {
+        const response = await axios.post(
+          "http://10.100.102.4:3000/placesUserWantToVisit",
+          { username, placesToVisit: [...new Set(lines)] }
+        );
+
+        const { status } = response.data;
+
+        if (status === "ok") {
+          navigation.navigate("MainScreen");
+        } else {
+          console.error("Error from server:", data);
+        }
+      } catch (error) {
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error("Server responded with an error:", error.response.data);
+        } else if (error.request) {
+          // Request was made but no response was received
+          console.error("No response received:", error.request);
+        } else {
+          // Something else happened in setting up the request
+          console.error("Error setting up the request:", error.message);
+        }
       }
     }
   };

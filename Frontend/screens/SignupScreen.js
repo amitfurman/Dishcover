@@ -45,7 +45,7 @@ export default function SignupScreen({ props }) {
         .then((res) => {
           if (res.data.status === "ok") {
             Alert.alert("User created successfully");
-            navigation.navigate("FirstIntro");
+            navigation.navigate("FirstIntro", { username: name });
           } else {
             Alert.alert(res.data.data);
           }

@@ -4,9 +4,11 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Button,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 function FirstIntroScreen() {
@@ -16,33 +18,49 @@ function FirstIntroScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.paginationContainer}>
-        <View style={styles.pagination}>
-          <View style={[styles.dot, styles.activeDot]} />
-          <View style={styles.dot} />
+      <View style={styles.card}>
+        <View style={styles.paginationContainer}>
+          <View style={styles.pagination}>
+            <View style={[styles.dot, styles.activeDot]} />
+            <View style={styles.dot} />
+          </View>
         </View>
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.titleText}>
-          Do you have a list of restaurants you've already visited?
-        </Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Yes, Copy & Paste List"
-          onPress={() =>
-            navigation.navigate("CopyAndPaste", {
-              fromScreen: "FirstScreen",
-              username: username,
-            })
-          }
-        />
-        <Button
-          title="Maybe Later"
-          onPress={() =>
-            navigation.navigate("SecondIntro", { username: username })
-          }
-        />
+        <View style={styles.contentContainer}>
+          <Text style={styles.titleText}>
+            Do you have a list of restaurants you've already visited?
+          </Text>
+        </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../assets/copyListFromIphone.png")}
+            style={styles.image}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.CopyAndPasteButton}
+            onPress={() =>
+              navigation.navigate("CopyAndPaste", {
+                fromScreen: "FirstScreen",
+                username: username,
+              })
+            }
+          >
+            <Text style={styles.CopyAndPasteButtonText}>
+              Yes, Copy & Paste List
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.maybeLaterButtonContainer}>
+          <TouchableOpacity
+            style={styles.maybeLaterButton}
+            onPress={() =>
+              navigation.navigate("SecondIntro", { username: username })
+            }
+          >
+            <Text style={styles.maybeLaterButtonText}>Maybe Later</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -53,11 +71,20 @@ export default FirstIntroScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.blue,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card: {
+    borderRadius: 20,
+    marginHorizontal: 20,
+    height: "80%",
+    width: "90%",
+    backgroundColor: COLORS.beige,
   },
   paginationContainer: {
     alignItems: "center",
-    marginTop: 100, // Adjust this value to move the dots higher or lower
+    marginTop: 80, // Adjust this value to move the dots higher or lower
   },
   pagination: {
     flexDirection: "row",
@@ -70,7 +97,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   activeDot: {
-    backgroundColor: "#000",
+    backgroundColor: COLORS.pink,
   },
   contentContainer: {
     flex: 1,
@@ -78,25 +105,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    fontFamily: "Cochin",
+    fontFamily: "Poppins_800ExtraBold",
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
-    padding: 20,
-  },
-  buttonContainer: {
-    paddingBottom: 100, // Adjust this value to move the buttons higher or lower
-    alignItems: "center",
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 11,
-    paddingHorizontal: 32,
-    borderRadius: 20, // Adjust this value to make the corners rounder
-    elevation: 3,
-    backgroundColor: "black",
-    marginBottom: 10, // Add margin bottom to create space between buttons
+    padding: 10,
+    lineHeight: 45,
   },
   text: {
     //fontFamily: 'Cochin',
@@ -105,5 +119,44 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+  },
+  CopyAndPasteButton: {
+    backgroundColor: COLORS.pink,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  maybeLaterButtonContainer: {
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  CopyAndPasteButtonText: {
+    fontFamily: "Poppins_500Medium",
+    color: "#fff",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  maybeLaterButtonText: {
+    fontFamily: "Poppins_700Bold",
+    color: COLORS.blue,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  image: {
+    height: "100%",
+    width: "100%",
+    resizeMode: "contain",
+  },
+  imageContainer: {
+    width: "100%",
+    height: "40%",
+    alignItems: "center",
   },
 });

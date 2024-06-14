@@ -7,7 +7,6 @@ import {
   Image,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 

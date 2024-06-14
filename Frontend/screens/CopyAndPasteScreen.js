@@ -9,34 +9,23 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native"; // Import useNavigation hook
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import qs from "qs";
 import { COLORS } from "../colors";
 
 const CopyAndPasteScreen = () => {
-  const navigation = useNavigation(); // useNavigation hook here
+  const navigation = useNavigation();
   const route = useRoute();
   const { fromScreen, username } = route.params;
-  const [value, onChangeText] = useState("");
+  const [value, setValue] = useState("");
 
-  /* useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        // Add any additional actions when keyboard shows up
-      }
-    );
-*/
-  // Clear restaurantsText whenever fromScreen changes
   useEffect(() => {
-    onChangeText("");
+    // Clear input value whenever fromScreen changes
+    setValue("");
   }, [fromScreen]);
 
   const handleClearTextButton = () => {
-    if (value.trim() !== "") {
-      setValue("");
-    }
+    setValue("");
   };
 
   const handleContinueButton = async () => {
@@ -45,13 +34,20 @@ const CopyAndPasteScreen = () => {
       .map((line) => line.trim())
       .filter((line) => line !== "");
 
-    console.log("Sending data to server:", lines);
+    // Extract only the restaurant names
+    const restaurantNames = lines
+      .map((item) => {
+        // Remove '- [ ] ' and trim whitespace
+        return item.replace(/- \[ \] /g, "").trim();
+      })
+      .filter((name) => name !== ""); // Filter out empty strings
+    console.log("Sending data to server:", restaurantNames);
 
     if (fromScreen === "FirstScreen") {
       try {
         const response = await axios.post(
           "http://10.100.102.4:3000/placesUserVisit",
-          { username, placesVisited: [...new Set(lines)] }
+          { username, placesVisited: [...new Set(restaurantNames)] }
         );
 
         const { status, data } = response.data;
@@ -66,16 +62,7 @@ const CopyAndPasteScreen = () => {
           console.error("Error from server:", data);
         }
       } catch (error) {
-        if (error.response) {
-          // Server responded with a status other than 200 range
-          console.error("Server responded with an error:", error.response.data);
-        } else if (error.request) {
-          // Request was made but no response was received
-          console.error("No response received:", error.request);
-        } else {
-          // Something else happened in setting up the request
-          console.error("Error setting up the request:", error.message);
-        }
+        handleError(error);
       }
     } else if (fromScreen === "SecondScreen") {
       try {
@@ -92,17 +79,18 @@ const CopyAndPasteScreen = () => {
           console.error("Error from server:", data);
         }
       } catch (error) {
-        if (error.response) {
-          // Server responded with a status other than 200 range
-          console.error("Server responded with an error:", error.response.data);
-        } else if (error.request) {
-          // Request was made but no response was received
-          console.error("No response received:", error.request);
-        } else {
-          // Something else happened in setting up the request
-          console.error("Error setting up the request:", error.message);
-        }
+        handleError(error);
       }
+    }
+  };
+
+  const handleError = (error) => {
+    if (error.response) {
+      console.error("Server responded with an error:", error.response.data);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up the request:", error.message);
     }
   };
 
@@ -121,7 +109,7 @@ const CopyAndPasteScreen = () => {
             multiline
             numberOfLines={50}
             maxLength={500}
-            onChangeText={handleTextChange}
+            onChangeText={setValue}
             value={value}
             placeholder={
               "Paste your list here! \nOne restaurant per line.\n\nFor example:\nEmesh\nMalka"

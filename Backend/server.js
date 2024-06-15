@@ -75,6 +75,8 @@ app.get("/checkUserByEmail", async (req, res) => {
 app.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
+  console.log("Received signup request:", req.body);
+
   const encryptedPassword = await bcrypt.hash(password, 10);
 
   try {

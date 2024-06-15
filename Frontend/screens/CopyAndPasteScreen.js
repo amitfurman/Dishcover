@@ -13,6 +13,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS } from "../colors";
 
+const url = "http://10.100.102.4:3000";
+//const url = "http://192.168.68.111:3000";
+
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -45,10 +48,10 @@ const CopyAndPasteScreen = () => {
 
     if (fromScreen === "FirstScreen") {
       try {
-        const response = await axios.post(
-          "http://10.100.102.4:3000/placesUserVisit",
-          { username, placesVisited: [...new Set(restaurantNames)] }
-        );
+        const response = await axios.post(`${url}/placesUserVisit`, {
+          username,
+          placesVisited: [...new Set(restaurantNames)],
+        });
 
         const { status, data } = response.data;
 
@@ -66,10 +69,10 @@ const CopyAndPasteScreen = () => {
       }
     } else if (fromScreen === "SecondScreen") {
       try {
-        const response = await axios.post(
-          "http://10.100.102.4:3000/placesUserWantToVisit",
-          { username, placesToVisit: [...new Set(lines)] }
-        );
+        const response = await axios.post(`${url}/placesUserWantToVisit`, {
+          username,
+          placesToVisit: [...new Set(lines)],
+        });
 
         const { status } = response.data;
 

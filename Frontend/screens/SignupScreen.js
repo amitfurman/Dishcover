@@ -18,8 +18,7 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-//const url = "http://79.178.113.127:3000";
-const url = "http://10.100.102.4:3000";
+const url = "http://192.168.68.111:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -88,7 +87,7 @@ export default function SignupScreen({ props }) {
         if (res.data.exists) {
           // Name already exists in the database
           setNameVerified(false);
-          setNameError("Name already exists in the database");
+          setNameError("😅 Username already taken. Try another one!");
         }
       })
       .catch((error) => {
@@ -117,7 +116,7 @@ export default function SignupScreen({ props }) {
         if (res.data.exists) {
           // Email already exists in the database
           setEmailVerified(false);
-          setEmailError("Email already exists in the database");
+          setEmailError("Email already registered. You might have an account");
         }
       })
       .catch((error) => {
@@ -309,25 +308,25 @@ export default function SignupScreen({ props }) {
 const styles = StyleSheet.create({
   button: {
     width: "100%",
-    padding: 12, // converted p-3 to 12 for padding in React Native
-    borderRadius: 20, // rounded-2xl roughly converts to 20 in React Native
+    padding: 12,
+    borderRadius: 20, 
     backgroundColor: COLORS.blue,
-    marginBottom: 12, // mb-3 converts to 12 for margin in React Native
+    marginBottom: 12, 
   },
   buttonText: {
-    fontSize: 18, // text-lg converts to 18 in React Native
+    fontSize: 18,
     textAlign: "center",
-    color: "#f8f7f4", // assuming you want white text for contrast
+    color: "#f8f7f4", 
   },
   createAcountText: {
-    fontSize: 30, // text-2xl converts to 24 in React Native
-    fontWeight: "bold", // font-bold converts to bold in React Native
-    color: COLORS.pink, // assuming you want blue text for contrast
+    fontSize: 30, 
+    fontWeight: "bold", 
+    color: COLORS.pink, 
   },
   errorContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFE6E6", // Light red background color for the error message
+    backgroundColor: "#FFE6E6",
     borderRadius: 5,
     padding: 5,
     marginBottom: 10,

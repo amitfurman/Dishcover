@@ -6,12 +6,12 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../colors";
+import LottieView from 'lottie-react-native';
 
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute();
   const { username } = route.params;
 
   return (
@@ -19,18 +19,27 @@ const SecondIntroScreen = () => {
       <View style={styles.card}>
         <View style={styles.paginationContainer}>
           <View style={styles.pagination}>
+            <View style={[styles.dot]} />
             <View style={[styles.dot, styles.activeDot]} />
-            <View style={styles.dot} />
           </View>
         </View>
         <View style={styles.contentContainer}>
           <Text style={styles.titleText}>
-            Do you have a list of restaurants you've already visited?
+            Got a list of restaurants you'd like to visit?
           </Text>
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={styles.animationContainer}>
+          
+          <LottieView
+            source={require('../assets/swipe.json')}
+            autoPlay
+            loop
+            style={styles.animation}
+          />
+        </View>
+        <View style={styles.buttonRow}>
           <TouchableOpacity
-            style={styles.CopyAndPasteButton}
+            style={[styles.button, styles.CopyAndPasteButton]}
             onPress={() =>
               navigation.navigate("CopyAndPaste", {
                 fromScreen: "SecondScreen",
@@ -38,21 +47,17 @@ const SecondIntroScreen = () => {
               })
             }
           >
-            <Text style={styles.CopyAndPasteButtonText}>
-              Yes, Copy & Paste List
-            </Text>
+            <Text style={styles.buttonText}>Paste List</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={styles.CopyAndPasteButton}
+            style={[styles.button, styles.CopyAndPasteButton]}
             onPress={() =>
               navigation.navigate("SwipeRestaurants", {
                 username: username,
               })
             }
           >
-            <Text style={styles.CopyAndPasteButtonText}>Yes, Swipe</Text>
+            <Text style={styles.buttonText}>Swipe</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.maybeLaterButtonContainer}>
@@ -70,8 +75,6 @@ const SecondIntroScreen = () => {
   );
 };
 
-export default SecondIntroScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -85,10 +88,11 @@ const styles = StyleSheet.create({
     height: "80%",
     width: "90%",
     backgroundColor: COLORS.beige,
+    overflow: "hidden", // Ensure the overlays do not overflow the card
   },
   paginationContainer: {
     alignItems: "center",
-    marginTop: 80, // Adjust this value to move the dots higher or lower
+    marginTop: 80,
   },
   pagination: {
     flexDirection: "row",
@@ -116,36 +120,40 @@ const styles = StyleSheet.create({
     padding: 10,
     lineHeight: 45,
   },
-  text: {
-    //fontFamily: 'Cochin',
-    fontSize: 16,
-    lineHeight: 15,
-    fontWeight: "bold",
-    letterSpacing: 0.25,
-    color: "white",
+  animationContainer: {
+    width: "100%",
+    height: "40%",
+    alignItems: "center",
+  },
+  animation: {
+    width: "100%",
+    height: "100%",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
   CopyAndPasteButton: {
     backgroundColor: COLORS.pink,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 10,
-    marginBottom: 10,
+    marginHorizontal: 10,
   },
-  buttonContainer: {
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
+  buttonText: {
+    fontFamily: "Poppins_500Medium",
+    color: "#fff",
+    fontSize: 18,
+    textAlign: "center",
   },
   maybeLaterButtonContainer: {
     alignItems: "center",
     marginBottom: 30,
-  },
-  CopyAndPasteButtonText: {
-    fontFamily: "Poppins_500Medium",
-    color: "#fff",
-    fontSize: 20,
-    textAlign: "center",
   },
   maybeLaterButtonText: {
     fontFamily: "Poppins_700Bold",
@@ -154,3 +162,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default SecondIntroScreen;

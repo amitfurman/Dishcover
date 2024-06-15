@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
+import qs from "qs";
 import { COLORS } from "../colors";
 
 const url = "http://10.100.102.4:3000";
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     width: "100%",
+    minHeight: 150,
     padding: 10,
     borderColor: COLORS.black,
     borderWidth: 1,

@@ -12,8 +12,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native"; /
 import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
 
-//const url = "http://79.178.113.127:3000";
-const url = "http://10.100.102.4:3000";
+const url = "http://192.168.68.111:3000";
 
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here

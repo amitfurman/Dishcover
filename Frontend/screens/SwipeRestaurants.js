@@ -7,9 +7,9 @@ import {
   Dimensions,
   PanResponder,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { StatusBar } from "expo-status-bar";
 import { restaurants as restaurantsArray } from "../data";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
@@ -17,6 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import CardBack from "../components/CardBack";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { COLORS } from "../colors";
 
 export default function SwipeRestaurants() {
   const route = useRoute();
@@ -138,7 +139,7 @@ export default function SwipeRestaurants() {
   });
 
   return (
-    <LinearGradient colors={["#ffffff", "#ffffff"]} style={styles.background}>
+    <LinearGradient colors={[COLORS.blue, COLORS.blue]} style={styles.background}>
       <View style={styles.container}>
         <StatusBar style="auto" />
         {restaurants
@@ -154,7 +155,7 @@ export default function SwipeRestaurants() {
                     <MaterialCommunityIcons
                       name="swap-horizontal"
                       size={32}
-                      color="#010057"
+                      color={COLORS.beige}
                     />
                   </TouchableOpacity>
                 </Animated.View>
@@ -222,6 +223,7 @@ export default function SwipeRestaurants() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+    opacity: 0.7,
   },
   container: {
     flex: 1,

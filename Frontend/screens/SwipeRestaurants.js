@@ -223,7 +223,6 @@ export default function SwipeRestaurants() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    opacity: 0.7,
   },
   container: {
     flex: 1,

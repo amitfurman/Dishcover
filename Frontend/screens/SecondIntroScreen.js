@@ -6,12 +6,13 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from "../colors";
 import LottieView from 'lottie-react-native';
 
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const { username } = route.params;
 
   return (

@@ -14,8 +14,8 @@ import axios from "axios";
 import qs from "qs";
 import { COLORS } from "../colors";
 
-const url = "http://10.100.102.4:3000";
-//const url = "http://192.168.68.111:3000";
+// const url = "http://10.100.102.4:3000";
+const url = "http://192.168.68.111:3000";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();

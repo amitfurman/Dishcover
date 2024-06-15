@@ -7,11 +7,13 @@ import {
   Image,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../colors";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 function FirstIntroScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { username } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,20 +30,32 @@ function FirstIntroScreen() {
           </Text>
         </View>
         <View style={styles.imageContainer}>
-            <Image source={require("../assets/copyListFromIphone.png")} style={styles.image} />
+          <Image
+            source={require("../assets/copyListFromIphone.png")}
+            style={styles.image}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.CopyAndPasteButton}
-            onPress={() => navigation.navigate("CopyAndPaste")}
+            onPress={() =>
+              navigation.navigate("CopyAndPaste", {
+                fromScreen: "FirstScreen",
+                username: username,
+              })
+            }
           >
-            <Text style={styles.CopyAndPasteButtonText}>Yes, Copy & Paste List</Text>
+            <Text style={styles.CopyAndPasteButtonText}>
+              Yes, Copy & Paste List
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.maybeLaterButtonContainer}>
           <TouchableOpacity
             style={styles.maybeLaterButton}
-            onPress={() => navigation.navigate("SecondIntro")}
+            onPress={() =>
+              navigation.navigate("SecondIntro", { username: username })
+            }
           >
             <Text style={styles.maybeLaterButtonText}>Maybe Later</Text>
           </TouchableOpacity>
@@ -120,19 +134,19 @@ const styles = StyleSheet.create({
   },
   maybeLaterButtonContainer: {
     alignItems: "center",
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   CopyAndPasteButtonText: {
-    fontFamily: 'Poppins_500Medium',
-    color: '#fff',
+    fontFamily: "Poppins_500Medium",
+    color: "#fff",
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   maybeLaterButtonText: {
-    fontFamily: 'Poppins_700Bold',
+    fontFamily: "Poppins_700Bold",
     color: COLORS.blue,
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
   image: {
     height: "100%",
@@ -143,6 +157,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "40%",
     alignItems: "center",
-
   },
 });

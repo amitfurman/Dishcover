@@ -114,6 +114,91 @@ app.post("/signin", async (req, res) => {
   }
 });
 
+app.post("/placesUserVisit", async (req, res) => {
+  const { username, placesVisited } = req.body;
+  console.log(`Received request for restaurants: ${placesVisited}`);
+  console.log(`UserId: ${username}`);
+
+  try {
+    // Save placesVisited to user collection
+    const updatedUser = await User.findOneAndUpdate(
+      { name: username },
+      { $addToSet: { placesVisited: { $each: placesVisited } } }, // Use $addToSet to ensure uniqueness
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send({ status: "error", data: "User not found" });
+    }
+    const restaurantsDataFromDB = await Restaurants.find(
+      {
+        name: { $in: placesVisited },
+      },
+      { name: 1, mainImage: 1 }
+    );
+
+    /////////////////////////////////////////////////
+    const foundRestaurants = restaurantsDataFromDB.map(
+      (restaurant) => restaurant.name
+    );
+    console.log("foundRestaurants", foundRestaurants);
+
+    const missingRestaurants = restaurantsDataFromDB.filter(
+      (name) => !foundRestaurants.includes(name)
+    );
+    console.log("missingRestaurants", missingRestaurants);
+    /////////////////////////////////////////////////
+
+    if (restaurantsDataFromDB.length > 0) {
+      console.log(
+        `Returning data for restaurants: ${restaurantsDataFromDB
+          .map((restaurant) => restaurant.name)
+          .join(", ")}`
+      );
+      res.send({ status: "ok", data: restaurantsDataFromDB });
+    } else {
+      res.status(404).send({
+        status: "error",
+        data: "No listings found with the given names.",
+      });
+    }
+  } catch (e) {
+    res.status(500).send({
+      status: "error",
+      data: e.message,
+    });
+  }
+});
+
+app.post("/placesUserWantToVisit", async (req, res) => {
+  const { username, placesToVisit } = req.body;
+  console.log(`Received request for restaurants: ${placesToVisit}`);
+  console.log(`UserId: ${username}`);
+
+  try {
+    // Save placesToVisit to user collection
+    const updatedUser = await User.findOneAndUpdate(
+      { name: username },
+      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).send({ status: "error", data: "User not found" });
+    }
+    res.send({ status: "ok" });
+  } catch (e) {
+    res.status(500).send({
+      status: "error",
+      data: e.message,
+    });
+  }
+});
+/*
+const axios = require("axios");
+const cheerio = require("cheerio");
+const puppeteer = require("puppeteer");
+
 app.get("/image", async (req, res) => {
   const { restaurantNames } = req.query;
   console.log(`Received request for restaurants: ${restaurantNames}`);
@@ -129,12 +214,12 @@ app.get("/image", async (req, res) => {
     const foundRestaurants = restaurantsDataFromDB.map(
       (restaurant) => restaurant.name
     );
-    console.log("foundRestaurants", foundRestaurants);
+    console.log("foundRestaurants:", foundRestaurants);
 
     const missingRestaurants = restaurantNames.filter(
       (name) => !foundRestaurants.includes(name)
     );
-    console.log("missingRestaurants", missingRestaurants);
+    console.log("missingRestaurants:", missingRestaurants);
 
     const missingRestaurantsData = [];
 
@@ -143,10 +228,52 @@ app.get("/image", async (req, res) => {
       token: MY_APIFY_TOKEN,
     });
 
+    // Function to search TripAdvisor for the restaurant URL using Puppeteer
+    const findTripAdvisorURL = async (restaurantName) => {
+      let browser;
+      try {
+        browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        const searchUrl = `https://www.tripadvisor.com/Search?q=${encodeURIComponent(
+          restaurantName
+        )}`;
+        console.log(`Searching for ${restaurantName} at ${searchUrl}`);
+        await page.goto(searchUrl, { waitUntil: "networkidle2" });
+
+        // Log the HTML of the search results for debugging
+        const html = await page.content();
+        console.log(`HTML content for ${restaurantName}:`, html);
+
+        // Extract the URL of the first search result
+        const firstResult = await page.evaluate(() => {
+          const link = document.querySelector("a.result-title"); // Update this selector based on the actual HTML structure
+          return link ? link.href : null;
+        });
+
+        await browser.close();
+        console.log(`Found URL for ${restaurantName}: ${firstResult}`);
+        return firstResult;
+      } catch (error) {
+        if (browser) {
+          await browser.close();
+        }
+        console.error(
+          `Error searching for ${restaurantName}: ${error.message}`
+        );
+        return null;
+      }
+    };
+
     // Fetch data for missing restaurants from the API
     await Promise.all(
       missingRestaurants.map(async (name) => {
         try {
+          const tripAdvisorUrl = await findTripAdvisorURL(name);
+          if (!tripAdvisorUrl) {
+            console.log(`No URL found for ${name}`);
+            return;
+          }
+
           const input = {
             currency: "ILS",
             includeDescription: false,
@@ -161,7 +288,7 @@ app.get("/image", async (req, res) => {
             maxItemsPerQuery: 1,
             startUrls: [
               {
-                url: "https://www.tripadvisor.com/Restaurant_Review-g293984-d4071520-Reviews-Night_Kitchen_TLV-Tel_Aviv_Tel_Aviv_District.html",
+                url: tripAdvisorUrl,
               },
             ],
             checkInDate: "",
@@ -169,21 +296,22 @@ app.get("/image", async (req, res) => {
           };
 
           const run = await client.actor("maxcopell/tripadvisor").call(input);
+          console.log(`Run ID for ${name}: ${run.id}`);
+
           const { items } = await client
             .dataset(run.defaultDatasetId)
             .listItems();
 
-          console.log("items", items);
+          console.log(`Items for ${name}:`, items);
           if (items && items.length > 0) {
             // Assuming the first item contains the restaurant data
-            console.log("items[0]", items[0]);
             const restaurantData = items[0];
 
             // Extract the image URL from the restaurant data
             const id = restaurantData.id;
             const imageUrl = restaurantData.image;
             missingRestaurantsData.push({ name, image: imageUrl, id: id });
-            console.log("missingRestaurantsData", missingRestaurantsData);
+            console.log(`Data for ${name}:`, { name, image: imageUrl, id: id });
           }
         } catch (error) {
           console.error(
@@ -197,7 +325,7 @@ app.get("/image", async (req, res) => {
       ...restaurantsDataFromDB,
       ...missingRestaurantsData,
     ];
-    console.log("allRestaurantsData", allRestaurantsData);
+    console.log("allRestaurantsData:", allRestaurantsData);
 
     if (allRestaurantsData.length > 0) {
       console.log(
@@ -213,14 +341,17 @@ app.get("/image", async (req, res) => {
       });
     }
   } catch (e) {
+    console.error(`Error in /image endpoint: ${e.message}`);
     res.send({
       status: "error",
       data: e.message,
     });
   }
 });
+*/
 
 /*
+//14/06
 app.get("/image", async (req, res) => {
   const { restaurantNames } = req.query;
   console.log(`Received request for restaurants: ${restaurantNames}`);
@@ -285,7 +416,6 @@ app.get("/image", async (req, res) => {
             // Assuming the first item contains the restaurant data
             console.log("items[0]", items[0]);
             const restaurantData = items[0];
-
 
             // Extract the image URL from the restaurant data
             const id = restaurantData.id;

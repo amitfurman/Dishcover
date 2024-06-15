@@ -7,7 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Modal
+  Modal,
 } from "react-native";
 import { React, useState } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
@@ -50,10 +50,11 @@ export default function SignupScreen({ props }) {
             setModalVisible(true);
             setTimeout(() => {
               setModalVisible(false);
-              navigation.navigate("FirstIntro");
+              navigation.navigate("FirstIntro", { username: name });
             }, 2000); // Close the modal after 2 seconds          } else {
-              setModalMessage(res.data.data);
-              setModalVisible(true);          }
+            setModalMessage(res.data.data);
+            setModalVisible(true);
+          }
         })
         .catch((e) => {
           setModalMessage(e.message);
@@ -61,7 +62,8 @@ export default function SignupScreen({ props }) {
         });
     } else {
       setModalMessage("Please fill all the mandatory details");
-      setModalVisible(true);    }
+      setModalVisible(true);
+    }
   }
 
   function checkIfNameValid(e) {
@@ -338,7 +340,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.3)",
-    
   },
   modalContainer: {
     width: "80%",
@@ -346,7 +347,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

@@ -9,27 +9,23 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import qs from "qs";
 import { COLORS } from "../colors";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { fromScreen, username } = route.params;
   const [value, setValue] = useState("");
 
-  const handleTextChange = (text) => {
-    const cleanedText = text
-      .split("\n")
-      .map((line) => line.replace(/^\s*-\s*\[\s*[x ]\s*\]\s*/, "").trim())
-      .join("\n");
-    setValue(cleanedText);
-  };
+  useEffect(() => {
+    // Clear input value whenever fromScreen changes
+    setValue("");
+  }, [fromScreen]);
 
   const handleClearTextButton = () => {
-    if (value.trim() !== "") {
-      setValue("");
-    }
+    setValue("");
   };
 
   const handleContinueButton = async () => {
@@ -40,29 +36,54 @@ const CopyAndPasteScreen = () => {
 
     console.log("Sending data to server:", lines);
     try {
-      const response = await axios.get("http://192.168.68.111:3000/image", {
+      const response = await axios.get("http://79.178.113.127:3000/image", {
         params: { restaurantNames: lines },
         paramsSerializer: (params) => {
           return qs.stringify(params, { arrayFormat: "repeat" });
         },
       });
 
-      const { status, data } = response.data;
+        const { status, data } = response.data;
 
-      if (status === "ok") {
-        console.log("Data received successfully:", data);
-        navigation.navigate("PasteListScreen", { data: data });
-      } else {
-        console.error("Error from server:", data);
+        if (status === "ok") {
+          console.log("Data received successfully:", data);
+          navigation.navigate("PasteListScreen", {
+            username: username,
+            data: data,
+          });
+        } else {
+          console.error("Error from server:", data);
+        }
+      } catch (error) {
+        handleError(error);
       }
-    } catch (error) {
-      if (error.response) {
-        console.error("Server responded with an error:", error.response.data);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error setting up the request:", error.message);
+    } else if (fromScreen === "SecondScreen") {
+      try {
+        const response = await axios.post(
+          "http://10.100.102.4:3000/placesUserWantToVisit",
+          { username, placesToVisit: [...new Set(lines)] }
+        );
+
+        const { status } = response.data;
+
+        if (status === "ok") {
+          navigation.navigate("MainScreen");
+        } else {
+          console.error("Error from server:", data);
+        }
+      } catch (error) {
+        handleError(error);
       }
+    }
+  };
+
+  const handleError = (error) => {
+    if (error.response) {
+      console.error("Server responded with an error:", error.response.data);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up the request:", error.message);
     }
   };
 
@@ -81,7 +102,7 @@ const CopyAndPasteScreen = () => {
             multiline
             numberOfLines={50}
             maxLength={500}
-            onChangeText={handleTextChange}
+            onChangeText={setValue}
             value={value}
             placeholder={
               "Paste your list here! \nOne restaurant per line.\n\nFor example:\nEmesh\nMalka"

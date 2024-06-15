@@ -13,10 +13,10 @@ import { COLORS } from "../colors";
 
 const PasteListScreen = ({ route }) => {
   const navigation = useNavigation();
-  const { data } = route.params;
+  const { username, data } = route.params;
 
   const handleContinueButton = () => {
-    // Implement continue button handling logic here
+    navigation.navigate("SecondIntro", { username: username });
   };
 
   const handleReviewButton = (restaurant) => {
@@ -38,7 +38,7 @@ const PasteListScreen = ({ route }) => {
           {data.map((restaurant, index) => (
             <View key={index} style={styles.restaurantContainer}>
               <Image
-                source={{ uri: restaurant.image }}
+                source={{ uri: restaurant.mainImage }}
                 style={styles.restaurantImage}
               />
               <View style={styles.restaurantDetails}>

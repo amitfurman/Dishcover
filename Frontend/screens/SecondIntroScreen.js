@@ -8,12 +8,11 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../colors";
-import { LinearGradient } from "expo-linear-gradient";
 import LottieView from 'lottie-react-native';
 
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
-  const { username } = "AMIT"; // Replace with your username logic or route params
+  const { username } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,13 +124,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "40%",
     alignItems: "center",
-
-
   },
   animation: {
     width: "100%",
     height: "100%",
-    // backgroundColor: COLORS.black,
   },
   buttonRow: {
     flexDirection: "row",

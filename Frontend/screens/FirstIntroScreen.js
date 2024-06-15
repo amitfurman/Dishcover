@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS } from "../colors";
@@ -17,6 +18,7 @@ function FirstIntroScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
       <View style={styles.card}>
         <View style={styles.paginationContainer}>
           <View style={styles.pagination}>

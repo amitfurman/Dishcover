@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
+import qs from "qs";
 import { COLORS } from "../colors";
 
 const CopyAndPasteScreen = () => {
@@ -36,7 +37,7 @@ const CopyAndPasteScreen = () => {
 
     console.log("Sending data to server:", lines);
     try {
-      const response = await axios.get("http://79.178.113.127:3000/image", {
+      const response = await axios.get("http://192.168.68.111:3000/image", {
         params: { restaurantNames: lines },
         paramsSerializer: (params) => {
           return qs.stringify(params, { arrayFormat: "repeat" });
@@ -57,25 +58,27 @@ const CopyAndPasteScreen = () => {
       } catch (error) {
         handleError(error);
       }
-    } else if (fromScreen === "SecondScreen") {
-      try {
-        const response = await axios.post(
-          "http://10.100.102.4:3000/placesUserWantToVisit",
-          { username, placesToVisit: [...new Set(lines)] }
-        );
+    }  
+    ////****** */
+  //   if (fromScreen === "SecondScreen") {
+  //     try {
+  //       const response = await axios.post(
+  //         "http://10.100.102.4:3000/placesUserWantToVisit",
+  //         { username, placesToVisit: [...new Set(lines)] }
+  //       );
 
-        const { status } = response.data;
+  //       const { status } = response.data;
 
-        if (status === "ok") {
-          navigation.navigate("MainScreen");
-        } else {
-          console.error("Error from server:", data);
-        }
-      } catch (error) {
-        handleError(error);
-      }
-    }
-  };
+  //       if (status === "ok") {
+  //         navigation.navigate("MainScreen");
+  //       } else {
+  //         console.error("Error from server:", data);
+  //       }
+  //     } catch (error) {
+  //       handleError(error);
+  //     }
+  //   }
+  // };
 
   const handleError = (error) => {
     if (error.response) {
@@ -159,6 +162,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     width: "100%",
+    minHeight: 150,
     padding: 10,
     borderColor: COLORS.black,
     borderWidth: 1,

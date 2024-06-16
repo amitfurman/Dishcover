@@ -9,6 +9,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { RatingInput } from "react-native-stock-star-rating";
 import { COLORS } from "../colors";
@@ -34,69 +36,74 @@ function ReviewPlaceScreen({ route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <ScrollView contentContainerStyle={styles.contentContainer}>
-          <View style={styles.header}>
-            <Text style={styles.headerText}>
-              What Was Your Experience Like at {data.name}? Share With Us!
-            </Text>
-          </View>
-          <View style={styles.ratingContainer}>
-            <Text style={styles.label}>Food:</Text>
-            <RatingInput
-              rating={foodRating}
-              setRating={setFoodRating}
-              size={35}
-              maxStars={5}
-              bordered={false}
-            />
-            <Text style={styles.label}>Service:</Text>
-            <RatingInput
-              rating={serviceRating}
-              setRating={setServiceRating}
-              size={35}
-              maxStars={5}
-              bordered={false}
-            />
-            <Text style={styles.label}>Cleanliness:</Text>
-            <RatingInput
-              rating={cleanlinessRating}
-              setRating={setCleanlinessRating}
-              size={35}
-              maxStars={5}
-              bordered={false}
-            />
-            <Text style={styles.label}>Vibes:</Text>
-            <RatingInput
-              rating={vibesRating}
-              setRating={setVibesRating}
-              size={35}
-              maxStars={5}
-              bordered={false}
-            />
-            <Text style={styles.label}>Additional Comments:</Text>
-            <TextInput
-              style={styles.textInput}
-              editable
-              multiline
-              numberOfLines={8}
-              maxLength={200}
-              onChangeText={setAdditionalComments}
-              value={additionalComments}
-              placeholder={"Share your experience here!"}
-              placeholderTextColor={COLORS.blue} // Placeholder color changed to blue
-            />
-          </View>
-          <TouchableOpacity style={styles.button} onPress={handleSubmitButton}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.container}>
+          <ScrollView contentContainerStyle={styles.contentContainer}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>
+                What Was Your Experience Like at {data.name}? Share With Us!
+              </Text>
+            </View>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.label}>Food:</Text>
+              <RatingInput
+                rating={foodRating}
+                setRating={setFoodRating}
+                size={35}
+                maxStars={5}
+                bordered={false}
+              />
+              <Text style={styles.label}>Service:</Text>
+              <RatingInput
+                rating={serviceRating}
+                setRating={setServiceRating}
+                size={35}
+                maxStars={5}
+                bordered={false}
+              />
+              <Text style={styles.label}>Cleanliness:</Text>
+              <RatingInput
+                rating={cleanlinessRating}
+                setRating={setCleanlinessRating}
+                size={35}
+                maxStars={5}
+                bordered={false}
+              />
+              <Text style={styles.label}>Vibes:</Text>
+              <RatingInput
+                rating={vibesRating}
+                setRating={setVibesRating}
+                size={35}
+                maxStars={5}
+                bordered={false}
+              />
+              <Text style={styles.label}>Additional Comments:</Text>
+              <TextInput
+                style={styles.textInput}
+                editable
+                multiline
+                numberOfLines={8}
+                maxLength={200}
+                onChangeText={setAdditionalComments}
+                value={additionalComments}
+                placeholder={"Share your experience here!"}
+                placeholderTextColor={COLORS.blue} // Placeholder color changed to blue
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmitButton}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginBottom: 10,
     backgroundColor: COLORS.white,
-    lineHeight: 60,
+    height: 100, // Ensures the TextInput is large enough for multiple lines
   },
   button: {
     width: "100%",

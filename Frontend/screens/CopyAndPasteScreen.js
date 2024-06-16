@@ -8,14 +8,15 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Platform,
+  Alert,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import qs from "qs";
 import { COLORS } from "../colors";
 
-// const url = "http://10.100.102.4:3000";
-const url = "http://192.168.68.111:3000";
+const url = "http://10.100.102.4:3000";
+//const url = "http://192.168.68.111:3000";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
@@ -66,7 +67,18 @@ const CopyAndPasteScreen = () => {
           console.error("Error from server:", data);
         }
       } catch (error) {
-        handleError(error);
+        if (
+          error.response.data.data == "No listings found with the given names."
+        ) {
+          Alert.alert(
+            "The restaurant you entered is not in the database right now,\n but we work hard to add new restaurants every day. \n Please try again later."
+          );
+          navigation.navigate("SecondIntro", {
+            username: username,
+          });
+        } else {
+          handleError(error);
+        }
       }
     } else if (fromScreen === "SecondScreen") {
       try {

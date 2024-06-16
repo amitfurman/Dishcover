@@ -143,7 +143,7 @@ app.post("/placesUserVisit", async (req, res) => {
     );
     console.log("foundRestaurants", foundRestaurants);
 
-    const missingRestaurants = restaurantsDataFromDB.filter(
+    const missingRestaurants = placesVisited.filter(
       (name) => !foundRestaurants.includes(name)
     );
     console.log("missingRestaurants", missingRestaurants);
@@ -194,29 +194,35 @@ app.post("/placesUserWantToVisit", async (req, res) => {
     });
   }
 });
+
 /*
 const axios = require("axios");
 const cheerio = require("cheerio");
 const puppeteer = require("puppeteer");
 
-app.get("/image", async (req, res) => {
-  const { restaurantNames } = req.query;
-  console.log(`Received request for restaurants: ${restaurantNames}`);
+app.get("/placesUserWantToVisit", async (req, res) => {
+  const { username, placesToVisit } = req.body;
+  console.log(`Received request for places to visit: ${placesToVisit}`);
 
   try {
-    const restaurantsDataFromDB = await Restaurants.find(
-      {
-        name: { $in: restaurantNames },
-      },
-      { name: 1, image: 1 }
+    // Save placesToVisit to user collection
+    const updatedUser = await User.findOneAndUpdate(
+      { name: username },
+      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
+      { new: true }
     );
 
+    if (!updatedUser) {
+      return res.status(404).send({ status: "error", data: "User not found" });
+    }
+
+    const restaurantsDataFromDB = await getRestaurantsDataFromDB(); // Assuming this is a function that fetches data from your DB
     const foundRestaurants = restaurantsDataFromDB.map(
       (restaurant) => restaurant.name
     );
     console.log("foundRestaurants:", foundRestaurants);
 
-    const missingRestaurants = restaurantNames.filter(
+    const missingRestaurants = placesToVisit.filter(
       (name) => !foundRestaurants.includes(name)
     );
     console.log("missingRestaurants:", missingRestaurants);
@@ -225,7 +231,7 @@ app.get("/image", async (req, res) => {
 
     // Initialize the ApifyClient with your Apify API token
     const client = new ApifyClient({
-      token: MY_APIFY_TOKEN,
+      token: process.env.MY_APIFY_TOKEN,
     });
 
     // Function to search TripAdvisor for the restaurant URL using Puppeteer
@@ -272,6 +278,8 @@ app.get("/image", async (req, res) => {
           if (!tripAdvisorUrl) {
             console.log(`No URL found for ${name}`);
             return;
+          } else {
+            console.log(`URL found for ${name}: ${tripAdvisorUrl}`);
           }
 
           const input = {
@@ -341,8 +349,7 @@ app.get("/image", async (req, res) => {
       });
     }
   } catch (e) {
-    console.error(`Error in /image endpoint: ${e.message}`);
-    res.send({
+    res.status(500).send({
       status: "error",
       data: e.message,
     });

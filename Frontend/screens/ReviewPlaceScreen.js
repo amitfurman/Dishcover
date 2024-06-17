@@ -12,8 +12,21 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { RatingInput } from "react-native-stock-star-rating";
 import { COLORS } from "../colors";
+import { FontAwesome5 } from "@expo/vector-icons"; 
+import RatingInput from "../components/RatingInput"; 
+
+import burgerFull from '../assets/symbols/burgerFull.png'; 
+import burgerEmpty from '../assets/symbols/burgerEmpty.png'; 
+
+import serviceFull from '../assets/symbols/serviceFull.png';
+import serviceEmpty from '../assets/symbols/serviceEmpty.png'; 
+
+import cleanlinessFull from '../assets/symbols/cleanlinessFull.png'; 
+import cleanlinessEmpty from '../assets/symbols/cleanlinessEmpty.png'; 
+
+import vibesFull from '../assets/symbols/vibesFull.png'; 
+import vibesEmpty from '../assets/symbols/vibesEmpty.png'; 
 
 function ReviewPlaceScreen({ route }) {
   const { data } = route.params;
@@ -33,7 +46,10 @@ function ReviewPlaceScreen({ route }) {
       additionalComments,
     };
     console.log("Ratings submitted:", ratings);
+    alert("Thank you for your review!");
+
   };
+
 
   return (
     <KeyboardAvoidingView
@@ -45,7 +61,7 @@ function ReviewPlaceScreen({ route }) {
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={styles.header}>
               <Text style={styles.headerText}>
-                What Was Your Experience Like at {data.name}? Share With Us!
+              How was your experience at {data.name}? Share with us! 🌟
               </Text>
             </View>
             <View style={styles.ratingContainer}>
@@ -53,33 +69,29 @@ function ReviewPlaceScreen({ route }) {
               <RatingInput
                 rating={foodRating}
                 setRating={setFoodRating}
-                size={35}
-                maxStars={5}
-                bordered={false}
+                fullImage={burgerFull}
+                emptyImage={burgerEmpty}
               />
               <Text style={styles.label}>Service:</Text>
               <RatingInput
                 rating={serviceRating}
                 setRating={setServiceRating}
-                size={35}
-                maxStars={5}
-                bordered={false}
+                fullImage={serviceFull}
+                emptyImage={serviceEmpty}
               />
               <Text style={styles.label}>Cleanliness:</Text>
               <RatingInput
                 rating={cleanlinessRating}
                 setRating={setCleanlinessRating}
-                size={35}
-                maxStars={5}
-                bordered={false}
+                fullImage={cleanlinessFull}
+                emptyImage={cleanlinessEmpty}
               />
               <Text style={styles.label}>Vibes:</Text>
               <RatingInput
                 rating={vibesRating}
                 setRating={setVibesRating}
-                size={35}
-                maxStars={5}
-                bordered={false}
+                fullImage={vibesFull}
+                emptyImage={vibesEmpty}
               />
               <Text style={styles.label}>Additional Comments:</Text>
               <TextInput
@@ -90,7 +102,7 @@ function ReviewPlaceScreen({ route }) {
                 maxLength={200}
                 onChangeText={setAdditionalComments}
                 value={additionalComments}
-                placeholder={"Share your experience here!"}
+                placeholder={"Share your experience here! 💬"}
                 placeholderTextColor={COLORS.blue} 
               />
             </View>
@@ -98,8 +110,8 @@ function ReviewPlaceScreen({ route }) {
               style={styles.button}
               onPress={handleSubmitButton}
             >
-              <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
+              <Text style={styles.buttonText}>Submit Review <FontAwesome5 name="paper-plane" size={18} color={COLORS.white} /></Text>
+              </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
@@ -119,11 +131,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerText: {
-    fontSize: 25,
-    fontFamily: "Cochin",
-    fontWeight: "bold",
+    fontSize: 20,
+    fontFamily: "Poppins_700Bold",
     textAlign: "center",
-    color: COLORS.black, 
+    color: COLORS.blue, 
   },
   ratingContainer: {
     marginBottom: 20,
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     marginVertical: 10,
-    fontFamily: "Cochin",
+    fontFamily: "Roboto",
     fontWeight: "bold",
     color: COLORS.black, 
   },
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlignVertical: "top",
     marginBottom: 10,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.beige,
     height: 100, // Ensures the TextInput is large enough for multiple lines
   },
   button: {
@@ -151,6 +162,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: COLORS.blue,
     marginBottom: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,

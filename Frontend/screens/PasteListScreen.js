@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
   },
   restaurantImage: {
-    width: 130,
+    width: 180,
     height: 130,
     borderRadius: 10,
   },

@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Image,
   Modal,
 } from "react-native";
 import { React, useState } from "react";
@@ -144,16 +145,19 @@ export default function SignupScreen({ props }) {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View
           style={{
-            backgroundColor: "#f9f2eb",
+            backgroundColor: COLORS.beige,
             height: "100%",
             width: "100%",
-            flex: 1,
+            // flex: 1,
             justifyContent: "space-around",
             paddingTop: 40,
             paddingBottom: 10,
           }}
-        >
-          <View className="flex items-center justify-center">
+          > 
+          <View style={styles.image}>
+            <Image source={require("../assets/logo.png")} />
+          </View>
+          <View className="items-center justify-center">
             <Text style={styles.createAcountText}>Create an account</Text>
           </View>
           {/* form */}
@@ -373,4 +377,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
   },
+  image: {
+    width: 200,
+    height: 150,
+
+    // borderRadius: 100,
+  },
+
 });

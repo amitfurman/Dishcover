@@ -61,7 +61,7 @@ function ReviewPlaceScreen({ route }) {
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={styles.header}>
               <Text style={styles.headerText}>
-              How was your experience at {data.name}? Share with us! 🌟
+              How was your experience at {data.name}? Share with us!
               </Text>
             </View>
             <View style={styles.ratingContainer}>
@@ -93,7 +93,7 @@ function ReviewPlaceScreen({ route }) {
                 fullImage={vibesFull}
                 emptyImage={vibesEmpty}
               />
-              <Text style={styles.label}>Additional Comments:</Text>
+              <Text style={styles.additionalLabel}>Additional Comments:</Text>
               <TextInput
                 style={styles.textInput}
                 editable
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Poppins_700Bold",
     textAlign: "center",
-    color: COLORS.blue, 
+    color: COLORS.pink, 
   },
   ratingContainer: {
     marginBottom: 20,
@@ -142,19 +142,20 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     marginVertical: 10,
-    fontFamily: "Roboto",
     fontWeight: "bold",
-    color: COLORS.black, 
+    color: COLORS.blue, 
+    fontFamily: "Poppins_700Bold",
   },
   textInput: {
-    borderColor: COLORS.pink, 
-    borderWidth: 1,
     borderRadius: 5,
+    width: "100%",
+    minHeight: 150,
     padding: 10,
-    textAlignVertical: "top",
-    marginBottom: 10,
+    borderColor: COLORS.pink,
+    borderWidth: 1,
     backgroundColor: COLORS.beige,
-    height: 100, // Ensures the TextInput is large enough for multiple lines
+    color: COLORS.black,
+    fontFamily: "Poppins_400Regular",
   },
   button: {
     width: "100%",
@@ -169,6 +170,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     color: COLORS.white,
+    fontFamily: "Poppins_700Bold",
+  },
+  additionalLabel: {
+    marginTop: 30,
+    fontSize: 20,
+    marginVertical: 10,
+    fontWeight: "bold",
+    color: COLORS.blue, 
+    fontFamily: "Poppins_700Bold",
   },
 });
 

@@ -35,6 +35,15 @@ export default function SignupScreen({ props }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [focusedField, setFocusedField] = useState('');
+
+const handleFocus = (field) => {
+  setFocusedField(field);
+};
+
+const handleBlur = () => {
+  setFocusedField('');
+};
 
   function handleSignup() {
     const userData = {
@@ -63,7 +72,7 @@ export default function SignupScreen({ props }) {
           setModalVisible(true);
         });
     } else {
-      setModalMessage("Please fill all the mandatory details");
+      setModalMessage("⚠️ Please fill all the mandatory details");
       setModalVisible(true);
     }
   }
@@ -149,20 +158,20 @@ export default function SignupScreen({ props }) {
             height: "100%",
             width: "100%",
             // flex: 1,
-            justifyContent: "space-around",
+            // justifyContent: "space-around",
             paddingTop: 40,
             paddingBottom: 10,
           }}
           > 
-          <View style={styles.image}>
-            <Image source={require("../assets/logo.png")} />
+          <View style={styles.imageContainer}>
+            <Image source={require("../assets/logo.png")} style={styles.image} />
           </View>
-          <View className="items-center justify-center">
+          <View style={styles.textContainer}>
             <Text style={styles.createAcountText}>Create an account</Text>
           </View>
           {/* form */}
-          <View className="flex items-center mx-4 space-y-4">
-            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+          <View className="flex items-center mx-4 mt-10 space-y-4">
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-5 flex-row">
               <Octicons
                 name="person"
                 size={18}
@@ -173,8 +182,14 @@ export default function SignupScreen({ props }) {
                 placeholder="User Name"
                 placeholderTextColor={"gray"}
                 className="flex-1"
+                style={[
+                  styles.textInput,
+                  focusedField === 'username' && styles.focusedInput,
+                ]}
                 onChange={(e) => checkIfNameValid(e)}
                 onEndEditing={() => checkIfNameExists()}
+                onFocus={() => handleFocus('username')}
+                onBlur={handleBlur}
               />
               {name.length < 1 ? null : nameVerified ? (
                 <Feather
@@ -196,7 +211,7 @@ export default function SignupScreen({ props }) {
                 <Text style={styles.errorText}>{nameError} </Text>
               </View>
             )}
-            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-5 flex-row">
               <Octicons
                 name="mail"
                 size={18}
@@ -231,7 +246,7 @@ export default function SignupScreen({ props }) {
               </View>
             )}
 
-            <View className="bg-black/5 p-5 rounded-2xl w-full mb-3 flex-row">
+            <View className="bg-black/5 p-5 rounded-2xl w-full mb-5 flex-row">
               <Octicons
                 name="lock"
                 size={18}
@@ -280,7 +295,7 @@ export default function SignupScreen({ props }) {
                 style={styles.button}
                 onPress={() => handleSignup()}
               >
-                <Text style={styles.buttonText}>Sign Up</Text>
+                <Text style={styles.buttonText}>Sign Up </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -319,14 +334,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   buttonText: {
-    fontSize: 18,
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 20,
     textAlign: "center",
     color: "#f8f7f4",
   },
   createAcountText: {
-    fontSize: 30,
+    fontFamily: "Poppins_800ExtraBold",
+    fontSize: 36,
     fontWeight: "bold",
-    color: COLORS.pink,
+    color: COLORS.blue,
   },
   errorContainer: {
     flexDirection: "row",
@@ -377,11 +394,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
   },
-  image: {
-    width: 200,
-    height: 150,
-
-    // borderRadius: 100,
+  imageContainer: {
+    marginTop: 40,
+    alignItems: "center",
+    marginBottom: 20,
   },
-
+  image: {
+    width: "90%",
+    height: 100,
+  },
+  textContainer: {
+    alignItems: "center",
+    paddingTop: 20,
+    paddingBottom: 150,
+  },
 });

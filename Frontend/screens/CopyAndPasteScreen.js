@@ -48,7 +48,6 @@ const CopyAndPasteScreen = () => {
         return item.replace(/- \[ \] /g, "").trim();
       })
       .filter((name) => name !== ""); // Filter out empty strings
-    console.log("Sending data to server:", restaurantNames);
 
     if (fromScreen === "FirstScreen") {
       try {

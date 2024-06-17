@@ -14,9 +14,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import qs from "qs";
 import { COLORS } from "../colors";
+import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons
 
-const url = "http://10.100.102.4:3000";
-//const url = "http://192.168.68.111:3000";
+
+// const url = "http://10.100.102.4:3000";
+const url = "http://192.168.68.111:3000";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
@@ -71,8 +73,7 @@ const CopyAndPasteScreen = () => {
           error.response.data.data == "No listings found with the given names."
         ) {
           Alert.alert(
-            "The restaurant you entered is not in the database right now,\n but we work hard to add new restaurants every day. \n Please try again later."
-          );
+            "We couldn't find the restaurant you entered, but we're always adding new places!\n Please check back soon"          );
           navigation.navigate("SecondIntro", {
             username: username,
           });
@@ -147,6 +148,12 @@ const CopyAndPasteScreen = () => {
             onPress={handleContinueButton}
           >
             <Text style={styles.buttonText}>Continue</Text>
+            <Icon
+              name="arrow-forward-circle"
+              size={20}
+              color={COLORS.pink}
+              style={{ marginLeft: 5 }} // Adjust the styling as needed
+            />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -181,6 +188,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   textInputStyle: {
+    borderRadius: 5,
     width: "100%",
     minHeight: 150,
     padding: 10,
@@ -210,6 +218,8 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: COLORS.blue,
+    flexDirection: "row",
+    justifyContent: "center",
   },
   buttonText: {
     color: COLORS.pink,

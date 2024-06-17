@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useNavigation} from "@react-navigation/native";
 import { COLORS } from "../colors";
+import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons
 
 const PasteListScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -26,12 +27,11 @@ const PasteListScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.titleText}>{data.length} Restaurants Added!</Text>
-          <Text style={styles.text}>Now in your library,</Text>
-          <Text style={styles.text}>
-            Edit these ratings to improve your matches.
+        <Text style={styles.titleText}>{data.length} Restaurants Added 🍽️</Text>
+        <Text style={styles.text}>
+          Rate them to get even better recommendations!
           </Text>
         </View>
         <View style={styles.reviewContainer}>
@@ -56,7 +56,13 @@ const PasteListScreen = ({ route }) => {
             style={styles.continueButton}
             onPress={handleContinueButton}
           >
-            <Text style={styles.buttonText}>Continue</Text>
+            <Text style={styles.continueButtonText}>Continue</Text>
+            <Icon
+              name="arrow-forward-circle"
+              size={20}
+              color={COLORS.pink}
+              style={{ marginLeft: 5 }} 
+            />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -67,32 +73,36 @@ const PasteListScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
     alignItems: "center",
+  },
+  scrollContainer: {
+    alignItems: "center",
+    width: '100%',
   },
   textContainer: {
     padding: 5,
     alignItems: "center",
+    width: "100%",
   },
   titleText: {
-    fontFamily: "Cochin",
+    fontFamily: "Poppins_700Bold",
     top: 20,
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 28,
     textAlign: "center",
     marginBottom: 20,
     color: COLORS.black,
   },
   text: {
-    fontFamily: "Cochin",
+    fontFamily: "Poppins_500Medium",
     top: 15,
     fontSize: 20,
-    fontWeight: "bold",
     textAlign: "center",
     marginBottom: 5,
-    color: COLORS.black,
+    color: COLORS.pink,
   },
   reviewContainer: {
+    width: "100%",
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
@@ -104,9 +114,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "90%",
     alignSelf: "center",
-    backgroundColor: COLORS.white,
-    padding: 10,
+    backgroundColor: COLORS.beige,
     borderRadius: 10,
+    minHeight: 150,
+    padding: 10,
+    borderColor: COLORS.blue,
+    borderWidth: 0.3,
   },
   restaurantImage: {
     width: 130,
@@ -119,12 +132,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   restaurantName: {
-    fontFamily: "Cochin",
+    fontFamily: "Poppins_600SemiBold",
     fontSize: 25,
     color: COLORS.black,
   },
   button: {
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.pink,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
@@ -132,19 +145,26 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: "center",
     justifyContent: "center",
+
   },
   continueButton: {
     backgroundColor: COLORS.blue,
-    padding: 10,
+    padding: 15,
+    margin: 10,
     borderRadius: 5,
-    marginTop: 10,
     alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "row", // Ensure button and icon are in the same row
   },
+  continueButtonText: {
+    color: COLORS.pink,
+    fontWeight: "bold",
+    fontFamily: "Poppins_700Bold",
+},
   buttonText: {
     color: COLORS.white,
     fontSize: 18,
     textAlign: "center",
+    fontFamily: "Roboto_500Medium",
   },
 });
 

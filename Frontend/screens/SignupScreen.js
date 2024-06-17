@@ -18,8 +18,8 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-const url = "http://10.100.102.4:3000";
-//const url = "http://192.168.68.111:3000";
+// const url = "http://10.100.102.4:3000";
+const url = "http://192.168.68.111:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -117,7 +117,7 @@ export default function SignupScreen({ props }) {
         if (res.data.exists) {
           // Email already exists in the database
           setEmailVerified(false);
-          setEmailError("Email already registered. You might have an account");
+          setEmailError("Email already registered. You might have an account.");
         }
       })
       .catch((error) => {

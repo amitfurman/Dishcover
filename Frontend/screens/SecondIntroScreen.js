@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     height: "80%",
     width: "90%",
     backgroundColor: COLORS.beige,
-    overflow: "hidden", // Ensure the overlays do not overflow the card
+    overflow: "hidden",
   },
   paginationContainer: {
     alignItems: "center",

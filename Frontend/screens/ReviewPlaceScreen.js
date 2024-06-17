@@ -91,7 +91,7 @@ function ReviewPlaceScreen({ route }) {
                 onChangeText={setAdditionalComments}
                 value={additionalComments}
                 placeholder={"Share your experience here!"}
-                placeholderTextColor={COLORS.blue} // Placeholder color changed to blue
+                placeholderTextColor={COLORS.blue} 
               />
             </View>
             <TouchableOpacity
@@ -110,7 +110,7 @@ function ReviewPlaceScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white, // Changed background color to white
+    backgroundColor: COLORS.white, 
   },
   contentContainer: {
     padding: 20,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     fontFamily: "Cochin",
     fontWeight: "bold",
     textAlign: "center",
-    color: COLORS.black, // Changed text color to pink
+    color: COLORS.black, 
   },
   ratingContainer: {
     marginBottom: 20,
@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontFamily: "Cochin",
     fontWeight: "bold",
-    color: COLORS.black, // Changed text color to pink
+    color: COLORS.black, 
   },
   textInput: {
-    borderColor: COLORS.pink, // Border color changed to pink
+    borderColor: COLORS.pink, 
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,

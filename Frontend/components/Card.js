@@ -135,9 +135,6 @@ const styles = StyleSheet.create({
       },
     gradient: {
         position: 'absolute',
-        // bottom: 100,
-        // left: 0,
-        // right: 0,
         height: '50%',
         borderBottomRightRadius: 20,
         borderBottomLeftRadius: 20,
@@ -165,6 +162,8 @@ const styles = StyleSheet.create({
     nameRatingContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 5,
+        marginTop: 5,
     },
     priceTypeContainer: {
         flexDirection: 'row',
@@ -173,13 +172,12 @@ const styles = StyleSheet.create({
     name: {
         fontFamily: 'Poppins_700Bold',
         color: '#010057',
-        fontSize: 24,
-        marginRight: 5,
+        fontSize: 18,
     },    
     separator: {
         fontFamily: 'Poppins_700Bold',
         color: '#010057',
-        fontSize: 24,
+        fontSize: 18,
         marginHorizontal: 5,
     },
     priceLevel: {
@@ -195,7 +193,7 @@ const styles = StyleSheet.create({
     },
     location: {
         color: 'gray',
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'PlayfairDisplay_600SemiBold',
         fontWeight: 'bold',
         marginLeft: 10,

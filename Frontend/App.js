@@ -105,8 +105,8 @@ function HomeScreen() {
           textColor="#f8f7f4"
           backgroundColor={COLORS.pink}
           borderColor={COLORS.blue}
-          onPress={() => navigation.navigate("Signin")}
-          // onPress={() => navigation.navigate("SwipeRestaurants")}
+          // onPress={() => navigation.navigate("Signin")}
+          onPress={() => navigation.navigate("SwipeRestaurants")}
         />
       </View>
     </View>

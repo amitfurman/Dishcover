@@ -21,7 +21,9 @@ import { COLORS } from "../colors";
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  const { username } = route.params;
+  // const { username } = route.params;
+  const { username } ="amit";
+
   const [restaurants, setRestaurants] = useState(restaurantsArray);
   const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
   const { width, height } = Dimensions.get("screen");
@@ -139,9 +141,15 @@ export default function SwipeRestaurants() {
   });
 
   return (
-    <LinearGradient colors={[COLORS.blue, COLORS.blue]} style={styles.background}>
+    <LinearGradient colors={["white", "white"]} style={styles.background}>
       <View style={styles.container}>
         <StatusBar style="auto" />
+        <Text style={styles.title}>
+        Swipe as much as you want!
+        </Text>
+        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+          <Text style={styles.homeButtonText}>Stop Swiping</Text>
+        </TouchableOpacity>
         {restaurants
           .map((restaurant, index) => {
             const isFirst = index === 0;
@@ -171,7 +179,7 @@ export default function SwipeRestaurants() {
                   <Card
                     name={restaurant.name}
                     rating={restaurant.rating}
-                    location={restaurant.location}
+                    location={restaurant.city}
                     priceLevel={restaurant.priceLevel}
                     image={restaurant.image}
                     isFirst={isFirst}
@@ -228,6 +236,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  title: {
+    fontSize:22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: COLORS.pink,
+    textAlign: 'center',
+    flex: 1,
+    top: 100,
+    fontFamily: "Poppins_700Bold",
+  },
+  homeButton: {
+    position: "absolute",
+    top: 50,
+    right: 20,
+    padding: 10,
+    backgroundColor: COLORS.blue,
+    borderRadius: 5,
+  },
+  homeButtonText: {
+    color: COLORS.beige,
+    fontWeight: "bold",
   },
   cardWrapper: {
     position: "absolute",

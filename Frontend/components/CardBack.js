@@ -154,13 +154,13 @@ infoContainer: {
   },
   name: {
     fontFamily: 'Poppins_700Bold',
-    color: '#010057',
+    color: COLORS.blue,
     fontSize: 26,
     textAlign: 'center',
   },
   location: {
     fontFamily: 'Poppins_400Regular',
-    color: '#FF5959',
+    color: COLORS.pink,
     fontSize: 16,
     textAlign: 'center',
   },
@@ -224,7 +224,7 @@ navigationButtonText: {
     flex: 1, 
   },
   type: {
-    color: 'gray',
+    color: COLORS.pink,
     fontSize: 18,
     fontFamily: 'Roboto_400Regular',
     flex: 1,
@@ -240,11 +240,11 @@ openingHoursTitle: {
   fontFamily: 'Poppins_600SemiBold',
   fontSize: 20,
   marginBottom: 5,
-  color: '#FF5959',
+  color: COLORS.pink,
   marginLeft: 10,
 },
 day: {
-  color: '#010057', // Change the color as desired
+  color: COLORS.blue, 
   fontFamily: 'Poppins_600SemiBold_Italic',
   fontSize: 16,
 },

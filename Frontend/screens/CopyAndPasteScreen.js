@@ -35,6 +35,16 @@ const CopyAndPasteScreen = () => {
     setValue("");
   };
 
+  const handleTextChange = (text) => {
+    const cleanedText = text
+      .split("\n")
+      .map((line) => line.replace(/^\s*-\s*\[\s*[x ]\s*\]\s*/, "").trim())
+      .join("\n");
+    setValue(cleanedText);
+
+    console.log("Text changed:", cleanedText);
+  };
+
   const handleContinueButton = async () => {
     const lines = value
       .split("\n")
@@ -125,7 +135,7 @@ const CopyAndPasteScreen = () => {
             multiline
             numberOfLines={50}
             maxLength={500}
-            onChangeText={setValue}
+            onChangeText={handleTextChange}
             value={value}
             placeholder={
               "Paste your list here! \nOne restaurant per line.\n\nFor example:\nEmesh\nMalka"

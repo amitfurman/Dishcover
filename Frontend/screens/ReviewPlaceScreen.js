@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from "../colors";
 import { FontAwesome5 } from "@expo/vector-icons"; 
 import RatingInput from "../components/RatingInput"; 
@@ -29,6 +30,8 @@ import vibesFull from '../assets/symbols/vibesFull.png';
 import vibesEmpty from '../assets/symbols/vibesEmpty.png'; 
 
 function ReviewPlaceScreen({ route }) {
+  const navigation = useNavigation();
+  const { username } = route.params;
   const { data } = route.params;
   const [foodRating, setFoodRating] = useState(0);
   const [serviceRating, setServiceRating] = useState(0);
@@ -47,6 +50,8 @@ function ReviewPlaceScreen({ route }) {
     };
     console.log("Ratings submitted:", ratings);
     alert("Thank you for your review!");
+    navigation.navigate("SecondIntro", { username: username });
+
 
   };
 

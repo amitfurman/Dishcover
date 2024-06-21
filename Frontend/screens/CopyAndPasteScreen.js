@@ -14,11 +14,10 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import qs from "qs";
 import { COLORS } from "../colors";
-import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons
+import Icon from "react-native-vector-icons/Ionicons"; // Importing icons
 
-
-// const url = "http://10.100.102.4:3000";
-const url = "http://192.168.68.111:3000";
+const url = "http://10.100.102.9:3000";
+//const url = "http://192.168.68.111:3000";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
@@ -82,7 +81,8 @@ const CopyAndPasteScreen = () => {
           error.response.data.data == "No listings found with the given names."
         ) {
           Alert.alert(
-            "We couldn't find the restaurant you entered, but we're always adding new places!\n Please check back soon"          );
+            "We couldn't find the restaurant you entered, but we're always adding new places!\n Please check back soon"
+          );
           navigation.navigate("SecondIntro", {
             username: username,
           });

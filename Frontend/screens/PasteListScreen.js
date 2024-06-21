@@ -8,9 +8,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../colors";
-import Icon from 'react-native-vector-icons/Ionicons'; // Importing icons
+import Icon from "react-native-vector-icons/Ionicons"; // Importing icons
 
 const PasteListScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -22,16 +22,21 @@ const PasteListScreen = ({ route }) => {
 
   const handleReviewButton = (restaurant) => {
     console.log("Review button pressed for:", restaurant);
-    navigation.navigate("ReviewPlaceScreen", { data: restaurant });
+    navigation.navigate("ReviewPlaceScreen", {
+      username: username,
+      restaurantName: restaurant.name,
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.textContainer}>
-        <Text style={styles.titleText}>{data.length} Restaurants Added 🍽️</Text>
-        <Text style={styles.text}>
-          Rate them to get even better recommendations!
+          <Text style={styles.titleText}>
+            {data.length} Restaurants Added 🍽️
+          </Text>
+          <Text style={styles.text}>
+            Rate them to get even better recommendations!
           </Text>
         </View>
         <View style={styles.reviewContainer}>
@@ -61,7 +66,7 @@ const PasteListScreen = ({ route }) => {
               name="arrow-forward-circle"
               size={20}
               color={COLORS.pink}
-              style={{ marginLeft: 5 }} 
+              style={{ marginLeft: 5 }}
             />
           </TouchableOpacity>
         </View>
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     alignItems: "center",
-    width: '100%',
+    width: "100%",
   },
   textContainer: {
     padding: 5,
@@ -145,7 +150,6 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: "center",
     justifyContent: "center",
-
   },
   continueButton: {
     backgroundColor: COLORS.blue,
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
     color: COLORS.pink,
     fontWeight: "bold",
     fontFamily: "Poppins_700Bold",
-},
+  },
   buttonText: {
     color: COLORS.white,
     fontSize: 18,

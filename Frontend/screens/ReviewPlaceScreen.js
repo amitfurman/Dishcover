@@ -11,28 +11,33 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+
 import { COLORS } from "../colors";
-import { FontAwesome5 } from "@expo/vector-icons"; 
-import RatingInput from "../components/RatingInput"; 
+import { FontAwesome5 } from "@expo/vector-icons";
+import RatingInput from "../components/RatingInput";
 
-import burgerFull from '../assets/symbols/burgerFull.png'; 
-import burgerEmpty from '../assets/symbols/burgerEmpty.png'; 
+import burgerFull from "../assets/symbols/burgerFull.png";
+import burgerEmpty from "../assets/symbols/burgerEmpty.png";
 
-import serviceFull from '../assets/symbols/serviceFull.png';
-import serviceEmpty from '../assets/symbols/serviceEmpty.png'; 
+import serviceFull from "../assets/symbols/serviceFull.png";
+import serviceEmpty from "../assets/symbols/serviceEmpty.png";
 
-import cleanlinessFull from '../assets/symbols/cleanlinessFull.png'; 
-import cleanlinessEmpty from '../assets/symbols/cleanlinessEmpty.png'; 
+import cleanlinessFull from "../assets/symbols/cleanlinessFull.png";
+import cleanlinessEmpty from "../assets/symbols/cleanlinessEmpty.png";
 
-import vibesFull from '../assets/symbols/vibesFull.png'; 
-import vibesEmpty from '../assets/symbols/vibesEmpty.png'; 
+import vibesFull from "../assets/symbols/vibesFull.png";
+import vibesEmpty from "../assets/symbols/vibesEmpty.png";
+
+const url = "http://10.100.102.9:3000";
+//const url = "http://192.168.68.111:3000";
 
 function ReviewPlaceScreen({ route }) {
   const navigation = useNavigation();
-  const { username } = route.params;
-  const { data } = route.params;
+  const { username, restaurantName } = route.params;
   const [foodRating, setFoodRating] = useState(0);
   const [serviceRating, setServiceRating] = useState(0);
   const [cleanlinessRating, setCleanlinessRating] = useState(0);
@@ -41,20 +46,36 @@ function ReviewPlaceScreen({ route }) {
 
   const handleSubmitButton = () => {
     // Send ratings to backend
-    const ratings = {
+    console.log(
+      "Submitting review...",
+      username,
+      restaurantName,
+      foodRating,
+      serviceRating,
+      cleanlinessRating,
+      vibesRating,
+      additionalComments
+    );
+
+    const reviewData = {
+      username,
+      restaurantName,
       foodRating,
       serviceRating,
       cleanlinessRating,
       vibesRating,
       additionalComments,
     };
-    console.log("Ratings submitted:", ratings);
-    alert("Thank you for your review!");
-    navigation.navigate("SecondIntro", { username: username });
-
-
+    try {
+      axios.post(`${url}/reviewByUser`, reviewData).then((res) => {
+        console.log("Review submitted successfully:", res.data);
+        Alert.alert("Thank you for your review!");
+        navigation.goBack();
+      });
+    } catch (error) {
+      console.error("Error submitting review:", error.message);
+    }
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -66,7 +87,7 @@ function ReviewPlaceScreen({ route }) {
           <ScrollView contentContainerStyle={styles.contentContainer}>
             <View style={styles.header}>
               <Text style={styles.headerText}>
-              How was your experience at {data.name}? Share with us!
+                How was your experience at {restaurantName}? Share with us!
               </Text>
             </View>
             <View style={styles.ratingContainer}>
@@ -108,15 +129,22 @@ function ReviewPlaceScreen({ route }) {
                 onChangeText={setAdditionalComments}
                 value={additionalComments}
                 placeholder={"Share your experience here! 💬"}
-                placeholderTextColor={COLORS.blue} 
+                placeholderTextColor={COLORS.blue}
               />
             </View>
             <TouchableOpacity
               style={styles.button}
               onPress={handleSubmitButton}
             >
-              <Text style={styles.buttonText}>Submit Review <FontAwesome5 name="paper-plane" size={18} color={COLORS.white} /></Text>
-              </TouchableOpacity>
+              <Text style={styles.buttonText}>
+                Submit Review{" "}
+                <FontAwesome5
+                  name="paper-plane"
+                  size={18}
+                  color={COLORS.white}
+                />
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
@@ -127,7 +155,7 @@ function ReviewPlaceScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white, 
+    backgroundColor: COLORS.white,
   },
   contentContainer: {
     padding: 20,
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Poppins_700Bold",
     textAlign: "center",
-    color: COLORS.pink, 
+    color: COLORS.pink,
   },
   ratingContainer: {
     marginBottom: 20,
@@ -148,7 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 10,
     fontWeight: "bold",
-    color: COLORS.blue, 
+    color: COLORS.blue,
     fontFamily: "Poppins_700Bold",
   },
   textInput: {
@@ -182,7 +210,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 10,
     fontWeight: "bold",
-    color: COLORS.blue, 
+    color: COLORS.blue,
     fontFamily: "Poppins_700Bold",
   },
 });

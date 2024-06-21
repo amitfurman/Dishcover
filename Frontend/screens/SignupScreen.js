@@ -19,8 +19,8 @@ import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
 import { COLORS } from "../colors";
 
-// const url = "http://10.100.102.4:3000";
-const url = "http://192.168.68.111:3000";
+const url = "http://10.100.102.9:3000";
+//const url = "http://192.168.68.111:3000";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -35,15 +35,15 @@ export default function SignupScreen({ props }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [focusedField, setFocusedField] = useState('');
+  const [focusedField, setFocusedField] = useState("");
 
-const handleFocus = (field) => {
-  setFocusedField(field);
-};
+  const handleFocus = (field) => {
+    setFocusedField(field);
+  };
 
-const handleBlur = () => {
-  setFocusedField('');
-};
+  const handleBlur = () => {
+    setFocusedField("");
+  };
 
   function handleSignup() {
     const userData = {
@@ -162,9 +162,12 @@ const handleBlur = () => {
             paddingTop: 40,
             paddingBottom: 10,
           }}
-          > 
+        >
           <View style={styles.imageContainer}>
-            <Image source={require("../assets/logo.png")} style={styles.image} />
+            <Image
+              source={require("../assets/logo.png")}
+              style={styles.image}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.createAcountText}>Create an account</Text>
@@ -184,11 +187,11 @@ const handleBlur = () => {
                 className="flex-1"
                 style={[
                   styles.textInput,
-                  focusedField === 'username' && styles.focusedInput,
+                  focusedField === "username" && styles.focusedInput,
                 ]}
                 onChange={(e) => checkIfNameValid(e)}
                 onEndEditing={() => checkIfNameExists()}
-                onFocus={() => handleFocus('username')}
+                onFocus={() => handleFocus("username")}
                 onBlur={handleBlur}
               />
               {name.length < 1 ? null : nameVerified ? (

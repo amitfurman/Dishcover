@@ -15,9 +15,11 @@ const MY_APIFY_TOKEN = process.env.MY_APIFY_TOKEN;
 // Import the schemas/models
 require("./UserDetails");
 require("./RestaurantsDetails");
+require("./ReviewDetails");
 
 const User = mongoose.model("UserInfo");
 const Restaurants = mongoose.model("restaurants");
+const Reviews = mongoose.model("restaurants_reviews");
 
 // Connect to MongoDB using Mongoose
 mongoose
@@ -195,6 +197,53 @@ app.post("/placesUserWantToVisit", async (req, res) => {
   }
 });
 
+app.post("/reviewByUser", async (req, res) => {
+  const {
+    username,
+    restaurantName,
+    foodRating,
+    serviceRating,
+    cleanlinessRating,
+    vibesRating,
+    additionalComments,
+  } = req.body;
+
+  console.log("Received review request:", req.body);
+  console.log(
+    "all: ",
+    username,
+    restaurantName,
+    foodRating,
+    serviceRating,
+    cleanlinessRating,
+    vibesRating,
+    additionalComments
+  );
+
+  try {
+    let restaurant = await Reviews.findOne({ name: restaurantName });
+
+    if (!restaurant) {
+      restaurant = new Reviews({ name: restaurantName, reviews: [] });
+    }
+
+    const newReview = {
+      customerName: username,
+      foodScore: foodRating,
+      serviceScore: serviceRating,
+      cleanlinessScore: cleanlinessRating,
+      atmosphereScore: vibesRating,
+      comments: additionalComments,
+    };
+
+    restaurant.reviews.push(newReview);
+    await restaurant.save();
+
+    res.status(201).send(restaurant);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
 /*
 const axios = require("axios");
 const cheerio = require("cheerio");

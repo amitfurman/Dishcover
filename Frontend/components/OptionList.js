@@ -1,27 +1,29 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from "react-native";
 import { COLORS } from "../colors";
 
-const OptionList = ({ title, data, selectedItems, onToggle }) => {
+const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
   const renderOption = (item) => {
     const isSelected = selectedItems.includes(item);
 
     return (
       <TouchableOpacity
-        key={item}
+        key={item.name || item}
         style={[
           styles.typeBox,
           isSelected ? styles.selectedType : styles.unselectedType,
+          { height: dataType === 'image' ? 80 : 55 },
         ]}
         onPress={() => onToggle(item)}
       >
-        <Text style={styles.typeText}>{item}</Text>
+        {dataType === 'image' ? (
+          <View style={styles.imageContainer}>
+            <Image source={item.image} style={styles.image} />
+            <Text style={styles.typeText}>{item.name}</Text>
+          </View>
+        ) : (
+          <Text style={[styles.typeText, { color: title === 'Budget' ? "#E9AE0B" : "black" },]}>{item}</Text>
+        )}
       </TouchableOpacity>
     );
   };
@@ -32,7 +34,7 @@ const OptionList = ({ title, data, selectedItems, onToggle }) => {
       <FlatList
         data={data}
         renderItem={({ item }) => renderOption(item)}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.name || item}
         numColumns={3}
         columnWrapperStyle={styles.row}
       />
@@ -43,6 +45,7 @@ const OptionList = ({ title, data, selectedItems, onToggle }) => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
+    paddingVertical: 10,
   },
   title: {
     fontSize: 18,
@@ -62,8 +65,6 @@ const styles = StyleSheet.create({
     width: 110,
     alignItems: "center",
     justifyContent: "center",
-    height: 55,
-    backgroundColor: "#f9f9f9",
     elevation: 3,
     shadowColor: COLORS.blue,
     shadowOffset: {
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 2,
+    backgroundColor: "#f9f9f9",
   },
   selectedType: {
     borderColor: COLORS.pink,
@@ -82,7 +84,19 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 13,
+    fontSize: 14,
+    opacity: 0.6,
+    textAlign: 'center', 
+    marginTop: 3, 
+
+  },
+  imageContainer: {
+    alignItems: 'center', 
+  },
+  image: {
+    width: 50, 
+    height: 50, 
+    resizeMode: "cover", 
   },
 });
 

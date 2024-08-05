@@ -3,7 +3,15 @@ import { View, Text, StyleSheet } from "react-native";
 import OptionList from "../components/OptionList"; // Import the new OptionList component
 import { COLORS } from "../colors";
 
-const restaurantTypes = ["Italian", "Asian", "Mexican", "American", "Indian", "Mediterranean"];
+const restaurantTypes = [
+  { name: "Italian", image: require("../assets/symbols/spaghetti.png") },
+  { name: "Asian", image: require("../assets/symbols/sushi.png") },
+  { name: "Mexican", image: require("../assets/symbols/taco.png") },
+  { name: "American", image: require("../assets/symbols/burgerFull.png") },
+  { name: "Indian", image: require("../assets/symbols/indian.png") },
+  { name: "Greek", image: require("../assets/symbols/greek.png") },
+];
+
 const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];
 const atmospheres = ["Casual", "Fine Dining", "Fast Food", "Romantic"];
 
@@ -30,11 +38,13 @@ const RestaurantPreferenceScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
       <OptionList
         title="Type of Restaurant"
         data={restaurantTypes}
         selectedItems={selectedTypes}
         onToggle={toggleType}
+        dataType="image"
       />
 
       <OptionList
@@ -42,6 +52,7 @@ const RestaurantPreferenceScreen = () => {
         data={budgets}
         selectedItems={[selectedBudget]}
         onToggle={selectBudget}
+        dataType="text"
       />
 
       <OptionList
@@ -49,13 +60,8 @@ const RestaurantPreferenceScreen = () => {
         data={atmospheres}
         selectedItems={[selectedAtmosphere]}
         onToggle={selectAtmosphere}
+        dataType="text"
       />
-
-      <Text style={styles.selectedText}>
-        Selected Types: {selectedTypes.join(", ")}
-      </Text>
-      <Text style={styles.selectedText}>Budget: {selectedBudget}</Text>
-      <Text style={styles.selectedText}>Atmosphere: {selectedAtmosphere}</Text>
     </View>
   );
 };
@@ -66,6 +72,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: COLORS.beige,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontFamily: "Poppins_700Bold",
+    color: COLORS.pink,
+    textAlign: "center",
+    marginBottom: 20,
   },
   selectedText: {
     fontFamily: "Poppins_400Regular",

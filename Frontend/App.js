@@ -72,6 +72,7 @@ import SecondIntroScreen from "./screens/SecondIntroScreen";
 import PasteListScreen from "./screens/PasteListScreen";
 import ReviewPlaceScreen from "./screens/ReviewPlaceScreen";
 import MainScreen from "./screens/MainScreen";
+import RestaurantPreferenceScreen from "./screens/RestaurantPreferenceScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -167,7 +168,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="RestaurantPreferenceScreen"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -180,6 +181,7 @@ function App() {
         <Stack.Screen name="PasteListScreen" component={PasteListScreen} />
         <Stack.Screen name="ReviewPlaceScreen" component={ReviewPlaceScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
+        <Stack.Screen name="RestaurantPreferenceScreen" component={RestaurantPreferenceScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -4,12 +4,23 @@ import OptionList from "../components/OptionList"; // Import the new OptionList 
 import { COLORS } from "../colors";
 
 const restaurantTypes = [
+  // { name: "Israeli", image: require("../assets/symbols/spaghetti.png") },
   { name: "Italian", image: require("../assets/symbols/spaghetti.png") },
+  // { name: "Bar", image: require("../assets/symbols/spaghetti.png") },
+  { name: "Greek", image: require("../assets/symbols/greek.png") },
+  // { name: "Cafe", image: require("../assets/symbols/greek.png") },
   { name: "Asian", image: require("../assets/symbols/sushi.png") },
   { name: "Mexican", image: require("../assets/symbols/taco.png") },
   { name: "American", image: require("../assets/symbols/burgerFull.png") },
+  // { name: "Pizza", image: require("../assets/symbols/greek.png") },
   { name: "Indian", image: require("../assets/symbols/indian.png") },
-  { name: "Greek", image: require("../assets/symbols/greek.png") },
+  // { name: "Street Food", image: require("../assets/symbols/greek.png") },
+  // { name: "Seafood", image: require("../assets/symbols/fish.png") },
+  // { name: "Diner", image: require("../assets/symbols/greek.png") },
+ // Georgian
+ //Steakhouse
+
+
 ];
 
 const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];

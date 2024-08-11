@@ -6,11 +6,20 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer, useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { Platform } from "react-native";
+import { IOS_CLIENT, ANDROID_CLIENT } from '@env';
+
+console.log('API URL:', IOS_CLIENT);
+console.log('API Key:', ANDROID_CLIENT);
+
+WebBrowser.maybeCompleteAuthSession();
 
 const url = "http://10.100.102.9:3000";
 //const url = "http://192.168.68.111:3000";
@@ -20,6 +29,38 @@ export default function SigninScreen() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const clientId =
+    Platform.OS === "android" ? ANDROID_CLIENT : IOS_CLIENT;
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId: clientId,
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      handleGoogleSignin(id_token);
+    }
+  }, [response]);
+
+  const handleGoogleSignin = (id_token) => {
+    console.log("Google Signin");
+    // axios
+    //   .post(`${url}/google-signin`, { id_token })
+    //   .then((res) => {
+    //     if (res.data.status === "ok") {
+    //       Alert.alert("User logged in successfully with Google");
+    //       navigation.navigate("FirstIntro", { username: res.data.username });
+    //     } else {
+    //       Alert.alert(res.data.data);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     Alert.alert("An error occurred during Google sign in");
+    //     console.error(error);
+    //   });
+  };
 
   function handleSignin() {
     const userData = {
@@ -95,6 +136,18 @@ export default function SigninScreen() {
             <Text className="text-gray-500">Don't have an account?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
               <Text className="text-orange-300"> Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+          <View className="flex-row justify-center">
+            <Text className="text-gray-500">Or sign in with</Text>
+            <TouchableOpacity
+              className="w-full p-3 rounded-2xl mb-3 bg-blue-500"
+              onPress={() => promptAsync()}
+              disabled={!request}
+            >
+              <Text className="text-xl font-bold text-center text-white">
+                Sign In with Google
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

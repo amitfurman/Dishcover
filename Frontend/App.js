@@ -168,7 +168,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="RestaurantPreferenceScreen"
+        initialRouteName="HomeScreen"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -181,7 +181,10 @@ function App() {
         <Stack.Screen name="PasteListScreen" component={PasteListScreen} />
         <Stack.Screen name="ReviewPlaceScreen" component={ReviewPlaceScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
-        <Stack.Screen name="RestaurantPreferenceScreen" component={RestaurantPreferenceScreen} />
+        <Stack.Screen
+          name="RestaurantPreferenceScreen"
+          component={RestaurantPreferenceScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

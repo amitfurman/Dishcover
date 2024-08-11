@@ -4,8 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -17,19 +17,26 @@
     "@react-navigation/native-stack": "^6.9.26",
     "apify": "^3.2.3",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
     "expo": "^51.0.10",
     "expo-app-loading": "^2.1.1",
+    "expo-auth-session": "~5.5.2",
     "expo-av": "~14.0.5",
     "expo-cli": "^6.3.10",
+    "expo-crypto": "~13.0.2",
+    "expo-dev-client": "~4.0.22",
     "expo-font": "~12.0.6",
     "expo-linear-gradient": "^13.0.2",
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
+    "expo-web-browser": "~13.0.3",
+    "lottie-react-native": "6.7.0",
     "nativewind": "^2.0.11",
     "qs": "^6.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
+    "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "^2.16.2",
     "react-native-modal": "^13.0.1",
     "react-native-reanimated": "~3.10.1",
@@ -39,8 +46,7 @@
     "react-native-star-rating": "^1.1.0",
     "react-native-stock-star-rating": "^1.0.6",
     "react-native-web": "~0.19.10",
-    "tailwind-react-native-classnames": "^1.5.1",
-    "lottie-react-native": "6.7.0"
+    "tailwind-react-native-classnames": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

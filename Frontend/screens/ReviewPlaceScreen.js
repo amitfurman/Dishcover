@@ -58,7 +58,7 @@ function ReviewPlaceScreen({ route }) {
     );
 
     const reviewData = {
-      username,
+      // username,
       restaurantName,
       foodRating,
       serviceRating,

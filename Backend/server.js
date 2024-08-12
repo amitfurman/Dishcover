@@ -199,7 +199,7 @@ app.post("/placesUserWantToVisit", async (req, res) => {
 
 app.post("/reviewByUser", async (req, res) => {
   const {
-    username,
+    // username,
     restaurantName,
     foodRating,
     serviceRating,
@@ -211,7 +211,7 @@ app.post("/reviewByUser", async (req, res) => {
   console.log("Received review request:", req.body);
   console.log(
     "all: ",
-    username,
+    //  username,
     restaurantName,
     foodRating,
     serviceRating,
@@ -228,7 +228,7 @@ app.post("/reviewByUser", async (req, res) => {
     }
 
     const newReview = {
-      customerName: username,
+      // customerName: username,
       foodScore: foodRating,
       serviceScore: serviceRating,
       cleanlinessScore: cleanlinessRating,

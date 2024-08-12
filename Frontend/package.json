@@ -18,7 +18,7 @@
     "apify": "^3.2.3",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
-    "expo": "^51.0.10",
+    "expo": "^51.0.26",
     "expo-app-loading": "^2.1.1",
     "expo-auth-session": "~5.5.2",
     "expo-av": "~14.0.5",

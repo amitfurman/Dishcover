@@ -5,21 +5,26 @@ import { COLORS } from "../colors";
 const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
   const renderOption = (item) => {
     const isSelected = selectedItems.includes(item);
-
+  
     return (
       <TouchableOpacity
         key={item.name || item}
         style={[
           styles.typeBox,
           isSelected ? styles.selectedType : styles.unselectedType,
-          { height: dataType === 'image' ? 80 : 55 },
+          { 
+            height: dataType === 'image' ? 70 : 50, 
+            width: title === "Atmosphere" || title === "Type of Restaurant"  ? 85 : 110 // Adjust the width for Atmosphere
+          },
         ]}
         onPress={() => onToggle(item)}
       >
         {dataType === 'image' ? (
           <View style={styles.imageContainer}>
             <Image source={item.image} style={styles.image} />
-            <Text style={styles.typeText}>{item.name}</Text>
+            {title !== "Atmosphere" && (
+              <Text style={styles.typeText}>{item.name}</Text>
+            )}
           </View>
         ) : (
           <Text style={[styles.typeText, { color: title === 'Budget' ? "#E9AE0B" : "black" },]}>{item}</Text>
@@ -27,6 +32,7 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
       </TouchableOpacity>
     );
   };
+  
 
   return (
     <View style={styles.container}>
@@ -35,7 +41,7 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
         data={data}
         renderItem={({ item }) => renderOption(item)}
         keyExtractor={(item) => item.name || item}
-        numColumns={3}
+        numColumns={"4"}
         columnWrapperStyle={styles.row}
       />
     </View>
@@ -44,25 +50,24 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
-    paddingVertical: 10,
+    paddingVertical: 2,
   },
   title: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 5,
     fontFamily: "Poppins_700Bold",
     color: COLORS.blue,
   },
   row: {
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+
   },
   typeBox: {
     borderWidth: 2,
     borderRadius: 10,
-    padding: 3,
+    // padding: 3,
     marginHorizontal: 7,
     marginVertical: 5,
-    width: 110,
     alignItems: "center",
     justifyContent: "center",
     elevation: 3,
@@ -84,7 +89,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 14,
+    fontSize: 13,
     opacity: 0.6,
     textAlign: 'center', 
     marginTop: 3, 
@@ -94,8 +99,8 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
   image: {
-    width: 50, 
-    height: 50, 
+    width: 35, 
+    height: 35, 
     resizeMode: "cover", 
   },
 });

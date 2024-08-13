@@ -73,6 +73,7 @@ import PasteListScreen from "./screens/PasteListScreen";
 import ReviewPlaceScreen from "./screens/ReviewPlaceScreen";
 import MainScreen from "./screens/MainScreen";
 import RestaurantPreferenceScreen from "./screens/RestaurantPreferenceScreen";
+import BottomTabsNavigator from "./components/BottomTabsNavigator";
 import WishlistScreen from "./screens/WishlistScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -99,9 +100,8 @@ function HomeScreen() {
           textColor={COLORS.blue}
           backgroundColor="#f8f7f4"
           borderColor={COLORS.pink}
-          //onPress={() => navigation.navigate("Signup")}
-          onPress={() => navigation.navigate("WishlistScreen")}
-          //onPress={() => navigation.navigate("SwipeRestaurants")}
+          onPress={() => navigation.navigate("Signup")}
+          //onPress={() => navigation.navigate("WishlistScreen")}
         />
         <HomePageButton
           text="Sign In"
@@ -170,7 +170,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeScreen"
+        initialRouteName="BottomTabs"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -187,6 +187,11 @@ function App() {
         <Stack.Screen
           name="RestaurantPreferenceScreen"
           component={RestaurantPreferenceScreen}
+        />
+        <Stack.Screen
+          name="BottomTabs"
+          component={BottomTabsNavigator}
+          options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

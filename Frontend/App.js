@@ -74,6 +74,7 @@ import ReviewPlaceScreen from "./screens/ReviewPlaceScreen";
 import MainScreen from "./screens/MainScreen";
 import RestaurantPreferenceScreen from "./screens/RestaurantPreferenceScreen";
 import BottomTabsNavigator from "./components/BottomTabsNavigator";
+import WishlistScreen from "./screens/WishlistScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -100,7 +101,7 @@ function HomeScreen() {
           backgroundColor="#f8f7f4"
           borderColor={COLORS.pink}
           onPress={() => navigation.navigate("Signup")}
-          // onPress={() => navigation.navigate("FirstIntro")}
+          //onPress={() => navigation.navigate("WishlistScreen")}
         />
         <HomePageButton
           text="Sign In"
@@ -182,6 +183,7 @@ function App() {
         <Stack.Screen name="PasteListScreen" component={PasteListScreen} />
         <Stack.Screen name="ReviewPlaceScreen" component={ReviewPlaceScreen} />
         <Stack.Screen name="MainScreen" component={MainScreen} />
+        <Stack.Screen name="WishlistScreen" component={WishlistScreen} />
         <Stack.Screen
           name="RestaurantPreferenceScreen"
           component={RestaurantPreferenceScreen}

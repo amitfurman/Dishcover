@@ -185,6 +185,10 @@ function App() {
         <Stack.Screen
           name="RestaurantPreferenceScreen"
           component={RestaurantPreferenceScreen}
+          options={{
+            presentation: 'modal', 
+            // headerShown: false,
+          }}
         />
         <Stack.Screen
           name="BottomTabs"

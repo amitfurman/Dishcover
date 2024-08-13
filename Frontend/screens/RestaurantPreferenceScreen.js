@@ -67,131 +67,148 @@ const RestaurantPreferenceScreen = () => {
     setSelectedAtmosphere(atmosphere);
   };
 
+  const handleGenerateRestaurant = () => {
+    console.log("Generating restaurant...");
+    console.log("District:", selectedDistrict);
+    console.log("Types:", selectedTypes);
+    console.log("Budget:", selectedBudget);
+    console.log("Atmosphere:", selectedAtmosphere);
+    console.log("Vegan:", isVegan);
+    console.log("Gluten Free:", isGlutenFree);
+    console.log("Wheelchair Accessible:", isWheelchairAccessible);
+
+    // Generate restaurant based on preferences
+  };
+
   return (
-        <View style={styles.container}>
-          <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
+    <View style={styles.container}>
+      <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
 
-          <View style={styles.pickerContainer}>
-            <TouchableOpacity
-              style={[
-                styles.customPicker,
-                selectedDistrict
-                  ? {
-                      backgroundColor: COLORS.pink + "20",
-                      borderColor: COLORS.pink,
-                    }
-                  : { backgroundColor: "#fff", borderColor: COLORS.blue },
-              ]}
-              onPress={() => setModalVisible(true)}
-            >
-              <Text style={styles.selectedText}>
-                {selectedDistrict || "Select District"}
-              </Text>
-            </TouchableOpacity>
+      <View style={styles.pickerContainer}>
+        <TouchableOpacity
+          style={[
+            styles.customPicker,
+            selectedDistrict
+              ? {
+                  backgroundColor: COLORS.pink + "20",
+                  borderColor: COLORS.pink,
+                }
+              : { backgroundColor: "#fff", borderColor: COLORS.blue },
+          ]}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.selectedText}>
+            {selectedDistrict || "Select District"}
+          </Text>
+        </TouchableOpacity>
 
-            <Modal
-              visible={modalVisible}
-              transparent={true}
-              animationType="fade"
-            >
-              <View style={styles.modalContainer}>
-                <View style={styles.pickerWrapper}>
-                  <Picker
-                    selectedValue={selectedDistrict}
-                    onValueChange={(itemValue) => {
-                      setSelectedDistrict(itemValue);
-                      setModalVisible(false);
-                    }}
-                  >
-                    <Picker.Item label="Select District" value="" />
-                    <Picker.Item
-                      label="Southern District"
-                      value="Southern District"
-                    />
-                    <Picker.Item
-                      label="Tel Aviv District"
-                      value="Tel Aviv District"
-                    />
-                    <Picker.Item
-                      label="Jerusalem District"
-                      value="Jerusalem District"
-                    />
-                    <Picker.Item
-                      label="Central District"
-                      value="Central District"
-                    />
-                    <Picker.Item
-                      label="Northern District"
-                      value="Northern District"
-                    />
-                  </Picker>
-                </View>
-              </View>
-            </Modal>
+        <Modal visible={modalVisible} transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={selectedDistrict}
+                onValueChange={(itemValue) => {
+                  setSelectedDistrict(itemValue);
+                  setModalVisible(false);
+                }}
+              >
+                <Picker.Item label="Select District" value="" />
+                <Picker.Item
+                  label="Southern District"
+                  value="Southern District"
+                />
+                <Picker.Item
+                  label="Tel Aviv District"
+                  value="Tel Aviv District"
+                />
+                <Picker.Item
+                  label="Jerusalem District"
+                  value="Jerusalem District"
+                />
+                <Picker.Item
+                  label="Central District"
+                  value="Central District"
+                />
+                <Picker.Item
+                  label="Northern District"
+                  value="Northern District"
+                />
+              </Picker>
+            </View>
           </View>
+        </Modal>
+      </View>
 
-          <OptionList
-            title="Type of Restaurant"
-            data={restaurantTypes}
-            selectedItems={selectedTypes}
-            onToggle={toggleType}
-            dataType="image"
+      <OptionList
+        title="Type of Restaurant"
+        data={restaurantTypes}
+        selectedItems={selectedTypes}
+        onToggle={toggleType}
+        dataType="image"
+      />
+
+      <OptionList
+        title="Budget"
+        data={budgets}
+        selectedItems={[selectedBudget]}
+        onToggle={selectBudget}
+        dataType="text"
+      />
+
+      <OptionList
+        title="Atmosphere"
+        data={atmospheres}
+        selectedItems={[selectedAtmosphere]}
+        onToggle={selectAtmosphere}
+        dataType="image"
+      />
+
+      <View style={styles.preferencesContainer}>
+        <TouchableOpacity
+          style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
+          onPress={() => setIsVegan(!isVegan)}
+        >
+          <Image
+            source={require("../assets/symbols/veganfriendly.png")}
+            style={styles.symbolImage}
           />
+        </TouchableOpacity>
 
-          <OptionList
-            title="Budget"
-            data={budgets}
-            selectedItems={[selectedBudget]}
-            onToggle={selectBudget}
-            dataType="text"
+        <TouchableOpacity
+          style={[
+            styles.symbolContainer,
+            isGlutenFree && styles.selectedSymbol,
+          ]}
+          onPress={() => setIsGlutenFree(!isGlutenFree)}
+        >
+          <Image
+            source={require("../assets/symbols/glutenfree.png")}
+            style={styles.symbolImage}
           />
+        </TouchableOpacity>
 
-          <OptionList
-            title="Atmosphere"
-            data={atmospheres}
-            selectedItems={[selectedAtmosphere]}
-            onToggle={selectAtmosphere}
-            dataType="image"
+        <TouchableOpacity
+          style={[
+            styles.symbolContainer,
+            isWheelchairAccessible && styles.selectedSymbol,
+          ]}
+          onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
+        >
+          <Image
+            source={require("../assets/symbols/wheelchairaccessibility.png")}
+            style={styles.symbolImage}
           />
-
-          <View style={styles.preferencesContainer}>
-            <TouchableOpacity
-              style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
-              onPress={() => setIsVegan(!isVegan)}
-            >
-              <Image
-                source={require("../assets/symbols/veganfriendly.png")}
-                style={styles.symbolImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.symbolContainer,
-                isGlutenFree && styles.selectedSymbol,
-              ]}
-              onPress={() => setIsGlutenFree(!isGlutenFree)}
-            >
-              <Image
-                source={require("../assets/symbols/glutenfree.png")}
-                style={styles.symbolImage}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.symbolContainer,
-                isWheelchairAccessible && styles.selectedSymbol,
-              ]}
-              onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
-            >
-              <Image
-                source={require("../assets/symbols/wheelchairaccessibility.png")}
-                style={styles.symbolImage}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity
+          style={styles.generateButton}
+          onPress={handleGenerateRestaurant}
+        >
+          <Text style={styles.generateButtonText}>
+            ✨ Let's Start the Magic! ✨
+          </Text>
+        </TouchableOpacity>
+    </View>
   );
 };
 
@@ -205,12 +222,12 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   formTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: "Poppins_700Bold",
     color: COLORS.pink,
     textAlign: "center",
-    marginBottom: 10,
-    marginTop: 25,
+    marginBottom: 3,
+    marginTop: 5,
   },
   pickerContainer: {
     marginTop: 10,
@@ -244,7 +261,7 @@ const styles = StyleSheet.create({
   preferencesContainer: {
     flexDirection: "row",
     // justifyContent: "space-between",
-    marginTop: 20,
+    marginTop: 10,
     justifyContent: "center",
   },
   symbolContainer: {
@@ -253,17 +270,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: "#fff",
     borderColor: COLORS.blue,
-    borderWidth: 1,
+    borderWidth: 2,
   },
   symbolImage: {
-    width: 37,
-    height: 37,
+    width: 30,
+    height: 30,
     borderRadius: 20,
   },
   selectedSymbol: {
     backgroundColor: COLORS.pink + "20",
     borderColor: COLORS.pink,
     borderWidth: 1,
+  },
+  generateButton: {
+    backgroundColor: COLORS.pink,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 15,
+  },
+  generateButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "Poppins_700Bold",
   },
 });
 export default RestaurantPreferenceScreen;

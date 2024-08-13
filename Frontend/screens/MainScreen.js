@@ -32,7 +32,7 @@ const MainScreen = () => {
         style={styles.button}
         onPress={() => navigation.navigate('RestaurantPreferenceScreen')}
       >
-        <Text style={styles.buttonText}>Generate Restaurant Recommendation</Text>
+        <Text style={styles.buttonText}>Suggest a Restaurant Just for Me</Text>
       </TouchableOpacity>
     </View>
   );
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: COLORS.beige,
   },
   title: {
     fontSize: 24,
@@ -58,14 +58,17 @@ const styles = StyleSheet.create({
     paddingLeft: 40,
   },
   button: {
-    backgroundColor: '#ff6347',
+    backgroundColor: COLORS.pink,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    borderColor: COLORS.blue,
+    borderWidth: 2,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.beige,
     fontSize: 18,
+    fontFamily: 'Poppins_700Bold',
   },
 });
 

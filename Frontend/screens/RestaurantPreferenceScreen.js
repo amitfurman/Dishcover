@@ -4,27 +4,37 @@ import OptionList from "../components/OptionList"; // Import the new OptionList 
 import { COLORS } from "../colors";
 
 const restaurantTypes = [
-  // { name: "Israeli", image: require("../assets/symbols/spaghetti.png") },
+  { name: "Israeli", image: require("../assets/symbols/falafel.png") },
   { name: "Italian", image: require("../assets/symbols/spaghetti.png") },
-  // { name: "Bar", image: require("../assets/symbols/spaghetti.png") },
+  { name: "Bar", image: require("../assets/symbols/beer.png") },
   { name: "Greek", image: require("../assets/symbols/greek.png") },
-  // { name: "Cafe", image: require("../assets/symbols/greek.png") },
+  { name: "Cafe", image: require("../assets/symbols/coffee.png") },
   { name: "Asian", image: require("../assets/symbols/sushi.png") },
   { name: "Mexican", image: require("../assets/symbols/taco.png") },
   { name: "American", image: require("../assets/symbols/burgerFull.png") },
-  // { name: "Pizza", image: require("../assets/symbols/greek.png") },
+  { name: "Pizza", image: require("../assets/symbols/pizza.png") },
   { name: "Indian", image: require("../assets/symbols/indian.png") },
-  // { name: "Street Food", image: require("../assets/symbols/greek.png") },
-  // { name: "Seafood", image: require("../assets/symbols/fish.png") },
+  { name: "Street Food", image: require("../assets/symbols/noodle.png") },
+  { name: "Seafood", image: require("../assets/symbols/shrimp.png") },
+  { name: "Desert", image: require("../assets/symbols/donut.png") },
+  { name: "Steakhouse", image: require("../assets/symbols/steak.png") },
+  { name: "Georgian", image: require("../assets/symbols/khachapuri.png") },
+
   // { name: "Diner", image: require("../assets/symbols/greek.png") },
  // Georgian
- //Steakhouse
 
 
 ];
 
 const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];
 const atmospheres = ["Casual", "Fine Dining", "Fast Food", "Romantic"];
+
+const vibe = [
+  { name: "Israeli", image: require("../assets/symbols/falafel.png") },
+  { name: "Italian", image: require("../assets/symbols/spaghetti.png") },
+  { name: "Bar", image: require("../assets/symbols/beer.png") },
+  { name: "Greek", image: require("../assets/symbols/greek.png") },
+];
 
 const RestaurantPreferenceScreen = () => {
   const [selectedTypes, setSelectedTypes] = useState([]);

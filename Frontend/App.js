@@ -168,7 +168,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeScreen"
+        initialRouteName="RestaurantPreferenceScreen"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />

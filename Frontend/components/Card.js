@@ -89,7 +89,6 @@ const Card = ({ name, rating, location, priceLevel, image, isFirst, swipe, title
             <View style={styles.priceTypeContainer}>
                 <Text style={styles.priceLevel}>{priceLevel}</Text>
                 <Text style={styles.type}>{type}</Text>
-                {/* <StarRating rating={rating} /> */}
             </View>
             </View>
         </View>
@@ -154,9 +153,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         left: 25,
-        paddingHorizontal: 10, // Adjust as needed
-        paddingVertical: 5, // Adjust as needed
-        borderRadius: 10, // Adjust as needed
+        paddingHorizontal: 10, 
+        paddingVertical: 5,
+        borderRadius: 10, 
         
     },
     nameRatingContainer: {

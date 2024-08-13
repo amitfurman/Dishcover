@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import OptionList from "../components/OptionList";
 import { COLORS } from "../colors";
 import { Picker } from "@react-native-picker/picker";
@@ -17,12 +24,11 @@ const restaurantTypes = [
   { name: "Indian", image: require("../assets/symbols/indian.png") },
   { name: "Street Food", image: require("../assets/symbols/noodle.png") },
   { name: "Seafood", image: require("../assets/symbols/shrimp.png") },
-  { name: "Desert", image: require("../assets/symbols/donut.png") },
+  { name: "Dessert", image: require("../assets/symbols/donut.png") },
   { name: "Steakhouse", image: require("../assets/symbols/steak.png") },
   { name: "Georgian", image: require("../assets/symbols/khachapuri.png") },
 
   // { name: "Diner", image: require("../assets/symbols/greek.png") },
-  // Georgian
 ];
 
 const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];
@@ -40,6 +46,9 @@ const RestaurantPreferenceScreen = () => {
   const [selectedAtmosphere, setSelectedAtmosphere] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [isVegan, setIsVegan] = useState(false);
+  const [isGlutenFree, setIsGlutenFree] = useState(false);
+  const [isWheelchairAccessible, setIsWheelchairAccessible] = useState(false);
 
   const toggleType = (type) => {
     if (selectedTypes.includes(type)) {
@@ -60,30 +69,6 @@ const RestaurantPreferenceScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
-
-      <OptionList
-        title="Type of Restaurant"
-        data={restaurantTypes}
-        selectedItems={selectedTypes}
-        onToggle={toggleType}
-        dataType="image"
-      />
-
-      <OptionList
-        title="Budget"
-        data={budgets}
-        selectedItems={[selectedBudget]}
-        onToggle={selectBudget}
-        dataType="text"
-      />
-
-      <OptionList
-        title="Atmosphere"
-        data={atmospheres}
-        selectedItems={[selectedAtmosphere]}
-        onToggle={selectAtmosphere}
-        dataType="image"
-      />
 
       <View style={styles.pickerContainer}>
         <TouchableOpacity
@@ -139,6 +124,68 @@ const RestaurantPreferenceScreen = () => {
           </View>
         </Modal>
       </View>
+
+      <OptionList
+        title="Type of Restaurant"
+        data={restaurantTypes}
+        selectedItems={selectedTypes}
+        onToggle={toggleType}
+        dataType="image"
+      />
+
+      <OptionList
+        title="Budget"
+        data={budgets}
+        selectedItems={[selectedBudget]}
+        onToggle={selectBudget}
+        dataType="text"
+      />
+
+      <OptionList
+        title="Atmosphere"
+        data={atmospheres}
+        selectedItems={[selectedAtmosphere]}
+        onToggle={selectAtmosphere}
+        dataType="image"
+      />
+
+      <View style={styles.preferencesContainer}>
+        <TouchableOpacity
+          style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
+          onPress={() => setIsVegan(!isVegan)}
+        >
+          <Image
+            source={require("../assets/symbols/veganfriendly.png")}
+            style={styles.symbolImage}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.symbolContainer,
+            isGlutenFree && styles.selectedSymbol,
+          ]}
+          onPress={() => setIsGlutenFree(!isGlutenFree)}
+        >
+          <Image
+            source={require("../assets/symbols/glutenfree.png")}
+            style={styles.symbolImage}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.symbolContainer,
+            isWheelchairAccessible && styles.selectedSymbol,
+          ]}
+          onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
+        >
+          <Image
+            source={require("../assets/symbols/wheelchairaccessibility.png")}
+            style={styles.symbolImage}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -158,7 +205,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   pickerContainer: {
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 15,
   },
   customPicker: {
@@ -185,6 +232,28 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
     padding: 10,
+  },
+  preferencesContainer: {
+    flexDirection: "row",
+    // justifyContent: "space-between",
+    marginTop: 20,
+    justifyContent: "center",
+  },
+  symbolContainer: {
+    padding: 17,
+    borderRadius: 50,
+    marginHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  symbolImage: {
+    width: 37,
+    height: 37,
+    borderRadius: 20,
+  },
+  selectedSymbol: {
+    backgroundColor: COLORS.pink + "20",
+    borderColor: COLORS.pink,
+    borderWidth: 1,
   },
 });
 export default RestaurantPreferenceScreen;

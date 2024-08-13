@@ -14,7 +14,9 @@
     "@expo-google-fonts/roboto": "^0.2.3",
     "@expo/metro-runtime": "~3.2.1",
     "@react-native-google-signin/google-signin": "^12.2.1",
-    "@react-navigation/native": "^6.1.17",
+    "@react-native-picker/picker": "2.7.5",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.9.26",
     "apify": "^3.2.3",
     "axios": "^1.7.2",
@@ -48,8 +50,7 @@
     "react-native-star-rating": "^1.1.0",
     "react-native-stock-star-rating": "^1.0.6",
     "react-native-web": "~0.19.10",
-    "tailwind-react-native-classnames": "^1.5.1",
-    "@react-native-picker/picker": "2.7.5"
+    "tailwind-react-native-classnames": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

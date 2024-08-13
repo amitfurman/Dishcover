@@ -72,9 +72,10 @@ export default function SigninScreen() {
       axios.post(`${url}/signin`, userData).then((res) => {
         if (res.data.status === "ok") {
           Alert.alert("User logged in successfully");
+          navigation.navigate("BottomTabs", { id: id });
           ////////////////add navigation to the next screen
           //navigation.navigate("MainScreen", { username: id });
-          navigation.navigate("FirstIntro", { username: id });
+          // navigation.navigate("FirstIntro", { username: id });
         } else {
           Alert.alert(res.data.data);
         }

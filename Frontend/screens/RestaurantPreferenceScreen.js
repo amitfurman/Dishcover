@@ -6,10 +6,13 @@ import {
   Modal,
   TouchableOpacity,
   Image,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import OptionList from "../components/OptionList";
 import { COLORS } from "../colors";
 import { Picker } from "@react-native-picker/picker";
+// import { ScrollView } from "react-native-gesture-handler";
 
 const restaurantTypes = [
   { name: "Israeli", image: require("../assets/symbols/falafel.png") },
@@ -27,8 +30,6 @@ const restaurantTypes = [
   { name: "Dessert", image: require("../assets/symbols/donut.png") },
   { name: "Steakhouse", image: require("../assets/symbols/steak.png") },
   { name: "Georgian", image: require("../assets/symbols/khachapuri.png") },
-
-  // { name: "Diner", image: require("../assets/symbols/greek.png") },
 ];
 
 const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];
@@ -67,126 +68,130 @@ const RestaurantPreferenceScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
+        <View style={styles.container}>
+          <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
 
-      <View style={styles.pickerContainer}>
-        <TouchableOpacity
-          style={[
-            styles.customPicker,
-            selectedDistrict
-              ? {
-                  backgroundColor: COLORS.pink + "20",
-                  borderColor: COLORS.pink,
-                }
-              : { backgroundColor: "#fff", borderColor: COLORS.blue },
-          ]}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.selectedText}>
-            {selectedDistrict || "Select District"}
-          </Text>
-        </TouchableOpacity>
+          <View style={styles.pickerContainer}>
+            <TouchableOpacity
+              style={[
+                styles.customPicker,
+                selectedDistrict
+                  ? {
+                      backgroundColor: COLORS.pink + "20",
+                      borderColor: COLORS.pink,
+                    }
+                  : { backgroundColor: "#fff", borderColor: COLORS.blue },
+              ]}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.selectedText}>
+                {selectedDistrict || "Select District"}
+              </Text>
+            </TouchableOpacity>
 
-        <Modal visible={modalVisible} transparent={true} animationType="fade">
-          <View style={styles.modalContainer}>
-            <View style={styles.pickerWrapper}>
-              <Picker
-                selectedValue={selectedDistrict}
-                onValueChange={(itemValue) => {
-                  setSelectedDistrict(itemValue);
-                  setModalVisible(false);
-                }}
-              >
-                <Picker.Item label="Select District" value="" />
-                <Picker.Item
-                  label="Southern District"
-                  value="Southern District"
-                />
-                <Picker.Item
-                  label="Tel Aviv District"
-                  value="Tel Aviv District"
-                />
-                <Picker.Item
-                  label="Jerusalem District"
-                  value="Jerusalem District"
-                />
-                <Picker.Item
-                  label="Central District"
-                  value="Central District"
-                />
-                <Picker.Item
-                  label="Northern District"
-                  value="Northern District"
-                />
-              </Picker>
-            </View>
+            <Modal
+              visible={modalVisible}
+              transparent={true}
+              animationType="fade"
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.pickerWrapper}>
+                  <Picker
+                    selectedValue={selectedDistrict}
+                    onValueChange={(itemValue) => {
+                      setSelectedDistrict(itemValue);
+                      setModalVisible(false);
+                    }}
+                  >
+                    <Picker.Item label="Select District" value="" />
+                    <Picker.Item
+                      label="Southern District"
+                      value="Southern District"
+                    />
+                    <Picker.Item
+                      label="Tel Aviv District"
+                      value="Tel Aviv District"
+                    />
+                    <Picker.Item
+                      label="Jerusalem District"
+                      value="Jerusalem District"
+                    />
+                    <Picker.Item
+                      label="Central District"
+                      value="Central District"
+                    />
+                    <Picker.Item
+                      label="Northern District"
+                      value="Northern District"
+                    />
+                  </Picker>
+                </View>
+              </View>
+            </Modal>
           </View>
-        </Modal>
-      </View>
 
-      <OptionList
-        title="Type of Restaurant"
-        data={restaurantTypes}
-        selectedItems={selectedTypes}
-        onToggle={toggleType}
-        dataType="image"
-      />
-
-      <OptionList
-        title="Budget"
-        data={budgets}
-        selectedItems={[selectedBudget]}
-        onToggle={selectBudget}
-        dataType="text"
-      />
-
-      <OptionList
-        title="Atmosphere"
-        data={atmospheres}
-        selectedItems={[selectedAtmosphere]}
-        onToggle={selectAtmosphere}
-        dataType="image"
-      />
-
-      <View style={styles.preferencesContainer}>
-        <TouchableOpacity
-          style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
-          onPress={() => setIsVegan(!isVegan)}
-        >
-          <Image
-            source={require("../assets/symbols/veganfriendly.png")}
-            style={styles.symbolImage}
+          <OptionList
+            title="Type of Restaurant"
+            data={restaurantTypes}
+            selectedItems={selectedTypes}
+            onToggle={toggleType}
+            dataType="image"
           />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.symbolContainer,
-            isGlutenFree && styles.selectedSymbol,
-          ]}
-          onPress={() => setIsGlutenFree(!isGlutenFree)}
-        >
-          <Image
-            source={require("../assets/symbols/glutenfree.png")}
-            style={styles.symbolImage}
+          <OptionList
+            title="Budget"
+            data={budgets}
+            selectedItems={[selectedBudget]}
+            onToggle={selectBudget}
+            dataType="text"
           />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.symbolContainer,
-            isWheelchairAccessible && styles.selectedSymbol,
-          ]}
-          onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
-        >
-          <Image
-            source={require("../assets/symbols/wheelchairaccessibility.png")}
-            style={styles.symbolImage}
+          <OptionList
+            title="Atmosphere"
+            data={atmospheres}
+            selectedItems={[selectedAtmosphere]}
+            onToggle={selectAtmosphere}
+            dataType="image"
           />
-        </TouchableOpacity>
-      </View>
-    </View>
+
+          <View style={styles.preferencesContainer}>
+            <TouchableOpacity
+              style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
+              onPress={() => setIsVegan(!isVegan)}
+            >
+              <Image
+                source={require("../assets/symbols/veganfriendly.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.symbolContainer,
+                isGlutenFree && styles.selectedSymbol,
+              ]}
+              onPress={() => setIsGlutenFree(!isGlutenFree)}
+            >
+              <Image
+                source={require("../assets/symbols/glutenfree.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.symbolContainer,
+                isWheelchairAccessible && styles.selectedSymbol,
+              ]}
+              onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
+            >
+              <Image
+                source={require("../assets/symbols/wheelchairaccessibility.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
   );
 };
 
@@ -195,6 +200,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     backgroundColor: COLORS.beige,
+  },
+  innerContainer: {
+    padding: 15,
   },
   formTitle: {
     fontSize: 24,
@@ -240,10 +248,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   symbolContainer: {
-    padding: 17,
+    padding: 15,
     borderRadius: 50,
     marginHorizontal: 10,
     backgroundColor: "#fff",
+    borderColor: COLORS.blue,
+    borderWidth: 1,
   },
   symbolImage: {
     width: 37,

@@ -14,7 +14,7 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
           isSelected ? styles.selectedType : styles.unselectedType,
           { 
             height: dataType === 'image' ? 70 : 50, 
-            width: title === "Atmosphere" ? 85 : 110 // Adjust the width for Atmosphere
+            width: title === "Atmosphere" || title === "Type of Restaurant"  ? 85 : 110 // Adjust the width for Atmosphere
           },
         ]}
         onPress={() => onToggle(item)}
@@ -41,7 +41,7 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
         data={data}
         renderItem={({ item }) => renderOption(item)}
         keyExtractor={(item) => item.name || item}
-        numColumns={title === "Atmosphere" ? 4 : 3} // Show 4 columns if it's Atmosphere
+        numColumns={"4"}
         columnWrapperStyle={styles.row}
       />
     </View>
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     color: COLORS.blue,
   },
   row: {
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+
   },
   typeBox: {
     borderWidth: 2,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 14,
+    fontSize: 13,
     opacity: 0.6,
     textAlign: 'center', 
     marginTop: 3, 
@@ -98,8 +99,8 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
   image: {
-    width: 40, 
-    height: 40, 
+    width: 35, 
+    height: 35, 
     resizeMode: "cover", 
   },
 });

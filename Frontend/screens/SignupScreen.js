@@ -17,10 +17,8 @@ import { Octicons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
 import Error from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import { COLORS } from "../colors";
-
-const url = "http://10.100.102.9:3000";
-//const url = "http://192.168.68.111:3000";
+import { COLORS } from "../constants";
+import { url } from "../constants";
 
 export default function SignupScreen({ props }) {
   const navigation = useNavigation();
@@ -46,15 +44,16 @@ export default function SignupScreen({ props }) {
   };
 
   function handleSignup() {
+    console.log("Signing up user with data:", name, email, password);
     const userData = {
-      name: name,
+      name,
       email,
       password,
     };
 
     if (nameVerified && emailVerified && passwordVerified) {
       axios
-        .post(`${url}/signup`, userData)
+        .post(`${url}/api/users/signup`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
             setModalMessage("User created successfully");
@@ -62,7 +61,8 @@ export default function SignupScreen({ props }) {
             setTimeout(() => {
               setModalVisible(false);
               navigation.navigate("FirstIntro", { username: name });
-            }, 2000); // Close the modal after 2 seconds          } else {
+            }, 2000);
+          } else {
             setModalMessage(res.data.data);
             setModalVisible(true);
           }
@@ -90,10 +90,11 @@ export default function SignupScreen({ props }) {
   }
 
   function checkIfNameExists() {
-    // Check if the name already exists in the database
+    console.log("Checking if name exists in the database");
 
+    // Check if the name already exists in the database
     axios
-      .get(`${url}/checkUserByName?name=${name}`)
+      .get(`${url}/api/users/checkUserByName?name=${name}`)
       .then((res) => {
         if (res.data.exists) {
           // Name already exists in the database
@@ -120,12 +121,15 @@ export default function SignupScreen({ props }) {
   }
 
   function checkIfEmailExists() {
+    console.log("Checking if email exists in the database");
     // Check if the email already exists in the database
+
     axios
-      .get(`${url}/checkUserByEmail?email=${email}`)
+      .get(`${url}/api/users/checkUserByEmail?email=${email}`)
       .then((res) => {
         if (res.data.exists) {
           // Email already exists in the database
+
           setEmailVerified(false);
           setEmailError("Email already registered. You might have an account.");
         }

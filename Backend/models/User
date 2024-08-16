@@ -1,0 +1,47 @@
+const mongoose = require("mongoose");
+const { COLLECTIONS } = require("../dal/constants");
+
+const UserSchema = new mongoose.Schema(
+  {
+    name: { type: String, unique: true },
+    email: { type: String, unique: true },
+    password: { type: String, required: true },
+    placesVisited: [
+      {
+        type: String,
+      },
+    ],
+    placesToVisit: [
+      {
+        type: String,
+      },
+    ],
+    district: { type: String }, // Add district field
+  },
+  {
+    collection: COLLECTIONS.USER_INFO, // Specify the collection name as "userinfo"
+  }
+);
+
+/*
+const UserProfileSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true },
+  district: String,
+  age: Number,
+  gender: String,
+  familyStatus: String,
+  accessibilityFeatures: {
+    vegan: Number,
+    glutenFree: Number,
+    wheelchair: Number,
+  },
+  cuisinesPriority: String,
+  scores: {
+    vegan: Number,
+    glutenFree: Number,
+    wheelchair: Number,
+  },
+});*/
+
+module.exports = mongoose.model("UserInfo", UserSchema);
+//module.exports = mongoose.model('UserProfile', UserProfileSchema);  //?

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,22 +7,46 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
-import { COLORS } from "../colors";
-import { restaurants as restaurantsArray } from "../data";
 import CardWishlist from "../components/CardWishlist";
 import CardBackWishlist from "../components/CardBackWishlist";
+import axios from "axios";
+import { COLORS } from "../constants";
+import { url } from "../constants";
 
 function WishlistScreen() {
   const navigation = useNavigation();
-  const [restaurants, setRestaurants] = useState(restaurantsArray);
+  const route = useRoute();
+  const { username } = route.params;
+  const [restaurants, setRestaurants] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [isCardModalVisible, setCardModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isReviewModalVisible, setReviewModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [currentRestaurant, setCurrentRestaurant] = useState(null);
+
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/users/getPlacesUserWantToVisit`,
+          {
+            params: { username },
+          }
+        );
+        setRestaurants(response.data.placesToVisit);
+      } catch (error) {
+        console.error("Error fetching wishlist:", error.message);
+        Alert.alert(
+          "An error occurred while fetching your wishlist. Please try again."
+        );
+      }
+    };
+
+    fetchRestaurants();
+  }, [username]);
 
   const handlePressOnCard = (item) => {
     const details = {
@@ -55,28 +79,44 @@ function WishlistScreen() {
   };
 
   const handleDeleteRestaurant = () => {
-    setDeleteModalVisible(false);
-    //TODO: Remove restaurant from wishlist (backend update DB)
-    setRestaurants(
-      restaurants.filter((r) => r.name !== currentRestaurant.name)
-    );
+    setDeleteModalVisible(false); // Close the modal
+
     setModalMessage(
       `${currentRestaurant.name} removed from your wishlist!\nVisited? Share your experience to get personalized recommendations like this one!`
     );
-    setReviewModalVisible(true);
+
+    setReviewModalVisible(true); // Show the review modal
   };
 
-  const handleReviewResponse = (response) => {
+  const handleReviewResponse = async (response) => {
     setReviewModalVisible(false);
-    if (response) {
-      // Handle review submission process
-      console.log("User chose to submit a review.");
-      navigation.navigate("ReviewPlaceScreen", {
-        username: "eden",
-        restaurantName: currentRestaurant.name,
+
+    // Prepare data for backend
+    const reviewData = {
+      username,
+      restaurantName: currentRestaurant.name,
+      visited: response,
+    };
+
+    try {
+      await axios.delete(`${url}/api/users/deleteRestaurantFromPlacesToVisit`, {
+        data: reviewData,
       });
-    } else {
-      console.log("User chose not to submit a review.");
+
+      if (response) {
+        // Navigate to the review screen if the user wants to leave a review
+        navigation.navigate("ReviewPlaceScreen", {
+          username: username,
+          restaurantName: currentRestaurant.name,
+        });
+      } else {
+        console.log("User chose not to submit a review.");
+      }
+    } catch (error) {
+      console.error("Error updating wishlist:", error.message);
+      Alert.alert(
+        "An error occurred while updating your wishlist. Please try again."
+      );
     }
   };
 
@@ -89,7 +129,7 @@ function WishlistScreen() {
           <View style={styles.cardWrapper}>
             <CardWishlist
               name={item.name}
-              image={item.image}
+              image={item.mainImage}
               onPress={() => handlePressOnCard(item)}
             />
             <TouchableOpacity

@@ -16,7 +16,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 import { FontAwesome5 } from "@expo/vector-icons";
 import RatingInput from "../components/RatingInput";
 
@@ -32,33 +32,21 @@ import cleanlinessEmpty from "../assets/symbols/cleanlinessEmpty.png";
 import vibesFull from "../assets/symbols/vibesFull.png";
 import vibesEmpty from "../assets/symbols/vibesEmpty.png";
 
-const url = "http://10.100.102.9:3000";
-//const url = "http://192.168.68.111:3000";
+import { url } from "../constants";
 
 function ReviewPlaceScreen({ route }) {
   const navigation = useNavigation();
   const { username, restaurantName } = route.params;
+
   const [foodRating, setFoodRating] = useState(0);
   const [serviceRating, setServiceRating] = useState(0);
   const [cleanlinessRating, setCleanlinessRating] = useState(0);
   const [vibesRating, setVibesRating] = useState(0);
   const [additionalComments, setAdditionalComments] = useState("");
 
-  const handleSubmitButton = () => {
-    // Send ratings to backend
-    console.log(
-      "Submitting review...",
-      username,
-      restaurantName,
-      foodRating,
-      serviceRating,
-      cleanlinessRating,
-      vibesRating,
-      additionalComments
-    );
-
+  const handleSubmitButton = async () => {
     const reviewData = {
-      // username,
+      username,
       restaurantName,
       foodRating,
       serviceRating,
@@ -66,14 +54,20 @@ function ReviewPlaceScreen({ route }) {
       vibesRating,
       additionalComments,
     };
+
     try {
-      axios.post(`${url}/reviewByUser`, reviewData).then((res) => {
-        console.log("Review submitted successfully:", res.data);
-        Alert.alert("Thank you for your review!");
-        navigation.goBack();
-      });
+      const response = await axios.post(
+        `${url}/api/users/reviewByUser`,
+        reviewData
+      );
+      console.log("Review submitted successfully:", response.data);
+      Alert.alert("Thank you for your review!");
+      navigation.goBack();
     } catch (error) {
       console.error("Error submitting review:", error.message);
+      Alert.alert(
+        "There was an error submitting your review. Please try again."
+      );
     }
   };
 

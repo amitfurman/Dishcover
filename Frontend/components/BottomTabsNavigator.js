@@ -1,13 +1,15 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import WishlistScreen from "../screens/WishlistScreen";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MainScreen from "../screens/MainScreen";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabsNavigator() {
+function BottomTabsNavigator({ route }) {
+  const { username } = route.params;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -19,6 +21,7 @@ function BottomTabsNavigator() {
       <Tab.Screen
         name="Home"
         component={MainScreen}
+        initialParams={{ username }}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="restaurant" color={color} size={size} />
@@ -30,6 +33,7 @@ function BottomTabsNavigator() {
       <Tab.Screen
         name="Wishlist"
         component={WishlistScreen}
+        initialParams={{ username }}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="favorite" color={color} size={size} />
@@ -41,4 +45,5 @@ function BottomTabsNavigator() {
     </Tab.Navigator>
   );
 }
+
 export default BottomTabsNavigator;

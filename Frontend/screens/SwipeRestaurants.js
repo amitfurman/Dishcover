@@ -17,14 +17,20 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import CardBack from "../components/CardBack";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { COLORS } from "../colors";
+import axios from "axios";
+import { COLORS } from "../constants";
+import { url } from "../constants";
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  // const { username } = route.params;
-  const { username } ="amit";
+  const { username } = route.params;
+  //const { username } ="amit";
+  //const username = "Eden12";
+  const navigation = useNavigation();
 
   const [restaurants, setRestaurants] = useState(restaurantsArray);
+  const [swipedLeft, setSwipedLeft] = useState([]);
+  const [swipedRight, setSwipedRight] = useState([]);
   const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
   const { width, height } = Dimensions.get("screen");
   //for swipe
@@ -53,6 +59,15 @@ export default function SwipeRestaurants() {
       const isActionActive = Math.abs(dx) > width * 0.4;
 
       if (isActionActive) {
+        // Update swiped arrays based on swipe direction
+        const restaurantName = restaurants[0].name; // Get the name of the restaurant
+
+        if (direction > 0) {
+          setSwipedRight((prev) => [...prev, restaurantName]);
+        } else {
+          setSwipedLeft((prev) => [...prev, restaurantName]);
+        }
+
         //swipe the card out
         Animated.timing(swipe, {
           toValue: {
@@ -140,14 +155,48 @@ export default function SwipeRestaurants() {
     outputRange: ["180deg", "360deg"],
   });
 
+  const handleStopSwiping = async () => {
+    console.log("Swiped left:", swipedLeft);
+    console.log("Swiped right:", swipedRight);
+    //TODO: Send swipedLeft to the backend
+
+    try {
+      const response = await axios.post(
+        `${url}/api/users/updatePlacesUserWantToVisit`,
+        {
+          username: username,
+          placesToVisit: [...new Set(swipedRight)],
+        }
+      );
+
+      const { status } = response.data;
+
+      if (status === "ok") {
+        navigation.navigate("BottomTabs", { username: username });
+      } else {
+        console.error("Error from server:", data);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleError = (error) => {
+    if (error.response) {
+      console.error("Server responded with an error:", error.response.data);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up the request:", error.message);
+    }
+  };
+
   return (
     <LinearGradient colors={["white", "white"]} style={styles.background}>
       <View style={styles.container}>
         <StatusBar style="auto" />
-        <Text style={styles.title}>
-        Swipe as much as you want!
-        </Text>
-        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.title}>Swipe as much as you want!</Text>
+        <TouchableOpacity style={styles.homeButton} onPress={handleStopSwiping}>
           <Text style={styles.homeButtonText}>Stop Swiping</Text>
         </TouchableOpacity>
         {restaurants
@@ -238,11 +287,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize:22,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: "bold",
     marginBottom: 10,
     color: COLORS.pink,
-    textAlign: 'center',
+    textAlign: "center",
     flex: 1,
     top: 100,
     fontFamily: "Poppins_700Bold",

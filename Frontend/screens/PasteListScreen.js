@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 import Icon from "react-native-vector-icons/Ionicons"; // Importing icons
 
 const PasteListScreen = ({ route }) => {

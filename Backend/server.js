@@ -1,521 +1,59 @@
+// Import the Express module
 const express = require("express");
 const app = express();
+
+//const routes = require("./routes");
+const userRoutes = require("./routes/userRoutes");
+
 app.use(express.json());
+
+//app.use("/api", routes);
+app.use("/api/users", userRoutes); // Prefix routes
+
+// Start the server on port 3000
 const port = 3000;
-require("dotenv").config();
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { ApifyClient } = require("apify-client"); // Import ApifyClient from apify-client package
-
-const mongoUrl = process.env.MONGODB_URI;
-const JWT_SECRET = process.env.JWT_SECRET;
-const MY_APIFY_TOKEN = process.env.MY_APIFY_TOKEN;
-
-// Import the schemas/models
-require("./UserDetails");
-require("./RestaurantsDetails");
-require("./ReviewDetails");
-
-const User = mongoose.model("UserInfo");
-const Restaurants = mongoose.model("restaurants");
-const Reviews = mongoose.model("restaurants_reviews");
-
-// Connect to MongoDB using Mongoose
-mongoose
-  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to the database"))
-  .catch((err) => console.error("Could not connect to MongoDB...", err));
-
-// Defining a route for handling client communication
-app.get("/", (req, res) => {
-  res.send({ statuse: "Started" });
-});
-
-app.get("/checkUserByName", async (req, res) => {
-  const { name } = req.query;
-
-  try {
-    const oldUserWithSameName = await User.findOne({ name: name });
-    if (oldUserWithSameName) {
-      return res.status(200).json({
-        exists: true,
-        message: "User already exists with this name.",
-      });
-    } else {
-      return res.status(200).json({
-        exists: false,
-        message: "Name is available.",
-      });
-    }
-  } catch (error) {
-    console.error("Error checking name:", error);
-    return res.status(500).json({
-      error: "Internal server error",
-    });
-  }
-});
-
-app.get("/checkUserByEmail", async (req, res) => {
-  const { email } = req.query;
-
-  try {
-    const oldUserWithSameEmail = await User.findOne({ email: email });
-    if (oldUserWithSameEmail) {
-      return res.status(200).json({
-        exists: true,
-        message: "User already exists with this email.",
-      });
-    }
-  } catch (error) {
-    return res.status(404).json({
-      error: error.message,
-    });
-  }
-});
-
-app.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-
-  console.log("Received signup request:", req.body);
-
-  const encryptedPassword = await bcrypt.hash(password, 10);
-
-  try {
-    await User.create({
-      name: name,
-      email: email,
-      password: encryptedPassword,
-    });
-    res.send({ status: "ok", data: "User created successfully" });
-  } catch (e) {
-    res.send({ status: "error", data: e.message });
-  }
-});
-
-app.post("/signin", async (req, res) => {
-  const { id, password } = req.body;
-  const oldUser = await User.findOne({ $or: [{ email: id }, { name: id }] });
-
-  if (!oldUser) {
-    return res.send({ status: "error", data: "User doesn't exists." });
-  }
-
-  if (await bcrypt.compare(password, oldUser.password)) {
-    const token = jwt.sign(
-      { id: oldUser._id, email: oldUser.email },
-      JWT_SECRET
-    );
-    if (res.status(201)) {
-      return res.send({ status: "ok", data: token });
-    } else {
-      return res.send({ status: "error", data: "Error" });
-    }
-  } else {
-    return res.send({ status: "error", data: "Invalid Password" });
-  }
-});
-
-app.post("/placesUserVisit", async (req, res) => {
-  const { username, placesVisited } = req.body;
-  console.log(`Received request for restaurants: ${placesVisited}`);
-  console.log(`UserId: ${username}`);
-
-  try {
-    // Save placesVisited to user collection
-    const updatedUser = await User.findOneAndUpdate(
-      { name: username },
-      { $addToSet: { placesVisited: { $each: placesVisited } } }, // Use $addToSet to ensure uniqueness
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).send({ status: "error", data: "User not found" });
-    }
-    const restaurantsDataFromDB = await Restaurants.find(
-      {
-        name: { $in: placesVisited },
-      },
-      { name: 1, mainImage: 1 }
-    );
-
-    /////////////////////////////////////////////////
-    const foundRestaurants = restaurantsDataFromDB.map(
-      (restaurant) => restaurant.name
-    );
-    console.log("foundRestaurants", foundRestaurants);
-
-    const missingRestaurants = placesVisited.filter(
-      (name) => !foundRestaurants.includes(name)
-    );
-    console.log("missingRestaurants", missingRestaurants);
-    /////////////////////////////////////////////////
-
-    if (restaurantsDataFromDB.length > 0) {
-      console.log(
-        `Returning data for restaurants: ${restaurantsDataFromDB
-          .map((restaurant) => restaurant.name)
-          .join(", ")}`
-      );
-      res.send({ status: "ok", data: restaurantsDataFromDB });
-    } else {
-      res.status(404).send({
-        status: "error",
-        data: "No listings found with the given names.",
-      });
-    }
-  } catch (e) {
-    res.status(500).send({
-      status: "error",
-      data: e.message,
-    });
-  }
-});
-
-app.post("/placesUserWantToVisit", async (req, res) => {
-  const { username, placesToVisit } = req.body;
-  console.log(`Received request for restaurants: ${placesToVisit}`);
-  console.log(`UserId: ${username}`);
-
-  try {
-    // Save placesToVisit to user collection
-    const updatedUser = await User.findOneAndUpdate(
-      { name: username },
-      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).send({ status: "error", data: "User not found" });
-    }
-    res.send({ status: "ok" });
-  } catch (e) {
-    res.status(500).send({
-      status: "error",
-      data: e.message,
-    });
-  }
-});
-
-app.post("/reviewByUser", async (req, res) => {
-  const {
-    // username,
-    restaurantName,
-    foodRating,
-    serviceRating,
-    cleanlinessRating,
-    vibesRating,
-    additionalComments,
-  } = req.body;
-
-  console.log("Received review request:", req.body);
-  console.log(
-    "all: ",
-    //  username,
-    restaurantName,
-    foodRating,
-    serviceRating,
-    cleanlinessRating,
-    vibesRating,
-    additionalComments
-  );
-
-  try {
-    let restaurant = await Reviews.findOne({ name: restaurantName });
-
-    if (!restaurant) {
-      restaurant = new Reviews({ name: restaurantName, reviews: [] });
-    }
-
-    const newReview = {
-      // customerName: username,
-      foodScore: foodRating,
-      serviceScore: serviceRating,
-      cleanlinessScore: cleanlinessRating,
-      atmosphereScore: vibesRating,
-      comments: additionalComments,
-    };
-
-    restaurant.reviews.push(newReview);
-    await restaurant.save();
-
-    res.status(201).send(restaurant);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-});
-/*
-const axios = require("axios");
-const cheerio = require("cheerio");
-const puppeteer = require("puppeteer");
-
-app.get("/placesUserWantToVisit", async (req, res) => {
-  const { username, placesToVisit } = req.body;
-  console.log(`Received request for places to visit: ${placesToVisit}`);
-
-  try {
-    // Save placesToVisit to user collection
-    const updatedUser = await User.findOneAndUpdate(
-      { name: username },
-      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).send({ status: "error", data: "User not found" });
-    }
-
-    const restaurantsDataFromDB = await getRestaurantsDataFromDB(); // Assuming this is a function that fetches data from your DB
-    const foundRestaurants = restaurantsDataFromDB.map(
-      (restaurant) => restaurant.name
-    );
-    console.log("foundRestaurants:", foundRestaurants);
-
-    const missingRestaurants = placesToVisit.filter(
-      (name) => !foundRestaurants.includes(name)
-    );
-    console.log("missingRestaurants:", missingRestaurants);
-
-    const missingRestaurantsData = [];
-
-    // Initialize the ApifyClient with your Apify API token
-    const client = new ApifyClient({
-      token: process.env.MY_APIFY_TOKEN,
-    });
-
-    // Function to search TripAdvisor for the restaurant URL using Puppeteer
-    const findTripAdvisorURL = async (restaurantName) => {
-      let browser;
-      try {
-        browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        const searchUrl = `https://www.tripadvisor.com/Search?q=${encodeURIComponent(
-          restaurantName
-        )}`;
-        console.log(`Searching for ${restaurantName} at ${searchUrl}`);
-        await page.goto(searchUrl, { waitUntil: "networkidle2" });
-
-        // Log the HTML of the search results for debugging
-        const html = await page.content();
-        console.log(`HTML content for ${restaurantName}:`, html);
-
-        // Extract the URL of the first search result
-        const firstResult = await page.evaluate(() => {
-          const link = document.querySelector("a.result-title"); // Update this selector based on the actual HTML structure
-          return link ? link.href : null;
-        });
-
-        await browser.close();
-        console.log(`Found URL for ${restaurantName}: ${firstResult}`);
-        return firstResult;
-      } catch (error) {
-        if (browser) {
-          await browser.close();
-        }
-        console.error(
-          `Error searching for ${restaurantName}: ${error.message}`
-        );
-        return null;
-      }
-    };
-
-    // Fetch data for missing restaurants from the API
-    await Promise.all(
-      missingRestaurants.map(async (name) => {
-        try {
-          const tripAdvisorUrl = await findTripAdvisorURL(name);
-          if (!tripAdvisorUrl) {
-            console.log(`No URL found for ${name}`);
-            return;
-          } else {
-            console.log(`URL found for ${name}: ${tripAdvisorUrl}`);
-          }
-
-          const input = {
-            currency: "ILS",
-            includeDescription: false,
-            includeAiReviewsSummary: false,
-            includeAttractions: false,
-            includeHotels: false,
-            includePriceOffers: true,
-            includeRestaurants: true,
-            includeTags: false,
-            includeVacationRentals: false,
-            language: "en",
-            maxItemsPerQuery: 1,
-            startUrls: [
-              {
-                url: tripAdvisorUrl,
-              },
-            ],
-            checkInDate: "",
-            checkOutDate: "",
-          };
-
-          const run = await client.actor("maxcopell/tripadvisor").call(input);
-          console.log(`Run ID for ${name}: ${run.id}`);
-
-          const { items } = await client
-            .dataset(run.defaultDatasetId)
-            .listItems();
-
-          console.log(`Items for ${name}:`, items);
-          if (items && items.length > 0) {
-            // Assuming the first item contains the restaurant data
-            const restaurantData = items[0];
-
-            // Extract the image URL from the restaurant data
-            const id = restaurantData.id;
-            const imageUrl = restaurantData.image;
-            missingRestaurantsData.push({ name, image: imageUrl, id: id });
-            console.log(`Data for ${name}:`, { name, image: imageUrl, id: id });
-          }
-        } catch (error) {
-          console.error(
-            `Error fetching data for restaurant ${name}: ${error.message}`
-          );
-        }
-      })
-    );
-
-    const allRestaurantsData = [
-      ...restaurantsDataFromDB,
-      ...missingRestaurantsData,
-    ];
-    console.log("allRestaurantsData:", allRestaurantsData);
-
-    if (allRestaurantsData.length > 0) {
-      console.log(
-        `Returning data for restaurants: ${allRestaurantsData
-          .map((restaurant) => restaurant.name)
-          .join(", ")}`
-      );
-      res.send({ status: "ok", data: allRestaurantsData });
-    } else {
-      res.send({
-        status: "error",
-        data: "No listings found with the given names.",
-      });
-    }
-  } catch (e) {
-    res.status(500).send({
-      status: "error",
-      data: e.message,
-    });
-  }
-});
-*/
-
-/*
-//14/06
-app.get("/image", async (req, res) => {
-  const { restaurantNames } = req.query;
-  console.log(`Received request for restaurants: ${restaurantNames}`);
-
-  try {
-    const restaurantsDataFromDB = await Restaurants.find(
-      {
-        name: { $in: restaurantNames },
-      },
-      { name: 1, image: 1 }
-    );
-
-    const foundRestaurants = restaurantsDataFromDB.map(
-      (restaurant) => restaurant.name
-    );
-    console.log("foundRestaurants", foundRestaurants);
-
-    const missingRestaurants = restaurantNames.filter(
-      (name) => !foundRestaurants.includes(name)
-    );
-    console.log("missingRestaurants", missingRestaurants);
-
-    const missingRestaurantsData = [];
-
-    // Initialize the ApifyClient with your Apify API token
-    const client = new ApifyClient({
-      token: MY_APIFY_TOKEN,
-    });
-
-    // Fetch data for missing restaurants from the API
-    await Promise.all(
-      missingRestaurants.map(async (name) => {
-        try {
-          const input = {
-            currency: "ILS",
-            includeDescription: false,
-            includeAiReviewsSummary: false,
-            includeAttractions: false,
-            includeHotels: false,
-            includePriceOffers: true,
-            includeRestaurants: true,
-            includeTags: false,
-            includeVacationRentals: false,
-            language: "en",
-            maxItemsPerQuery: 1,
-            startUrls: [
-              {
-                url: "https://www.tripadvisor.com/Restaurant_Review-g293984-d4071520-Reviews-Night_Kitchen_TLV-Tel_Aviv_Tel_Aviv_District.html",
-              },
-            ],
-            checkInDate: "",
-            checkOutDate: "",
-          };
-
-          const run = await client.actor("maxcopell/tripadvisor").call(input);
-          const { items } = await client
-            .dataset(run.defaultDatasetId)
-            .listItems();
-
-          console.log("items", items);
-          if (items && items.length > 0) {
-            // Assuming the first item contains the restaurant data
-            console.log("items[0]", items[0]);
-            const restaurantData = items[0];
-
-            // Extract the image URL from the restaurant data
-            const id = restaurantData.id;
-            const imageUrl = restaurantData.image;
-            missingRestaurantsData.push({ name, image: imageUrl, id: id });
-            console.log("missingRestaurantsData", missingRestaurantsData);
-          }
-        } catch (error) {
-          console.error(
-            `Error fetching data for restaurant ${name}: ${error.message}`
-          );
-        }
-      })
-    );
-
-    const allRestaurantsData = [
-      ...restaurantsDataFromDB,
-      ...missingRestaurantsData,
-    ];
-    console.log("allRestaurantsData", allRestaurantsData);
-
-    if (allRestaurantsData.length > 0) {
-      console.log(
-        `Returning data for restaurants: ${allRestaurantsData
-          .map((restaurant) => restaurant.name)
-          .join(", ")}`
-      );
-      res.send({ status: "ok", data: allRestaurantsData });
-    } else {
-      res.send({
-        status: "error",
-        data: "No listings found with the given names.",
-      });
-    }
-  } catch (e) {
-    res.send({
-      status: "error",
-      data: e.message,
-    });
-  }
-});
-*/
-
-// Starting the server
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
+
+// Handle 404 errors
+app.use((req, res, next) => {
+  res.status(404).send("Route not found");
+});
+
+// // Define API routes
+// app.get('/api/transform', async (req, res) => {
+//   const client = await connectToMongoDB();
+//   const data = await transformAndUploadData(client);
+//   await closeMongoDBConnection(client);
+//   res.json(data);
+// });
+
+// app.get('/api/random-restaurants', async (req, res) => {
+//   const { district, count } = req.query;
+//   const client = await connectToMongoDB();
+//   const data = await getRandomRestaurantsByDistrict(client, district, parseInt(count));
+//   await closeMongoDBConnection(client);
+//   res.json(data);
+// });
+
+// app.get('/api/user-random-restaurants', async (req, res) => {
+//   const { userId } = req.query;
+//   const client = await connectToMongoDB();
+//   const data = await getRandomRestaurantsBasedOnUser(client, userId, 50);
+//   await closeMongoDBConnection(client);
+//   res.json(data);
+// });
+// // Usage
+// async function main() {
+//   const client = await connectToMongoDB();
+//   //await transformAndUploadData(client);
+//   await closeMongoDBConnection(client);
+// }
+
+// main();
+
+// // Define a route handler for the default home page
+// app.get('/', (req, res) => {
+//   res.send('Hello, World!');
+// });

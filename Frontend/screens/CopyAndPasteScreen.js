@@ -13,11 +13,9 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import qs from "qs";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 import Icon from "react-native-vector-icons/Ionicons"; // Importing icons
-
-const url = "http://10.100.102.9:3000";
-//const url = "http://192.168.68.111:3000";
+import { url } from "../constants";
 
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
@@ -45,6 +43,7 @@ const CopyAndPasteScreen = () => {
   };
 
   const handleContinueButton = async () => {
+    console.log("Continue button pressed:", value);
     const lines = value
       .split("\n")
       .map((line) => line.trim())
@@ -60,8 +59,8 @@ const CopyAndPasteScreen = () => {
 
     if (fromScreen === "FirstScreen") {
       try {
-        const response = await axios.post(`${url}/placesUserVisit`, {
-          username,
+        const response = await axios.post(`${url}/api/users/placesUserVisit`, {
+          username: username,
           placesVisited: [...new Set(restaurantNames)],
         });
 
@@ -92,15 +91,20 @@ const CopyAndPasteScreen = () => {
       }
     } else if (fromScreen === "SecondScreen") {
       try {
-        const response = await axios.post(`${url}/placesUserWantToVisit`, {
-          username,
-          placesToVisit: [...new Set(lines)],
-        });
+        const response = await axios.post(
+          `${url}/api/users/updatePlacesUserWantToVisit`,
+          {
+            username: username,
+            placesToVisit: [...new Set(lines)],
+          }
+        );
 
         const { status } = response.data;
 
         if (status === "ok") {
-          navigation.navigate("MainScreen");
+          navigation.navigate("BottomTabs", {
+            username: username,
+          });
         } else {
           console.error("Error from server:", data);
         }

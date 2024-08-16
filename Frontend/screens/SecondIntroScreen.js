@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { COLORS } from "../colors";
-import LottieView from 'lottie-react-native';
+import { COLORS } from "../constants";
+import LottieView from "lottie-react-native";
 
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
@@ -30,9 +30,8 @@ const SecondIntroScreen = () => {
           </Text>
         </View>
         <View style={styles.animationContainer}>
-          
           <LottieView
-            source={require('../assets/swipe.json')}
+            source={require("../assets/swipe.json")}
             autoPlay
             loop
             style={styles.animation}
@@ -65,7 +64,7 @@ const SecondIntroScreen = () => {
           <TouchableOpacity
             style={styles.maybeLaterButton}
             onPress={() =>
-              navigation.navigate("MainScreen", { username: username })
+              navigation.navigate("BottomTabs", { username: username })
             }
           >
             <Text style={styles.maybeLaterButtonText}>Maybe Later</Text>

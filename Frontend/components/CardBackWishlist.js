@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import Carousel from "react-native-reanimated-carousel";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 
 // Get screen dimensions
 const { width, height } = Dimensions.get("screen");

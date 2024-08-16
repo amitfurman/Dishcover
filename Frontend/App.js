@@ -10,7 +10,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native"; /
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Video } from "expo-av";
 import HomePageButton from "./components/HomePageButton";
-import { COLORS } from "./colors"; // Adjust the path as necessary
+import { COLORS } from "./constants";
 import {
   useFonts,
   PlayfairDisplay_400Regular,
@@ -170,7 +170,8 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="BottomTabs"
+        // initialRouteName="BottomTabs"
+        initialRouteName="Home"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -188,7 +189,7 @@ function App() {
           name="RestaurantPreferenceScreen"
           component={RestaurantPreferenceScreen}
           options={{
-            presentation: 'modal', 
+            presentation: "modal",
             // headerShown: false,
           }}
         />

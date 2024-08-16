@@ -17,7 +17,7 @@ import {
 } from "react-native-gesture-handler";
 import Choice from "./Choice";
 import Carousel from "react-native-reanimated-carousel";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 
 const { width, height } = Dimensions.get("screen");
 

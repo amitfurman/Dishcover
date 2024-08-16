@@ -8,7 +8,7 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useState } from "react";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 function FirstIntroScreen() {

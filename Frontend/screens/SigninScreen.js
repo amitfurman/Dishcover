@@ -17,13 +17,10 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { Platform } from "react-native";
 import { IOS_CLIENT, ANDROID_CLIENT } from "@env";
-
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
+import { url } from "../constants";
 
 WebBrowser.maybeCompleteAuthSession();
-
-const url = "http://10.100.102.9:3000";
-//const url = "http://192.168.68.111:3000";
 
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here

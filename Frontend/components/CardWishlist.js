@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { COLORS } from "../colors";
+import { COLORS } from "../constants";
 
 const CardWishlist = ({ name, image, onPress }) => {
   return (

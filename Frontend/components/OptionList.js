@@ -1,25 +1,35 @@
 import React from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from "react-native";
-import { COLORS } from "../colors";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Image,
+} from "react-native";
+import { COLORS } from "../constants";
 
 const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
   const renderOption = (item) => {
     const isSelected = selectedItems.includes(item);
-  
+
     return (
       <TouchableOpacity
         key={item.name || item}
         style={[
           styles.typeBox,
           isSelected ? styles.selectedType : styles.unselectedType,
-          { 
-            height: dataType === 'image' ? 70 : 50, 
-            width: title === "Atmosphere" || title === "Type of Restaurant"  ? 85 : 110 // Adjust the width for Atmosphere
+          {
+            height: dataType === "image" ? 70 : 50,
+            width:
+              title === "Atmosphere" || title === "Type of Restaurant"
+                ? 85
+                : 110, // Adjust the width for Atmosphere
           },
         ]}
         onPress={() => onToggle(item)}
       >
-        {dataType === 'image' ? (
+        {dataType === "image" ? (
           <View style={styles.imageContainer}>
             <Image source={item.image} style={styles.image} />
             {title !== "Atmosphere" && (
@@ -27,12 +37,18 @@ const OptionList = ({ title, data, selectedItems, onToggle, dataType }) => {
             )}
           </View>
         ) : (
-          <Text style={[styles.typeText, { color: title === 'Budget' ? "#E9AE0B" : "black" },]}>{item}</Text>
+          <Text
+            style={[
+              styles.typeText,
+              { color: title === "Budget" ? "#E9AE0B" : "black" },
+            ]}
+          >
+            {item}
+          </Text>
         )}
       </TouchableOpacity>
     );
   };
-  
 
   return (
     <View style={styles.container}>
@@ -60,7 +76,6 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: "flex-start",
-
   },
   typeBox: {
     borderWidth: 2,
@@ -91,17 +106,16 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
     fontSize: 13,
     opacity: 0.6,
-    textAlign: 'center', 
-    marginTop: 3, 
-
+    textAlign: "center",
+    marginTop: 3,
   },
   imageContainer: {
-    alignItems: 'center', 
+    alignItems: "center",
   },
   image: {
-    width: 35, 
-    height: 35, 
-    resizeMode: "cover", 
+    width: 35,
+    height: 35,
+    resizeMode: "cover",
   },
 });
 

@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Alert,
+  Modal,
+  Platform,
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -15,10 +16,8 @@ import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { Platform } from "react-native";
 import { IOS_CLIENT, ANDROID_CLIENT } from "@env";
-import { COLORS } from "../constants";
-import { url } from "../constants";
+import { COLORS, url } from "../constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -27,6 +26,8 @@ export default function SigninScreen() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const clientId = Platform.OS === "android" ? ANDROID_CLIENT : IOS_CLIENT;
 
@@ -47,14 +48,17 @@ export default function SigninScreen() {
     //   .post(`${url}/google-signin`, { id_token })
     //   .then((res) => {
     //     if (res.data.status === "ok") {
-    //       Alert.alert("User logged in successfully with Google");
+    //       setModalMessage("User logged in successfully with Google");
+    //       setModalVisible(true);
     //       navigation.navigate("FirstIntro", { username: res.data.username });
     //     } else {
-    //       Alert.alert(res.data.data);
+    //       setModalMessage(res.data.data);
+    //       setModalVisible(true);
     //     }
     //   })
     //   .catch((error) => {
-    //     Alert.alert("An error occurred during Google sign in");
+    //     setModalMessage("An error occurred during Google sign in");
+    //     setModalVisible(true);
     //     console.error(error);
     //   });
   };
@@ -65,20 +69,34 @@ export default function SigninScreen() {
       password: password,
     };
 
-    if (id.length != 0 && password.length != 0) {
-      axios.post(`${url}/signin`, userData).then((res) => {
-        if (res.data.status === "ok") {
-          Alert.alert("User logged in successfully");
-          navigation.navigate("BottomTabs", { id: id });
-          ////////////////add navigation to the next screen
-          //navigation.navigate("MainScreen", { username: id });
-          // navigation.navigate("FirstIntro", { username: id });
-        } else {
-          Alert.alert(res.data.data);
-        }
-      });
+    if (id.length !== 0 && password.length !== 0) {
+      axios
+        .post(`${url}/api/users/signin`, userData)
+        .then((res) => {
+          if (res.data.status === "ok") {
+            setModalMessage("User logged in successfully");
+            setModalVisible(true);
+            navigation.navigate("BottomTabs", { username: id });
+          } else if (res.data.status === "error") {
+            setModalMessage(res.data.data);
+            setModalVisible(true);
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            setModalMessage("Incorrect password, please try again.");
+          } else if (error.response && error.response.status === 404) {
+            setModalMessage("User doesn't exist. Please sign up first.");
+          } else {
+            setModalMessage(
+              "An error occurred during signin. Please try again later."
+            );
+          }
+          setModalVisible(true);
+        });
     } else {
-      Alert.alert("Please fill all the mandatory details");
+      setModalMessage("Please fill all the mandatory details");
+      setModalVisible(true);
     }
   }
 
@@ -95,7 +113,7 @@ export default function SigninScreen() {
         <View style={styles.form}>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Email or username "
+              placeholder="Email or username"
               placeholderTextColor={"gray"}
               style={styles.input}
               onChange={(e) => setId(e.nativeEvent.text)}
@@ -117,9 +135,12 @@ export default function SigninScreen() {
               )}
             </TouchableOpacity>
           </View>
+
+          {/*
           <TouchableOpacity style={styles.forgotPassword}>
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
+          */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.signinButton}
@@ -130,18 +151,16 @@ export default function SigninScreen() {
           </View>
           <View style={styles.signupContainer}>
             <Text style={styles.grayText}>Don't have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
               <Text style={styles.signupText}> Sign Up</Text>
             </TouchableOpacity>
           </View>
-          {/* Divider with "Or sign in with" text */}
           <View style={styles.dividerContainer}>
             <View style={styles.line} />
             <Text style={styles.dividerText}>Or sign in with</Text>
             <View style={styles.line} />
           </View>
 
-          {/* Google sign-in button */}
           <TouchableOpacity
             style={styles.googleButton}
             onPress={() => promptAsync()}
@@ -155,6 +174,25 @@ export default function SigninScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Modal for displaying messages */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -188,7 +226,6 @@ const styles = StyleSheet.create({
   form: {
     alignItems: "center",
     marginHorizontal: 16,
-    spaceBetween: 16,
   },
   inputContainer: {
     backgroundColor: "rgba(0,0,0,0.05)",
@@ -198,7 +235,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 12,
   },
   input: {
     flex: 1,
@@ -273,5 +309,42 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 10,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+  },
+  modalContainer: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  modalText: {
+    fontFamily: "Poppins_500Medium_Italic",
+    fontSize: 16,
+    marginBottom: 20,
+    color: COLORS.blue,
+  },
+  modalButton: {
+    backgroundColor: COLORS.pink,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  modalButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
   },
 });

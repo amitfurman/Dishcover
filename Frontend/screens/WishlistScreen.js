@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   StyleSheet,
@@ -6,8 +6,13 @@ import {
   FlatList,
   Modal,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import CardWishlist from "../components/CardWishlist";
 import CardBackWishlist from "../components/CardBackWishlist";
@@ -27,26 +32,25 @@ function WishlistScreen() {
   const [modalMessage, setModalMessage] = useState("");
   const [currentRestaurant, setCurrentRestaurant] = useState(null);
 
-  useEffect(() => {
-    const fetchRestaurants = async () => {
-      try {
-        const response = await axios.get(
-          `${url}/api/users/getPlacesUserWantToVisit`,
-          {
-            params: { username },
-          }
-        );
-        setRestaurants(response.data.placesToVisit);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error.message);
-        Alert.alert(
-          "An error occurred while fetching your wishlist. Please try again."
-        );
-      }
-    };
-
-    fetchRestaurants();
+  const fetchRestaurants = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${url}/api/users/getPlacesUserWantToVisit?username=${username}`
+      );
+      setRestaurants(response.data.placesToVisit);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error.message);
+      Alert.alert(
+        "An error occurred while fetching your wishlist. Please try again."
+      );
+    }
   }, [username]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRestaurants();
+    }, [fetchRestaurants])
+  );
 
   const handlePressOnCard = (item) => {
     const details = {
@@ -78,45 +82,60 @@ function WishlistScreen() {
     setDeleteModalVisible(true);
   };
 
-  const handleDeleteRestaurant = () => {
-    setDeleteModalVisible(false); // Close the modal
+  const handleDeleteRestaurant = async () => {
+    setDeleteModalVisible(false);
 
-    setModalMessage(
-      `${currentRestaurant.name} removed from your wishlist!\nVisited? Share your experience to get personalized recommendations like this one!`
-    );
+    try {
+      // Prepare data for backend
+      const reviewData = {
+        username,
+        restaurantName: currentRestaurant.name,
+      };
 
-    setReviewModalVisible(true); // Show the review modal
+      // Perform the delete request
+      await axios.delete(`${url}/api/users/deleteRestaurantFromPlacesToVisit`, {
+        data: reviewData,
+      });
+
+      fetchRestaurants();
+
+      // Proceed to review modal
+      setModalMessage(
+        `${currentRestaurant.name} removed from your wishlist!\nVisited? Share your experience to get personalized recommendations like this one!`
+      );
+      setReviewModalVisible(true);
+    } catch (error) {
+      console.error("Error delete Restaurant:", error.message);
+      Alert.alert(
+        "An error occurred while updating your wishlist. Please try again."
+      );
+    }
   };
 
   const handleReviewResponse = async (response) => {
     setReviewModalVisible(false);
 
-    // Prepare data for backend
-    const reviewData = {
-      username,
-      restaurantName: currentRestaurant.name,
-      visited: response,
-    };
+    if (response) {
+      // Only proceed if the user has visited the restaurant
+      try {
+        await axios.post(`${url}/api/users/placesUserVisit`, {
+          username: username,
+          placesVisited: [currentRestaurant.name],
+        });
 
-    try {
-      await axios.delete(`${url}/api/users/deleteRestaurantFromPlacesToVisit`, {
-        data: reviewData,
-      });
-
-      if (response) {
         // Navigate to the review screen if the user wants to leave a review
         navigation.navigate("ReviewPlaceScreen", {
           username: username,
-          restaurantName: currentRestaurant.name,
+          restaurantName: [currentRestaurant.name],
         });
-      } else {
-        console.log("User chose not to submit a review.");
+      } catch (error) {
+        console.error("Error submitting review:", error.message);
+        Alert.alert(
+          "An error occurred while submitting your review. Please try again."
+        );
       }
-    } catch (error) {
-      console.error("Error updating wishlist:", error.message);
-      Alert.alert(
-        "An error occurred while updating your wishlist. Please try again."
-      );
+    } else {
+      console.log("User chose not to submit a review.");
     }
   };
 

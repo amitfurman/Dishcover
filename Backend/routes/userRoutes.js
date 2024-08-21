@@ -144,6 +144,7 @@ router.post("/placesUserVisit", async (req, res) => {
       {
         $group: {
           _id: "$name",
+          mainImage: { $first: "$mainImage" },
           name: { $first: "$name" },
           district: { $first: "$district" },
         },
@@ -224,11 +225,24 @@ router.post("/reviewByUser", async (req, res) => {
     }
     const userId = user._id;
 
-    // Check if the restaurant exists
-    let restaurant = await Reviews.findOne({ name: restaurantName });
-
+    // Find the restaurant's ID
+    const restaurant = await Restaurant.findOne({ name: restaurantName });
     if (!restaurant) {
-      restaurant = new Reviews({ name: restaurantName, reviews: [] });
+      return res.status(404).send({ message: "Restaurant not found" });
+    }
+    const restaurantId = restaurant._id;
+
+    // Check if the restaurant exists in the Reviews collection
+    let restaurantReviews = await Reviews.findOne({
+      restaurantId: restaurantId,
+    });
+
+    if (!restaurantReviews) {
+      restaurantReviews = new Reviews({
+        name: restaurantName,
+        restaurantId: restaurantId,
+        reviews: [],
+      });
     }
 
     const newReview = {
@@ -241,10 +255,10 @@ router.post("/reviewByUser", async (req, res) => {
     };
 
     // Add the new review to the restaurant's reviews array
-    restaurant.reviews.push(newReview);
-    await restaurant.save();
+    restaurantReviews.reviews.push(newReview);
+    await restaurantReviews.save();
 
-    res.status(201).send(restaurant);
+    res.status(201).send(restaurantReviews);
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
   }

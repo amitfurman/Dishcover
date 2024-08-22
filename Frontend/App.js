@@ -75,6 +75,7 @@ import MainScreen from "./screens/MainScreen";
 import RestaurantPreferenceScreen from "./screens/RestaurantPreferenceScreen";
 import BottomTabsNavigator from "./components/BottomTabsNavigator";
 import WishlistScreen from "./screens/WishlistScreen";
+import RecommendationsScreen from "./screens/RecommendationsScreen";
 
 // style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
 
@@ -170,7 +171,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // initialRouteName="BottomTabs"
+        //initialRouteName="RecommendationsScreen"
         initialRouteName="Home"
         screenOptions={{ headerShown: false }}
       >
@@ -197,6 +198,10 @@ function App() {
           name="BottomTabs"
           component={BottomTabsNavigator}
           options={{ gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="RecommendationsScreen"
+          component={RecommendationsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

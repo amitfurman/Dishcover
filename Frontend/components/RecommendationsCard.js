@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
 import { COLORS } from "../constants";
@@ -9,24 +9,40 @@ const RecommendationsCard = ({
   type,
   city,
   matchingPercentage,
+  onHeartPress, // Add onHeartPress as a prop
 }) => {
+  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+
+  const handleHeartPress = () => {
+    setIsAddedToWishlist(!isAddedToWishlist);
+    onHeartPress(); // Call the onHeartPress function passed as a prop
+  };
+
   const percentageValue = parseInt(matchingPercentage, 10);
   const progressBarWidth = `${percentageValue}%`;
 
   return (
     <View style={styles.cardContainer}>
       <Image source={{ uri: image }} style={styles.image} />
-      <TouchableOpacity style={styles.iconContainer}>
-        <MaterialCommunityIcons
-          name="heart-outline"
-          size={24}
-          color={COLORS.blue}
-        />
-      </TouchableOpacity>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.type}>
-        {type} | {city}
-      </Text>
+      <View style={styles.infoContainer}>
+        <View>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.type}>
+            {type} | {city}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={handleHeartPress}>
+          <MaterialCommunityIcons
+            name="heart"
+            size={30}
+            color={isAddedToWishlist ? COLORS.pink : COLORS.white}
+            style={{
+              textShadowColor: isAddedToWishlist ? "transparent" : COLORS.black,
+              textShadowRadius: 3,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.matchingContainer}>
         <View style={styles.progressBarContainer}>
           <View
@@ -46,8 +62,9 @@ const RecommendationsCard = ({
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: COLORS.white,
-    margin: 30,
-    borderRadius: 10,
+    width: 330,
+    margin: 15,
+    borderRadius: 5,
     shadowColor: COLORS.black,
     shadowOffset: {
       width: 0,
@@ -56,41 +73,33 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    paddingBottom: 10,
+    alignSelf: "center",
   },
   image: {
-    width: 300,
+    width: 310,
     height: 150,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     alignSelf: "center",
     top: 10,
   },
-  iconContainer: {
-    position: "absolute",
-    top: 15,
-    right: 15,
-    backgroundColor: COLORS.white,
-    borderRadius: 15,
-    padding: 5,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
+  infoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 10,
   },
   name: {
     fontSize: 20,
     color: COLORS.blue,
     fontFamily: "Poppins_700Bold",
-    paddingLeft: 20,
-    paddingTop: 15,
-    padding: 5,
   },
   type: {
     fontSize: 17,
     color: COLORS.blue,
-    paddingLeft: 20,
-    paddingBottom: 10,
+    paddingTop: 5,
   },
   matchingContainer: {
     flexDirection: "row",

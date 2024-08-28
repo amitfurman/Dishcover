@@ -98,6 +98,7 @@ const RestaurantPreferenceScreen = () => {
       .then((response) => {
         console.log("Generated restaurant:", response.data);
         // TODO: Show the generated restaurant to the user
+        //       and go to the RecommendationsScreen and pass username:
       })
       .catch((error) => {
         console.error("Error generating restaurant:", error.message);

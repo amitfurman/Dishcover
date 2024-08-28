@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+/*
 const {
   getRandomRestaurantsByDistrict,
   getRandomRestaurantsBasedOnUser,
@@ -31,7 +31,7 @@ router.get("/user-random-restaurants", async (req, res) => {
   await closeMongoDBConnection(client);
   res.json(data);
 });
-
+*/
 // get the top 10 restaurants
 router.get("/TopRestaurants", async (req, res) => {
   //TODO: Implement this function

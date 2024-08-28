@@ -1,18 +1,19 @@
-const { MongoClient } = require('mongodb');
-const { DATABASE_NAME } = require('./constants'); 
-
-const mongoURI = 'mongodb+srv://InbarCohen:ADAHLl0aJRMyy7ZL@cluster0.ulirpbk.mongodb.net/'; //TODO: remove and put in dotenv
+const { MongoClient } = require("mongodb");
+const { DATABASE_NAME } = require("./constants");
 
 async function connectToMongoDB() {
-  const client = new MongoClient(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+  const client = new MongoClient(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   await client.connect();
-  console.log('MongoDB connected...');
+  console.log("MongoDB connected...");
   return client;
 }
 
 async function closeMongoDBConnection(client) {
   await client.close();
-  console.log('MongoDB connection closed...');
+  console.log("MongoDB connection closed...");
 }
 
 /**
@@ -32,13 +33,11 @@ function withDatabaseConnection(fn) {
   };
 }
 
-module.exports = { connectToMongoDB, closeMongoDBConnection, withDatabaseConnection };
-
-
-
-
-
-
+module.exports = {
+  connectToMongoDB,
+  closeMongoDBConnection,
+  withDatabaseConnection,
+};
 
 //'mongodb://localhost:27017/'
-//'mongodb://localhost:27017/my_database'; 
+//'mongodb://localhost:27017/my_database';

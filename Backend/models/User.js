@@ -20,27 +20,33 @@ const UserSchema = new mongoose.Schema(
   },
   {
     collection: COLLECTIONS.USER_INFO, // Specify the collection name as "userinfo"
+    timestamps: true,
   }
 );
 
-const UserProfileSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true },
-  district: String,
-  age: Number,
-  gender: String,
-  familyStatus: String,
-  accessibilityFeatures: {
-    vegan: Number,
-    glutenFree: Number,
-    wheelchair: Number,
+const UserProfileSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true },
+    district: String,
+    age: Number,
+    gender: String,
+    familyStatus: String,
+    accessibilityFeatures: {
+      vegan: Number,
+      glutenFree: Number,
+      wheelchair: Number,
+    },
+    cuisinesPriority: String,
+    scores: {
+      vegan: Number,
+      glutenFree: Number,
+      wheelchair: Number,
+    },
   },
-  cuisinesPriority: String,
-  scores: {
-    vegan: Number,
-    glutenFree: Number,
-    wheelchair: Number,
-  },
-});
+  {
+    timestamps: true, // Add timestamps for createdAt and updatedAt
+  }
+);
 
 module.exports = {
   User: mongoose.model("UserInfo", UserSchema),

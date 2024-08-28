@@ -1,7 +1,5 @@
 # Dishcover
 
-![Dishcover Poster](./assets/dishcover_poster.pdf)
-
 Dishcover is a personalized restaurant recommendation app that helps users find the perfect dining spots based on their preferences, past experiences, and current mood. The app leverages AI and machine learning to continuously refine recommendations, making dining out easier and more enjoyable.
 
 ## Table of Contents
@@ -89,3 +87,8 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 - **Mentor:** Dr. Sarel Cohen for guiding us through the development process.
 - **Team:** Inbar Cohen, Amit Furman, Eden Ismah Moshe.
 - **External Tools:** Apify, Travel Advisor, and various AI/ML services that powered the app's functionality.
+
+## Project Poster
+
+![Dishcover Poster](./assets/dishcover_poster.png)
+

@@ -138,69 +138,6 @@ const getFirstTwoSentences = (description) => {
     }
   }
 
- //async function getRandomRestaurantsByDistrict(client, district, numberOfRestaurants) {
-  const getRandomRestaurantsByDistrict = async (client, district, numberOfRestaurants) => {
-    try {
-      const db = client.db(DATABASE_NAME);
-      const collection = db.collection(COLLECTIONS.RESTAURANTS_TRANSFORMED);
-  
-      const query = { district: district };
-      const matchingRestaurants = await collection.find(query).toArray();
-  
-      // Efficient shuffling using Fisher-Yates algorithm
-      for (let i = matchingRestaurants.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [matchingRestaurants[i], matchingRestaurants[j]] = [matchingRestaurants[j], matchingRestaurants[i]];
-      }
-  
-      const numberOfSameDistrictRestaurants = Math.ceil(0.9 * numberOfRestaurants);
-      const numberOfDifferentDistrictRestaurants = numberOfRestaurants - numberOfSameDistrictRestaurants;
-  
-      const sameDistrictRestaurants = matchingRestaurants.slice(0, numberOfSameDistrictRestaurants);
-  
-      const differentDistrictRestaurants = await collection.aggregate([
-        { $match: { district: { $ne: district } } },
-        { $sample: { size: numberOfDifferentDistrictRestaurants } }
-      ]).toArray();
-  
-      return sameDistrictRestaurants.concat(differentDistrictRestaurants);
-    } catch (err) {
-      console.error('Error: could not retrieve random restaurants by district', err);
-      return [];
-    }
-  }
-  
-// Utility function to get most visited district
-const getMostVisitedDistrict = (visitedRestaurant) => {
-    const districtCounts = visitedRestaurant.reduce((acc, restaurant) => {
-      acc[restaurant.district] = (acc[restaurant.district] || 0) + 1;
-      return acc;
-    }, {});
-  
-    return Object.keys(districtCounts).reduce((a, b) => districtCounts[a] > districtCounts[b] ? a : b);
-  };
-  
-
-  //async function getRandomRestaurantsBasedOnUser(client, userId, numberOfRestaurants) {
-    const getRandomRestaurantsBasedOnUser = async (client, userId, numberOfRestaurants) => {
-    try {
-      const db = client.db(DATABASE_NAME);
-      const usersCollection = db.collection(COLLECTIONS.USER_INFO);
-  
-      const user = await usersCollection.findOne({ _id: ObjectId(userId) });
-  
-      if (!user || !user.visitedRestaurant || user.visitedRestaurant.length === 0) {
-        return [];
-      }
-  
-      const mostVisitedDistrict = getMostVisitedDistrict(user.visitedRestaurant);
-  
-      return await getRandomRestaurantsByDistrict(client, mostVisitedDistrict, numberOfRestaurants);
-    } catch (err) {
-      console.error('Error: could not retrieve random restaurants based on user', err);
-      return [];
-    }
-  }
 
   async function addTimestampsToExistingDocuments(client) {
     const db = client.db(DATABASE_NAME); 
@@ -302,7 +239,7 @@ const getMostVisitedDistrict = (visitedRestaurant) => {
   }
   main();
   
-  module.exports = { transformAndUploadData, getRandomRestaurantsByDistrict, getRandomRestaurantsBasedOnUser };
+  module.exports = { transformAndUploadData };
   
 
   

@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { calculateDominantDistrict } = require("../utils/helpers"); // Import the helper function
-const { User, UserProfile } = require("../models/User");
+const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
+const { User } = require("../models/User.js/index.js");
 const Restaurant = require("../models/Restaurant");
-const Reviews = require("../models/Review");
+const Reviews = require("../models/Review.js");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely
 const mongoURI = process.env.MONGODB_URI;
@@ -152,7 +152,7 @@ router.post("/placesUserVisit", async (req, res) => {
     ]);
 
     // Calculate the dominant district using the helper function
-    const dominantDistrict = calculateDominantDistrict(restaurantsDataFromDB);
+    const dominantDistrict = getMostVisitedDistrict(restaurantsDataFromDB);
 
     // Update the user's district field with the dominant district
     await User.updateOne(

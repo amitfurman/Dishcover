@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    district: { type: String }, // Add district field
+    district: { type: String }, 
   },
   {
     collection: COLLECTIONS.USER_INFO, // Specify the collection name as "userinfo"
@@ -46,5 +46,4 @@ module.exports = {
   User: mongoose.model("UserInfo", UserSchema),
   UserProfile: mongoose.model("UserProfile", UserProfileSchema),
 };
-//module.exports = mongoose.model("UserInfo", UserSchema);
-//module.exports = mongoose.model('UserProfile', UserProfileSchema);  //?
+

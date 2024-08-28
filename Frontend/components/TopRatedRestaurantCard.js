@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   score: {
     fontSize: 16,
     marginHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 13,
   },
 });
 

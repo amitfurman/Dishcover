@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Alert,
   View,
@@ -7,13 +7,17 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from "@react-navigation/native";
 import TopRatedRestaurantCard from "../components/TopRatedRestaurantCard";
+import VisitedRestaurantCard from "../components/VisitedRestaurantCard";
 import { url, COLORS } from "../constants";
 import axios from "axios";
 
-/*
-const topRestaurants = [
+const top10Restaurants = [
   {
     name: "Restaurant 1",
     image: "https://via.placeholder.com/150",
@@ -61,32 +65,52 @@ const topRestaurants = [
   },
   // Add more restaurants here
 ];
-*/
 
 const MainScreen = () => {
   const route = useRoute();
   const { username } = route.params;
   const navigation = useNavigation();
-  const [topRestaurants, setTopRestaurants] = useState([]);
+  const [topRestaurants, setTopRestaurants] = useState(top10Restaurants);
+  const [visitedRestaurants, setVisitedRestaurants] = useState([]);
 
-  //TODO: implement the TopRestaurants endpoint in the backend
-  useEffect(() => {
-    const fetchRestaurants = async () => {
-      try {
-        const response = await axios.get(
-          `${url}/api/restaurant/TopRestaurants`
-        );
+  //TODO: implement the TopRestaurants api in the backend
+  /* const fetchTop10Restaurants  = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${url}/api/restaurant/TopRestaurants`,
+        { params: { username: username } } 
+      );
         setTopRestaurants(response.data);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error.message);
-        Alert.alert(
-          "An error occurred while fetching top restaurants. Please try again."
-        );
-      }
-    };
+    } catch (error) {
+        console.error("Error fetching top 10 restaurants:", error.message);
+      Alert.alert(
+          "An error occurred while fetching top 10 restaurants. Please try again."
+      );
+    }
+  }, [username]);
+*/
 
-    fetchRestaurants();
-  }, [topRestaurants]);
+  const fetchVisitedRestaurants = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${url}/api/users/getPlacesUserVisited`,
+        { params: { username: username } }
+      );
+      setVisitedRestaurants(response.data.placesVisited);
+    } catch (error) {
+      console.error("Error fetching visited restaurants:", error.message);
+      Alert.alert(
+        "An error occurred while fetching visited restaurants. Please try again."
+      );
+    }
+  }, [username]);
+
+  // Use useFocusEffect to call fetchVisitedRestaurants when the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      fetchVisitedRestaurants();
+    }, [fetchVisitedRestaurants]) // Dependency array includes fetchVisitedRestaurants
+  );
 
   return (
     <View style={styles.container}>
@@ -101,6 +125,21 @@ const MainScreen = () => {
             key={index}
             restaurant={restaurant}
             index={index}
+          />
+        ))}
+      </ScrollView>
+      <Text style={styles.title}>Restaurants You've Been To</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollContainer}
+      >
+        {visitedRestaurants.map((restaurant, index) => (
+          <VisitedRestaurantCard
+            key={index}
+            userName={username}
+            restaurantName={restaurant.name}
+            image={restaurant.mainImage}
           />
         ))}
       </ScrollView>
@@ -124,6 +163,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: COLORS.beige,
   },
+
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -131,10 +171,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
     color: COLORS.blue,
     fontFamily: "Poppins_700Bold",
+    alignSelf: "center",
+    textAlign: "center",
   },
   scrollContainer: {
-    marginBottom: 30,
-    paddingVertical: 10,
+    marginTop: 15,
+    marginBottom: 5,
+    paddingVertical: 5,
     paddingLeft: 40,
   },
   button: {
@@ -144,6 +187,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: COLORS.blue,
     borderWidth: 2,
+    marginTop: 25,
   },
   buttonText: {
     color: COLORS.beige,

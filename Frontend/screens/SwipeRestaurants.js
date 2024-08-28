@@ -20,12 +20,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS } from "../constants";
 import { url } from "../constants";
+const numberOfCards = 50;
 
 export default function SwipeRestaurants() {
   const route = useRoute();
   const { username } = route.params;
-  //const { username } ="amit";
-  //const username = "Eden12";
   const navigation = useNavigation();
 
   const [restaurants, setRestaurants] = useState(restaurantsArray);
@@ -143,6 +142,29 @@ export default function SwipeRestaurants() {
       setRestaurants(restaurantsArray);
     }
   }, [restaurants.length]);
+
+  /*
+  useEffect(() => {
+    const fetchRandomRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/restaurants/user-random-restaurants`,
+          {
+            params: {
+              userId: username,
+              count: numberOfCards,
+            },
+          }
+        );
+        setRestaurants(response.data); // Set the fetched data to the state
+      } catch (error) {
+        console.error("Error fetching random restaurants:", error);
+      }
+    };
+
+    fetchRandomRestaurants(); // Fetch data when the component mounts
+  }, []); // Empty dependency array means this runs once when the component mounts
+*/
 
   // Interpolate the animated value to get rotation in degrees
   const frontInterpolate = flipAnim.interpolate({

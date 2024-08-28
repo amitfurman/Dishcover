@@ -324,6 +324,35 @@ router.get("/getPlacesUserWantToVisit", async (req, res) => {
   }
 });
 
+// Fetch user's visited restaurants (from placesVisited Array and Restaurants collection)
+router.get("/getPlacesUserVisited", async (req, res) => {
+  const { username } = req.query;
+
+  try {
+    const user = await User.findOne({ name: username });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    const restaurants = await Restaurant.aggregate([
+      { $match: { name: { $in: user.placesVisited } } },
+      {
+        $group: {
+          _id: "$name", // Group by restaurant name to remove duplicates
+          restaurantData: { $first: "$$ROOT" }, // Get the first occurrence of the restaurant data
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: "$restaurantData", // Replace the root with the restaurant data
+        },
+      },
+    ]);
+    res.status(200).send({ placesVisited: restaurants });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 // Fetch user's restaurants recommendations
 router.get("/restaurantsRecommendations", async (req, res) => {
   const {

@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { getRandomRestaurantsBasedOnUser, getRandomRestaurantsByDistrict } = require("../utils/helpers"); // Import the helper function
-const { connectToMongoDB, closeMongoDBConnection } = require("./dal");
+const {
+  getRandomRestaurantsBasedOnUser,
+  getRandomRestaurantsByDistrict,
+} = require("../utils/helpers"); // Import the helper function
+const { connectToMongoDB, closeMongoDBConnection } = require("../dal/dal");
 
 // get random 'count' restaurants in the given district
 router.get("/random-restaurants", async (req, res) => {

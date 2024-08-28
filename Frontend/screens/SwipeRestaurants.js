@@ -24,10 +24,12 @@ const numberOfCards = 50;
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  const { username } = route.params;
+  //const { username } = route.params;
+  const { username } = "Eden";
+
   const navigation = useNavigation();
 
-  const [restaurants, setRestaurants] = useState(restaurantsArray);
+  const [restaurants, setRestaurants] = useState([]);
   const [swipedLeft, setSwipedLeft] = useState([]);
   const [swipedRight, setSwipedRight] = useState([]);
   const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
@@ -36,6 +38,38 @@ export default function SwipeRestaurants() {
   const swipe = useRef(new Animated.ValueXY()).current;
   const titleSign = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current; // Animated value for flipping
+
+  /*  useEffect(() => {
+    if (!restaurants.length) {
+      setRestaurants(restaurantsArray);
+    }
+  }, [restaurants.length]);
+
+  */
+
+  useEffect(() => {
+    const fetchRandomRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/restaurants/user-random-restaurants`,
+          {
+            params: {
+              //userId: username,
+              userId: "66c58cba7765c68664b0654b",
+              count: numberOfCards,
+            },
+          }
+        );
+        console.log(response.data);
+        setRestaurants(response.data); // Set the fetched data to the state
+      } catch (error) {
+        console.error("Error fetching random restaurants:", error);
+      }
+    };
+
+    fetchRandomRestaurants(); // Fetch data when the component mounts
+  }, []); // Empty dependency array means this runs once when the component mounts
+  /**/
 
   // Animated value to control flip button opacity
   const flipButtonOpacity = useRef(new Animated.Value(1)).current;
@@ -136,35 +170,6 @@ export default function SwipeRestaurants() {
     }
     setFlipped(!flipped);
   }, [flipped, flipAnim]);
-
-  useEffect(() => {
-    if (!restaurants.length) {
-      setRestaurants(restaurantsArray);
-    }
-  }, [restaurants.length]);
-
-  /*
-  useEffect(() => {
-    const fetchRandomRestaurants = async () => {
-      try {
-        const response = await axios.get(
-          `${url}/api/restaurants/user-random-restaurants`,
-          {
-            params: {
-              userId: username,
-              count: numberOfCards,
-            },
-          }
-        );
-        setRestaurants(response.data); // Set the fetched data to the state
-      } catch (error) {
-        console.error("Error fetching random restaurants:", error);
-      }
-    };
-
-    fetchRandomRestaurants(); // Fetch data when the component mounts
-  }, []); // Empty dependency array means this runs once when the component mounts
-*/
 
   // Interpolate the animated value to get rotation in degrees
   const frontInterpolate = flipAnim.interpolate({

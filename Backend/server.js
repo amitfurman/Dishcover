@@ -10,7 +10,7 @@ app.use(express.json());
 
 //app.use("/api", routes);
 app.use("/api/users", userRoutes); // Prefix routes
-//app.use("/api/restaurants", restaurantRoutes); // Prefix routes
+app.use("/api/restaurants", restaurantRoutes); // Prefix routes
 
 // Start the server on port 3000
 const port = 3000;

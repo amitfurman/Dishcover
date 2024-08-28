@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
-const { User } = require("../models/User.js/index.js");
+const { User } = require("../models/User.js");
 const Restaurant = require("../models/Restaurant");
 const Reviews = require("../models/Review.js");
 require("dotenv").config();

@@ -1,6 +1,6 @@
 # Dishcover
 
-![Dishcover Poster](./assets/dishcover_poster.png)
+![Dishcover Poster](./assets/dishcover_poster.pdf)
 
 Dishcover is a personalized restaurant recommendation app that helps users find the perfect dining spots based on their preferences, past experiences, and current mood. The app leverages AI and machine learning to continuously refine recommendations, making dining out easier and more enjoyable.
 

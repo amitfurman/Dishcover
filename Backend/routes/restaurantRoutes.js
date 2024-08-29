@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getRandomRestaurantsBasedOnUser, getRandomRestaurantsByDistrict } = require("../utils/helpers"); // Import the helper function
-const Restaurant = require("../models/Restaurant");
+// const Restaurant = require("../models/Restaurant");
 
 
 // get random 'count' restaurants in the given district
@@ -20,8 +20,9 @@ router.get("/random-restaurants", async (req, res) => {
 
 //'count' is used to retrieve the number of random restaurants requested by the client in the /user-random-restaurants endpoint
 router.get("/user-random-restaurants", async (req, res) => {
-  const { userId, count } = req.query;
-
+  const { userId } = req.query;
+  const count = 50;
+  
   try {
     const data = await getRandomRestaurantsBasedOnUser(userId, parseInt(count));
     res.json(data);

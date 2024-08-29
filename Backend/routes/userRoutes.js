@@ -2,19 +2,13 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely
 const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
 const { User } = require("../models/User.js");
 const Restaurant = require("../models/Restaurant.js");
 const Reviews = require("../models/Review.js");
-require("dotenv").config();
-const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely
-const mongoURI = process.env.MONGODB_URI;
-
-const mongoose = require("mongoose");
-mongoose
-  .connect(mongoURI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// const mongoURI = process.env.MONGODB_URI; // TODO: remove. not needed
 
 // Check if user exists by name
 router.get("/checkUserByName", async (req, res) => {

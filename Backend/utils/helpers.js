@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const { User } = require("../models/User");
 const Restaurant = require("../models/Restaurant"); // Import the Restaurant model
 
@@ -68,7 +67,7 @@ const getRestaurantByName = async (restaurantName) => {
   }
 };
 
-const getMostVisitedDistrict = (restaurantsData) => {
+const getMostVisitedDistrict = async (restaurantsData) => {
   const districtCount = {};
 
   // Loop through the restaurantsData array
@@ -97,6 +96,7 @@ const getMostVisitedDistrict = (restaurantsData) => {
   return dominantDistrict;
 };
 
+// TODO: make sure 'district' field in user_info is updated --> no need of getMostVisitedDistrict, only get 'district' value
 // Function to get random restaurants based on the user's most visited district
 //async function getRandomRestaurantsBasedOnUser(client, userId, numberOfRestaurants) {
 const getRandomRestaurantsBasedOnUser = async (userId, numberOfRestaurants) => {
@@ -110,7 +110,7 @@ const getRandomRestaurantsBasedOnUser = async (userId, numberOfRestaurants) => {
     return [];
    }
 
-  const mostVisitedDistrict = getMostVisitedDistrict(user.placesVisited);
+  const mostVisitedDistrict = await getMostVisitedDistrict(user.placesVisited);
   
   return await getRandomRestaurantsByDistrict(mostVisitedDistrict, numberOfRestaurants);
    } catch (err) {

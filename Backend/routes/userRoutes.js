@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
 const { User } = require("../models/User.js");
-const Restaurant = require("../models/Restaurant");
+const Restaurant = require("../models/Restaurant.js");
 const Reviews = require("../models/Review.js");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely

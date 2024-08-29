@@ -1,6 +1,6 @@
 const { User } = require("../models/User");
 const Restaurant = require("../models/Restaurant"); // Import the Restaurant model
-
+const { DEFAULT_MAIN_IMAGE } = require('../dal/constants');
 
 // Helper function to get restaurants from the same district
 const getSameDistrictRestaurants = async (district, numberOfRestaurants) => {
@@ -119,45 +119,43 @@ const getRandomRestaurantsBasedOnUser = async (userId, numberOfRestaurants) => {
    }
 }
 
-module.exports = { getRandomRestaurantsByDistrict, getMostVisitedDistrict, getRandomRestaurantsBasedOnUser};
+
+// Helper function to get the top 10 restaurants
+// Based on rankingString, Assuming more than 10 restaurants with rankingString. NOTE: should not display score in app
+const getTopRestaurants = async (limit) => {
+  try {
+    // Fetch all restaurants with a defined rankingString
+    const restaurants = await Restaurant.find({ rankingString: { $exists: true, $ne: "" } }).lean();
+
+    // Extract, calculate score, and sort by the score
+    const sortedRestaurants = restaurants
+      .map((restaurant) => {
+        const match = restaurant.rankingString.match(/#(\d+) of (\d+)/);
+        if (match) {
+          const rank = parseInt(match[1], 10); 
+          const total = parseInt(match[2], 10); 
+          const score = rank / total; // Lower score is better
+          return { ...restaurant, score };
+        }
+        return null;
+      })
+      .filter((restaurant) => restaurant !== null)
+      .sort((a, b) => a.score - b.score)
+      .slice(0, limit);
+
+    // Format the response
+    return sortedRestaurants.map((restaurant) => ({
+      name: restaurant.name,
+      image: restaurant.mainImage || DEFAULT_MAIN_IMAGE, // Default image if none exists
+      score: restaurant.rankingString,
+    }));
+  } catch (error) {
+    console.error("Error fetching top restaurants:", error);
+    throw new Error("Internal server error");
+  }
+};
+
+module.exports = { getRandomRestaurantsByDistrict, getMostVisitedDistrict, getRandomRestaurantsBasedOnUser, getTopRestaurants};
 
 
-
-//-----------------------------
-  
-// Function to get random restaurants by district
- //async function getRandomRestaurantsByDistrict(client, district, numberOfRestaurants) {
-  // const getRandomRestaurantsByDistrict = async (district, numberOfRestaurants) => {
-  //   try {
-     
-  //     // Query for matching restaurants in the specified district
-  //     const matchingRestaurants = await Restaurant.find({ district: "Tel Aviv District" }).lean();
-  
-  //     // If requested number of restaurants is more than available, limit to available restaurants
-  //     const availableSameDistrictRestaurants = matchingRestaurants.length;
-  //     const numberOfSameDistrictRestaurants = Math.min(Math.ceil(0.9 * numberOfRestaurants), availableSameDistrictRestaurants);
-  //     const numberOfDifferentDistrictRestaurants = Math.max(numberOfRestaurants - availableSameDistrictRestaurants, 0);
-  
-  //     // Efficient shuffling using Fisher-Yates algorithm
-  //     for (let i = matchingRestaurants.length - 1; i > 0; i--) {
-  //       const j = Math.floor(Math.random() * (i + 1));
-  //       [matchingRestaurants[i], matchingRestaurants[j]] = [matchingRestaurants[j], matchingRestaurants[i]];
-  //     }
-  
-  //     const sameDistrictRestaurants = matchingRestaurants.slice(0, numberOfSameDistrictRestaurants);
-  
-  //     // Handle if there are not enough different district restaurants available
-  //     let differentDistrictRestaurants = [];
-  //     if (numberOfDifferentDistrictRestaurants > 0) {
-  //       differentDistrictRestaurants = await Restaurant.aggregate([
-  //         { $match: { district: { $ne: district } } },
-  //         { $sample: { size: numberOfDifferentDistrictRestaurants } }
-  //       ]);
-  //     }
-  
-  //     return sameDistrictRestaurants.concat(differentDistrictRestaurants);
-  //   } catch (err) {
-  //     console.error('Error: could not retrieve random restaurants by district', err);
-  //     return [];
-  //   }
-  // }
+//------------------------------------------------------------------------------------------------

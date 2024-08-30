@@ -168,7 +168,6 @@ router.post("/placesUserVisit", async (req, res) => {
           _id: "$name",
           mainImage: { $first: "$mainImage" },
           name: { $first: "$name" },
-          district: { $first: "$district" },
         },
       },
     ]);

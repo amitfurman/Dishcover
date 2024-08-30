@@ -20,7 +20,7 @@ import { url } from "../constants";
 const CopyAndPasteScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { fromScreen, username } = route.params;
+  const { fromScreen, userId, userName } = route.params;
   const [value, setValue] = useState("");
 
   useEffect(() => {
@@ -38,12 +38,10 @@ const CopyAndPasteScreen = () => {
       .map((line) => line.replace(/^\s*-\s*\[\s*[x ]\s*\]\s*/, "").trim())
       .join("\n");
     setValue(cleanedText);
-
-    console.log("Text changed:", cleanedText);
   };
 
   const handleContinueButton = async () => {
-    console.log("Continue button pressed:", value);
+    console.log("Continue button pressed:", value, userName);
     const lines = value
       .split("\n")
       .map((line) => line.trim())
@@ -60,7 +58,7 @@ const CopyAndPasteScreen = () => {
     if (fromScreen === "FirstScreen") {
       try {
         const response = await axios.post(`${url}/api/users/placesUserVisit`, {
-          username: username,
+          userName: userName,
           placesVisited: [...new Set(restaurantNames)],
         });
 
@@ -69,7 +67,8 @@ const CopyAndPasteScreen = () => {
         if (status === "ok") {
           console.log("Data received successfully:", data);
           navigation.navigate("PasteListScreen", {
-            username: username,
+            userId: userId,
+            userName: userName,
             data: data,
           });
         } else {
@@ -83,7 +82,8 @@ const CopyAndPasteScreen = () => {
             "We couldn't find the restaurant you entered, but we're always adding new places!\n Please check back soon"
           );
           navigation.navigate("SecondIntro", {
-            username: username,
+            userId: userId,
+            userName: userName,
           });
         } else {
           handleError(error);
@@ -94,7 +94,7 @@ const CopyAndPasteScreen = () => {
         const response = await axios.post(
           `${url}/api/users/updatePlacesUserWantToVisit`,
           {
-            username: username,
+            userName: userName,
             placesToVisit: [...new Set(lines)],
           }
         );
@@ -103,7 +103,8 @@ const CopyAndPasteScreen = () => {
 
         if (status === "ok") {
           navigation.navigate("BottomTabs", {
-            username: username,
+            userId: userId,
+            userName: userName,
           });
         } else {
           console.error("Error from server:", data);

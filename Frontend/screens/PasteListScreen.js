@@ -14,16 +14,17 @@ import Icon from "react-native-vector-icons/Ionicons"; // Importing icons
 
 const PasteListScreen = ({ route }) => {
   const navigation = useNavigation();
-  const { username, data } = route.params;
+  const { userId, userName, data } = route.params;
 
   const handleContinueButton = () => {
-    navigation.navigate("SecondIntro", { username: username });
+    navigation.navigate("SecondIntro", { userId, userName });
   };
 
   const handleReviewButton = (restaurant) => {
     console.log("Review button pressed for:", restaurant);
     navigation.navigate("ReviewPlaceScreen", {
-      username: username,
+      userId: userId,
+      username: userName,
       restaurantName: restaurant.name,
     });
   };

@@ -36,7 +36,7 @@ import { url } from "../constants";
 
 function ReviewPlaceScreen({ route }) {
   const navigation = useNavigation();
-  const { username, restaurantName } = route.params;
+  const { userId, userName, restaurantName } = route.params;
 
   const [foodRating, setFoodRating] = useState(0);
   const [serviceRating, setServiceRating] = useState(0);
@@ -46,7 +46,7 @@ function ReviewPlaceScreen({ route }) {
 
   const handleSubmitButton = async () => {
     const reviewData = {
-      username,
+      username: userName,
       restaurantName,
       foodRating,
       serviceRating,

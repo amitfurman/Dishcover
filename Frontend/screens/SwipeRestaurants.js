@@ -10,7 +10,6 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { restaurants as restaurantsArray } from "../data";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,15 +19,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS } from "../constants";
 import { url } from "../constants";
-const numberOfCards = 50;
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  //const { username } = route.params;
-  const { username } = "Eden";
+  //const { userId, userName } = route.params;
+  const { userId } = route.params;
+  const userName = "66c58cba7765c68664b0654b";
 
   const navigation = useNavigation();
-
   const [restaurants, setRestaurants] = useState([]);
   const [swipedLeft, setSwipedLeft] = useState([]);
   const [swipedRight, setSwipedRight] = useState([]);
@@ -39,14 +37,6 @@ export default function SwipeRestaurants() {
   const titleSign = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current; // Animated value for flipping
 
-  /*  useEffect(() => {
-    if (!restaurants.length) {
-      setRestaurants(restaurantsArray);
-    }
-  }, [restaurants.length]);
-
-  */
-
   useEffect(() => {
     const fetchRandomRestaurants = async () => {
       try {
@@ -54,13 +44,10 @@ export default function SwipeRestaurants() {
           `${url}/api/restaurants/user-random-restaurants`,
           {
             params: {
-              //userId: username,
-              userId: "66c58cba7765c68664b0654b",
-              count: numberOfCards,
+              userId: userId,
             },
           }
         );
-        console.log(response.data);
         setRestaurants(response.data); // Set the fetched data to the state
       } catch (error) {
         console.error("Error fetching random restaurants:", error);
@@ -69,7 +56,6 @@ export default function SwipeRestaurants() {
 
     fetchRandomRestaurants(); // Fetch data when the component mounts
   }, []); // Empty dependency array means this runs once when the component mounts
-  /**/
 
   // Animated value to control flip button opacity
   const flipButtonOpacity = useRef(new Animated.Value(1)).current;
@@ -191,7 +177,7 @@ export default function SwipeRestaurants() {
       const response = await axios.post(
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          username: username,
+          username: userName,
           placesToVisit: [...new Set(swipedRight)],
         }
       );
@@ -199,7 +185,7 @@ export default function SwipeRestaurants() {
       const { status } = response.data;
 
       if (status === "ok") {
-        navigation.navigate("BottomTabs", { username: username });
+        navigation.navigate("BottomTabs", { userId, userName });
       } else {
         console.error("Error from server:", data);
       }
@@ -231,7 +217,10 @@ export default function SwipeRestaurants() {
             const isFirst = index === 0;
             const dragHandlers = isFirst ? panResponder.panHandlers : {};
             return (
-              <View key={restaurant.name} style={styles.cardWrapper}>
+              <View
+                key={`${restaurant.name}-${index}`}
+                style={styles.cardWrapper}
+              >
                 <Animated.View
                   style={{ ...styles.flipButton, opacity: flipButtonOpacity }}
                 >
@@ -257,7 +246,7 @@ export default function SwipeRestaurants() {
                     rating={restaurant.rating}
                     location={restaurant.city}
                     priceLevel={restaurant.priceLevel}
-                    image={restaurant.image}
+                    image={restaurant.mainImage}
                     isFirst={isFirst}
                     swipe={swipe}
                     titleSign={titleSign}

@@ -8,7 +8,7 @@ import MainScreen from "../screens/MainScreen";
 const Tab = createBottomTabNavigator();
 
 function BottomTabsNavigator({ route }) {
-  const { username } = route.params;
+  const { userId, userName } = route.params;
 
   return (
     <Tab.Navigator
@@ -21,7 +21,7 @@ function BottomTabsNavigator({ route }) {
       <Tab.Screen
         name="Home"
         component={MainScreen}
-        initialParams={{ username }}
+        initialParams={{ userId, userName }}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="restaurant" color={color} size={size} />
@@ -33,7 +33,7 @@ function BottomTabsNavigator({ route }) {
       <Tab.Screen
         name="Wishlist"
         component={WishlistScreen}
-        initialParams={{ username }}
+        initialParams={{ userId, userName }}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="favorite" color={color} size={size} />

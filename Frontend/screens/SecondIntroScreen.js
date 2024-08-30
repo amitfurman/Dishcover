@@ -13,7 +13,7 @@ import LottieView from "lottie-react-native";
 const SecondIntroScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +43,8 @@ const SecondIntroScreen = () => {
             onPress={() =>
               navigation.navigate("CopyAndPaste", {
                 fromScreen: "SecondScreen",
-                username: username,
+                userId: userId,
+                userName: userName,
               })
             }
           >
@@ -53,7 +54,8 @@ const SecondIntroScreen = () => {
             style={[styles.button, styles.CopyAndPasteButton]}
             onPress={() =>
               navigation.navigate("SwipeRestaurants", {
-                username: username,
+                userId: userId,
+                userName: userName,
               })
             }
           >
@@ -64,7 +66,10 @@ const SecondIntroScreen = () => {
           <TouchableOpacity
             style={styles.maybeLaterButton}
             onPress={() =>
-              navigation.navigate("BottomTabs", { username: username })
+              navigation.navigate("BottomTabs", {
+                userId: userId,
+                userName: userName,
+              })
             }
           >
             <Text style={styles.maybeLaterButtonText}>Maybe Later</Text>

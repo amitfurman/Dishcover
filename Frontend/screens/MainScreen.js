@@ -63,6 +63,12 @@ const top10Restaurants = [
     image: "https://via.placeholder.com/150",
     score: 8.7,
   },
+  {
+    name: "Restaurant 10",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+
   // Add more restaurants here
 ];
 

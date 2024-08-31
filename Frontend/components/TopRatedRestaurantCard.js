@@ -3,9 +3,11 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { COLORS } from "../constants";
 
 const TopRatedRestaurantCard = ({ restaurant, index }) => {
+  const rankStyle = index + 1 === 10 ? styles.rankTen : styles.rank;
+
   return (
     <View style={styles.cardContainer}>
-      <Text style={styles.rank}>{index + 1}</Text>
+      <Text style={rankStyle}>{index + 1}</Text>
       <View style={styles.card}>
         <Image source={{ uri: restaurant.image }} style={styles.image} />
         <Text style={styles.name}>{restaurant.name}</Text>
@@ -30,7 +32,19 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
     position: "absolute",
-    left: -40, // Adjust this value to position the rank number slightly to the left
+    left: -40,
+    zIndex: 1,
+    top: 10,
+  },
+  rankTen: {
+    fontSize: 70,
+    fontWeight: "bold",
+    color: COLORS.pink + "70",
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 1,
+    position: "absolute",
+    left: -50, 
     zIndex: 1,
     top: 10,
   },

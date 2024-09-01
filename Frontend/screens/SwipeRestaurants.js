@@ -23,8 +23,8 @@ import { url } from "../constants";
 export default function SwipeRestaurants() {
   const route = useRoute();
   //const { userId, userName } = route.params;
-  const { userId } = route.params;
-  const userName = "66c58cba7765c68664b0654b";
+  const { userName } = route.params;
+  const userId = "66c58cba7765c68664b0654b";
 
   const navigation = useNavigation();
   const [restaurants, setRestaurants] = useState([]);
@@ -177,7 +177,7 @@ export default function SwipeRestaurants() {
       const response = await axios.post(
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          username: userName,
+          userName: userName,
           placesToVisit: [...new Set(swipedRight)],
         }
       );

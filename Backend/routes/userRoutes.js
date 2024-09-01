@@ -173,7 +173,9 @@ router.post("/placesUserVisit", async (req, res) => {
     ]);
 
     // Calculate the dominant district using the helper function
-    const dominantDistrict = getMostVisitedDistrict(restaurantsDataFromDB);
+    const dominantDistrict = await getMostVisitedDistrict(
+      restaurantsDataFromDB
+    );
 
     // Update the user's district field with the dominant district
     await User.updateOne(
@@ -201,12 +203,12 @@ router.post("/placesUserVisit", async (req, res) => {
 // Update places user want to visit
 router.post("/updatePlacesUserWantToVisit", async (req, res) => {
   const { userName, placesToVisit } = req.body;
-
+  console.log(userName);
   try {
     // Save placesToVisit to user collection
     const updatedUser = await User.findOneAndUpdate(
       { name: userName },
-      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
+      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // $addToSet to ensure uniqueness
       { new: true }
     );
 

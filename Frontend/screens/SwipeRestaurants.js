@@ -10,7 +10,6 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { restaurants as restaurantsArray } from "../data";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,14 +19,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS } from "../constants";
 import { url } from "../constants";
-const numberOfCards = 50;
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  const { username } = route.params;
-  const navigation = useNavigation();
+  //const { userId, userName } = route.params;
+  const { userName } = route.params;
+  const userId = "66c58cba7765c68664b0654b";
 
-  const [restaurants, setRestaurants] = useState(restaurantsArray);
+  const navigation = useNavigation();
+  const [restaurants, setRestaurants] = useState([]);
   const [swipedLeft, setSwipedLeft] = useState([]);
   const [swipedRight, setSwipedRight] = useState([]);
   const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
@@ -36,6 +36,26 @@ export default function SwipeRestaurants() {
   const swipe = useRef(new Animated.ValueXY()).current;
   const titleSign = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current; // Animated value for flipping
+
+  useEffect(() => {
+    const fetchRandomRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/restaurants/user-random-restaurants`,
+          {
+            params: {
+              userId: userId,
+            },
+          }
+        );
+        setRestaurants(response.data); // Set the fetched data to the state
+      } catch (error) {
+        console.error("Error fetching random restaurants:", error);
+      }
+    };
+
+    fetchRandomRestaurants(); // Fetch data when the component mounts
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   // Animated value to control flip button opacity
   const flipButtonOpacity = useRef(new Animated.Value(1)).current;
@@ -137,35 +157,6 @@ export default function SwipeRestaurants() {
     setFlipped(!flipped);
   }, [flipped, flipAnim]);
 
-  useEffect(() => {
-    if (!restaurants.length) {
-      setRestaurants(restaurantsArray);
-    }
-  }, [restaurants.length]);
-
-  /*
-  useEffect(() => {
-    const fetchRandomRestaurants = async () => {
-      try {
-        const response = await axios.get(
-          `${url}/api/restaurants/user-random-restaurants`,
-          {
-            params: {
-              userId: username,
-              count: numberOfCards,
-            },
-          }
-        );
-        setRestaurants(response.data); // Set the fetched data to the state
-      } catch (error) {
-        console.error("Error fetching random restaurants:", error);
-      }
-    };
-
-    fetchRandomRestaurants(); // Fetch data when the component mounts
-  }, []); // Empty dependency array means this runs once when the component mounts
-*/
-
   // Interpolate the animated value to get rotation in degrees
   const frontInterpolate = flipAnim.interpolate({
     inputRange: [0, 1],
@@ -186,7 +177,7 @@ export default function SwipeRestaurants() {
       const response = await axios.post(
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          username: username,
+          userName: userName,
           placesToVisit: [...new Set(swipedRight)],
         }
       );
@@ -194,7 +185,7 @@ export default function SwipeRestaurants() {
       const { status } = response.data;
 
       if (status === "ok") {
-        navigation.navigate("BottomTabs", { username: username });
+        navigation.navigate("BottomTabs", { userId, userName });
       } else {
         console.error("Error from server:", data);
       }
@@ -226,7 +217,10 @@ export default function SwipeRestaurants() {
             const isFirst = index === 0;
             const dragHandlers = isFirst ? panResponder.panHandlers : {};
             return (
-              <View key={restaurant.name} style={styles.cardWrapper}>
+              <View
+                key={`${restaurant.name}-${index}`}
+                style={styles.cardWrapper}
+              >
                 <Animated.View
                   style={{ ...styles.flipButton, opacity: flipButtonOpacity }}
                 >
@@ -252,7 +246,7 @@ export default function SwipeRestaurants() {
                     rating={restaurant.rating}
                     location={restaurant.city}
                     priceLevel={restaurant.priceLevel}
-                    image={restaurant.image}
+                    image={restaurant.mainImage}
                     isFirst={isFirst}
                     swipe={swipe}
                     titleSign={titleSign}

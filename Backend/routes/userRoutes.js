@@ -2,19 +2,13 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { calculateDominantDistrict } = require("../utils/helpers"); // Import the helper function
-const { User, UserProfile } = require("../models/User");
-const Restaurant = require("../models/Restaurant");
-const Reviews = require("../models/Review");
 require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely
-const mongoURI = process.env.MONGODB_URI;
-
-const mongoose = require("mongoose");
-mongoose
-  .connect(mongoURI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
+const { User } = require("../models/User.js");
+const Restaurant = require("../models/Restaurant.js");
+const Reviews = require("../models/Review.js");
+// const mongoURI = process.env.MONGODB_URI; // TODO: remove. not needed
 
 // Check if user exists by name
 router.get("/checkUserByName", async (req, res) => {
@@ -69,6 +63,16 @@ router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
+    // Check if a user with the same name or email already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { name }] });
+    if (existingUser) {
+      // Return a specific message if the name or email already exists
+      return res.status(409).json({
+        status: "error",
+        data: "Username or email already exists.",
+      });
+    }
+
     // Hash the password
     const encryptedPassword = await bcrypt.hash(password, 10);
 
@@ -79,9 +83,19 @@ router.post("/signup", async (req, res) => {
       password: encryptedPassword,
     });
 
-    res.status(201).json({ status: "ok", data: "User created successfully" });
+    res.status(201).json({
+      status: "ok",
+      data: { userId: newUser._id.toString() },
+    });
   } catch (error) {
     console.error("Signup error:", error);
+    // Check for duplicate key error specifically and respond accordingly
+    if (error.code === 11000) {
+      return res.status(409).json({
+        status: "error",
+        data: "Duplicate key error: User already exists.",
+      });
+    }
     res.status(500).json({ status: "error", data: "Failed to create user" });
   }
 });
@@ -112,7 +126,15 @@ router.post("/signin", async (req, res) => {
         expiresIn: "1h",
       }
     );
-    res.status(200).json({ status: "ok", data: token });
+
+    res.status(200).json({
+      status: "ok",
+      data: {
+        token,
+        userId: oldUser._id.toString(),
+        userName: oldUser.name,
+      },
+    });
   } catch (error) {
     console.error("Signin error:", error);
     res.status(500).json({ status: "error", data: "Failed to signin" });
@@ -121,12 +143,12 @@ router.post("/signin", async (req, res) => {
 
 // Update places user has visited
 router.post("/placesUserVisit", async (req, res) => {
-  const { username, placesVisited } = req.body;
-
+  const { userName, placesVisited } = req.body;
+  console.log(userName);
   try {
     // Save placesVisited to user collection
     const updatedUser = await User.findOneAndUpdate(
-      { name: username },
+      { name: userName },
       { $addToSet: { placesVisited: { $each: placesVisited } } }, // Use $addToSet to ensure uniqueness
       { new: true }
     );
@@ -146,17 +168,18 @@ router.post("/placesUserVisit", async (req, res) => {
           _id: "$name",
           mainImage: { $first: "$mainImage" },
           name: { $first: "$name" },
-          district: { $first: "$district" },
         },
       },
     ]);
 
     // Calculate the dominant district using the helper function
-    const dominantDistrict = calculateDominantDistrict(restaurantsDataFromDB);
+    const dominantDistrict = await getMostVisitedDistrict(
+      restaurantsDataFromDB
+    );
 
     // Update the user's district field with the dominant district
     await User.updateOne(
-      { name: username },
+      { name: userName },
       { $set: { district: dominantDistrict } }
     );
 
@@ -179,13 +202,13 @@ router.post("/placesUserVisit", async (req, res) => {
 
 // Update places user want to visit
 router.post("/updatePlacesUserWantToVisit", async (req, res) => {
-  const { username, placesToVisit } = req.body;
-
+  const { userName, placesToVisit } = req.body;
+  console.log(userName);
   try {
     // Save placesToVisit to user collection
     const updatedUser = await User.findOneAndUpdate(
-      { name: username },
-      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // Use $addToSet to ensure uniqueness
+      { name: userName },
+      { $addToSet: { placesToVisit: { $each: placesToVisit } } }, // $addToSet to ensure uniqueness
       { new: true }
     );
 
@@ -204,7 +227,7 @@ router.post("/updatePlacesUserWantToVisit", async (req, res) => {
 // Add a review to restaurant by user
 router.post("/reviewByUser", async (req, res) => {
   const {
-    username,
+    userName,
     restaurantName,
     foodRating,
     serviceRating,
@@ -213,13 +236,13 @@ router.post("/reviewByUser", async (req, res) => {
     additionalComments,
   } = req.body;
 
-  if (!username || !restaurantName) {
+  if (!userName || !restaurantName) {
     return res.status(400).send({ message: "Missing required fields" });
   }
 
   try {
     // Find the user's ID
-    const user = await User.findOne({ name: username });
+    const user = await User.findOne({ name: userName });
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -266,15 +289,15 @@ router.post("/reviewByUser", async (req, res) => {
 
 // Delete a restaurant from user's placesToVisit
 router.delete("/deleteRestaurantFromPlacesToVisit", async (req, res) => {
-  const { username, restaurantName } = req.body;
+  const { userName, restaurantName } = req.body;
 
-  if (!username || !restaurantName) {
+  if (!userName || !restaurantName) {
     return res.status(400).send({ message: "Missing required fields" });
   }
 
   try {
     // Find the user
-    const user = await User.findOne({ name: username });
+    const user = await User.findOne({ name: userName });
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -297,10 +320,10 @@ router.delete("/deleteRestaurantFromPlacesToVisit", async (req, res) => {
 
 // Fetch user's wishlist (from placesToVisit Array and Restaurants collection)
 router.get("/getPlacesUserWantToVisit", async (req, res) => {
-  const { username } = req.query;
+  const { userName } = req.query;
 
   try {
-    const user = await User.findOne({ name: username });
+    const user = await User.findOne({ name: userName });
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -326,10 +349,10 @@ router.get("/getPlacesUserWantToVisit", async (req, res) => {
 
 // Fetch user's visited restaurants (from placesVisited Array and Restaurants collection)
 router.get("/getPlacesUserVisited", async (req, res) => {
-  const { username } = req.query;
+  const { userName } = req.query;
 
   try {
-    const user = await User.findOne({ name: username });
+    const user = await User.findOne({ name: userName });
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }

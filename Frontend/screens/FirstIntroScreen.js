@@ -14,7 +14,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 function FirstIntroScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +43,8 @@ function FirstIntroScreen() {
             onPress={() =>
               navigation.navigate("CopyAndPaste", {
                 fromScreen: "FirstScreen",
-                username: username,
+                userId: userId,
+                userName: userName,
               })
             }
           >
@@ -56,7 +57,10 @@ function FirstIntroScreen() {
           <TouchableOpacity
             style={styles.maybeLaterButton}
             onPress={() =>
-              navigation.navigate("SecondIntro", { username: username })
+              navigation.navigate("SecondIntro", {
+                userId: userId,
+                userName: userName,
+              })
             }
           >
             <Text style={styles.maybeLaterButtonText}>Maybe Later</Text>

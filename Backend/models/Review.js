@@ -19,6 +19,7 @@ const restaurantReviewsSchema = new mongoose.Schema(
   },
   {
     collection: COLLECTIONS.RESTAURANTS_REVIEW,
+    timestamps: true,
   }
 );
 

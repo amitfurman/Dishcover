@@ -44,7 +44,6 @@ export default function SignupScreen({ props }) {
   };
 
   function handleSignup() {
-    console.log("Signing up user with data:", name, email, password);
     const userData = {
       name,
       email,
@@ -60,7 +59,10 @@ export default function SignupScreen({ props }) {
             setModalVisible(true);
             setTimeout(() => {
               setModalVisible(false);
-              navigation.navigate("FirstIntro", { username: name });
+              navigation.navigate("FirstIntro", {
+                userId: res.data.data.userId,
+                userName: name,
+              });
             }, 2000);
           } else {
             setModalMessage(res.data.data);
@@ -90,9 +92,8 @@ export default function SignupScreen({ props }) {
   }
 
   function checkIfNameExists() {
-    console.log("Checking if name exists in the database");
-
     // Check if the name already exists in the database
+
     axios
       .get(`${url}/api/users/checkUserByName?name=${name}`)
       .then((res) => {
@@ -121,7 +122,6 @@ export default function SignupScreen({ props }) {
   }
 
   function checkIfEmailExists() {
-    console.log("Checking if email exists in the database");
     // Check if the email already exists in the database
 
     axios

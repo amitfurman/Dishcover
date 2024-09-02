@@ -11,7 +11,7 @@ const TopRatedRestaurantCard = ({ restaurant, index }) => {
       <View style={styles.card}>
         <Image source={{ uri: restaurant.image }} style={styles.image} />
         <Text style={styles.name}>{restaurant.name}</Text>
-        <Text style={styles.score}>Score: {restaurant.score}</Text>
+        <Text style={styles.score}>{restaurant.score}</Text>
       </View>
     </View>
   );
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: 200,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: "hidden",
     backgroundColor: "#fff",
     elevation: 3,
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   score: {
-    fontSize: 16,
+    fontSize: 15,
     marginHorizontal: 10,
-    marginBottom: 13,
+    marginBottom: 30,
   },
 });
 

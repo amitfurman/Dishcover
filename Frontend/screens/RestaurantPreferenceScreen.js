@@ -45,7 +45,7 @@ const atmospheres = [
 
 const RestaurantPreferenceScreen = () => {
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedBudget, setSelectedBudget] = useState("");
   const [selectedAtmosphere, setSelectedAtmosphere] = useState("");
@@ -85,7 +85,7 @@ const RestaurantPreferenceScreen = () => {
     axios
       .get(`${url}/api/user/restaurantsRecommendations`, {
         params: {
-          username,
+          username: userName,
           selectedDistrict,
           selectedTypes,
           selectedBudget,

@@ -1,5 +1,5 @@
-export const url = "http://10.100.102.10:3000";
-//export const url = "http://192.168.68.111:3000";
+//export const url = "http://10.100.102.10:3000";
+export const url = "http://192.168.68.122:3000";
 
 export const COLORS = {
   like: "#00eda6",

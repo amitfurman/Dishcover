@@ -9,53 +9,57 @@ const RecommendationsCard = ({
   type,
   city,
   matchingPercentage,
-  onHeartPress, // Add onHeartPress as a prop
+  onHeartPress,
+  onCardPress,
 }) => {
   const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+  const percentageValue = parseInt(matchingPercentage, 10);
+  const progressBarWidth = `${percentageValue}%`;
 
   const handleHeartPress = () => {
     setIsAddedToWishlist(!isAddedToWishlist);
     onHeartPress(); // Call the onHeartPress function passed as a prop
   };
 
-  const percentageValue = parseInt(matchingPercentage, 10);
-  const progressBarWidth = `${percentageValue}%`;
-
   return (
-    <View style={styles.cardContainer}>
-      <Image source={{ uri: image }} style={styles.image} />
-      <View style={styles.infoContainer}>
-        <View>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.type}>
-            {type} | {city}
-          </Text>
+    <TouchableOpacity style={styles.submitButton} onPress={onCardPress}>
+      <View style={styles.cardContainer}>
+        <Image source={{ uri: image }} style={styles.image} />
+        <View style={styles.infoContainer}>
+          <View>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.type}>
+              {type} | {city}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={handleHeartPress}>
+            <MaterialCommunityIcons
+              name="heart"
+              size={30}
+              color={isAddedToWishlist ? COLORS.pink : COLORS.white}
+              style={{
+                textShadowColor: isAddedToWishlist
+                  ? "transparent"
+                  : COLORS.black,
+                textShadowRadius: 3,
+              }}
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleHeartPress}>
-          <MaterialCommunityIcons
-            name="heart"
-            size={30}
-            color={isAddedToWishlist ? COLORS.pink : COLORS.white}
-            style={{
-              textShadowColor: isAddedToWishlist ? "transparent" : COLORS.black,
-              textShadowRadius: 3,
-            }}
-          />
-        </TouchableOpacity>
+        <View style={styles.matchingContainer}>
+          <View style={styles.progressBarContainer}>
+            <View
+              style={[styles.progressBarFilled, { width: progressBarWidth }]}
+            />
+            <View style={styles.progressBarBackground} />
+          </View>
+          <View style={styles.percentageContainer}>
+            <Text style={styles.percentageText}>{matchingPercentage}</Text>
+            <Text style={styles.matchText}>match</Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.matchingContainer}>
-        <View style={styles.progressBarContainer}>
-          <View
-            style={[styles.progressBarFilled, { width: progressBarWidth }]}
-          />
-          <View style={styles.progressBarBackground} />
-        </View>
-        <View style={styles.percentageContainer}>
-          <Text style={styles.percentageText}>{matchingPercentage}</Text>
-          <Text style={styles.matchText}>match</Text>
-        </View>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

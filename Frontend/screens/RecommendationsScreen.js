@@ -7,12 +7,23 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { COLORS } from "../constants";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+import { COLORS, url } from "../constants";
 import RecommendationsCard from "../components/RecommendationsCard";
-import { restaurants as restaurantsArray } from "../data";
+import WishlistCardBack from "../components/WishlistCardBack";
+import { restaurants } from "../data";
 
 const RecommendationsScreen = () => {
+  //const route = useRoute();
+  //const { username } = route.params;
+  //const username = "Eden";
+  const navigation = useNavigation();
+
+  const [restaurantsArray, setRestaurantArray] = useState(restaurants);
   const [selectedRestaurants, setSelectedRestaurants] = useState([]);
+  const [isCardModalVisible, setCardModalVisible] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   // Function to handle the selection of a restaurant
   const handleSelectRestaurant = (restaurant) => {
@@ -26,28 +37,47 @@ const RecommendationsScreen = () => {
     });
   };
 
-  // Function to handle the submit button press
   const handleSubmit = async () => {
-    console.log(selectedRestaurants);
     try {
-      const response = await fetch(
-        "https://your-backend-url.com/update-wishlist",
+      const response = await axios.post(
+        `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ restaurants: selectedRestaurants }),
+          username: username,
+          placesToVisit: [...new Set(selectedRestaurants)],
         }
       );
-      if (response.ok) {
-        Alert.alert("Success", "Your wishlist has been updated.");
+      if (response.data && response.data.status === "ok") {
+        navigation.navigate("MainScreen", {
+          username: username,
+        });
       } else {
-        Alert.alert("Error", "Failed to update your wishlist.");
+        console.error("Error from server:", response.data);
       }
     } catch (error) {
       Alert.alert("Error", "An unexpected error occurred.");
     }
+  };
+
+  const handleClickOnCard = (item) => {
+    const details = {
+      name: item.name,
+      rating: item.rating,
+      location: item.city,
+      priceLevel: item.priceLevel,
+      images: item.images,
+      menuLink: item.menuLink,
+      description: item.description,
+      openingHours: item.openingHours,
+      rankingString: item.rankingString,
+      type: item.type,
+    };
+    setSelectedCard(details);
+    setCardModalVisible(true);
+  };
+
+  const closeCardModal = () => {
+    setCardModalVisible(false);
+    setSelectedCard(null);
   };
 
   return (
@@ -65,12 +95,18 @@ const RecommendationsScreen = () => {
             city={item.city}
             matchingPercentage={item.matchingPercentage}
             onHeartPress={() => handleSelectRestaurant(item)} // Pass the handler to the card
+            onCardPress={() => handleClickOnCard(item)}
           />
         ))}
       </View>
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Update Wishlist</Text>
       </TouchableOpacity>
+      <WishlistCardBack
+        visible={isCardModalVisible}
+        onClose={closeCardModal}
+        details={selectedCard}
+      />
     </ScrollView>
   );
 };

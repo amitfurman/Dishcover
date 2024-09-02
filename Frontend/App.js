@@ -174,6 +174,7 @@ function App() {
         //initialRouteName="RecommendationsScreen"
         //initialRouteName="MainScreen"
         //initialRouteName="SwipeRestaurants"
+        //initialRouteName="RecommendationsScreen"
         initialRouteName="Home"
         screenOptions={{ headerShown: false }}
       >

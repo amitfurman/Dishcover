@@ -6,6 +6,8 @@ const COLLECTIONS = {
   USER_INFO: "user_info",
 };
 
+const DEFAULT_MAIN_IMAGE = "https://cdn-icons-png.freepik.com/512/948/948149.png?ga=GA1.1.1081896475.1709744900";
+
 const cuisines = [
   "Israeli",
   "Italian",

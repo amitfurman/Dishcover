@@ -15,24 +15,18 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-
-import { COLORS } from "../constants";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { COLORS, url } from "../constants";
 import RatingInput from "../components/RatingInput";
 
 import burgerFull from "../assets/symbols/burgerFull.png";
 import burgerEmpty from "../assets/symbols/burgerEmpty.png";
-
 import serviceFull from "../assets/symbols/serviceFull.png";
 import serviceEmpty from "../assets/symbols/serviceEmpty.png";
-
 import cleanlinessFull from "../assets/symbols/cleanlinessFull.png";
 import cleanlinessEmpty from "../assets/symbols/cleanlinessEmpty.png";
-
 import vibesFull from "../assets/symbols/vibesFull.png";
 import vibesEmpty from "../assets/symbols/vibesEmpty.png";
-
-import { url } from "../constants";
 
 function ReviewPlaceScreen({ route }) {
   const navigation = useNavigation();
@@ -48,7 +42,7 @@ function ReviewPlaceScreen({ route }) {
     const reviewData = {
       //userId,
       userName,
-      restaurantName: restaurantName[0],
+      restaurantName,
       foodRating,
       serviceRating,
       cleanlinessRating,

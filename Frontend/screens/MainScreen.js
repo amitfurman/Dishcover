@@ -27,7 +27,7 @@ const MainScreen = () => {
   const fetchTop10Restaurants = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${url}/api/restaurants/user-random-restaurants`,
+        `${url}/api/restaurants/top-restaurants`,
         { userId: userId }
       );
       setTopRestaurants(response.data);
@@ -79,27 +79,34 @@ const MainScreen = () => {
         </ScrollView>
       </View>
       <View style={styles.recentContainer}>
-        <Text style={styles.title}>Your Recent Restaurant Visits</Text>
+        <Text style={styles.title}>Your Recent Restaurant {"\n"}Visits</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.scrollContainer}
         >
-          {visitedRestaurants.map((restaurant) => (
-            <VisitedRestaurantCard
-              key={restaurant._id}
-              userName={userName}
-              restaurantName={restaurant.name}
-              image={restaurant.mainImage}
-            />
-          ))}
+          {visitedRestaurants.length === 0 ? (
+            <Text style={styles.emptyMessage}>
+              You haven't visited any {"\n"}restaurants recently. {"\n"} Start
+              exploring and {"\n"}share your experiences!
+            </Text>
+          ) : (
+            visitedRestaurants.map((restaurant) => (
+              <VisitedRestaurantCard
+                key={restaurant._id}
+                userName={userName}
+                restaurantName={restaurant.name}
+                image={restaurant.mainImage}
+              />
+            ))
+          )}
         </ScrollView>
       </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
           navigation.navigate("RestaurantPreferenceScreen", {
-            username: userName,
+            userName: userName,
           })
         }
       >
@@ -116,26 +123,29 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.beige,
   },
   top10Container: {
-    marginTop: 20,
+    marginTop: 30,
+    flex: 1,
   },
   recentContainer: {
-    bottom: 20,
+    marginBottom: 5,
+    flex: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 5,
-    marginTop: 50,
     color: COLORS.blue,
     fontFamily: "Poppins_700Bold",
     alignSelf: "center",
     textAlign: "center",
   },
+  scrollWrapper: {
+    flex: 1,
+  },
   scrollContainer: {
-    marginTop: 15,
+    marginTop: 10,
     marginBottom: 5,
     paddingVertical: 5,
-    paddingLeft: 40,
+    paddingLeft: 30,
   },
   button: {
     backgroundColor: COLORS.pink,
@@ -144,12 +154,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: COLORS.blue,
     borderWidth: 2,
-    Bottom: 20,
+    marginBottom: 20,
   },
   buttonText: {
     color: COLORS.beige,
     fontSize: 18,
     fontFamily: "Poppins_700Bold",
+  },
+  emptyMessage: {
+    color: COLORS.blue,
+    fontSize: 18,
+    fontFamily: "Poppins_500Medium_Italic",
+    alignSelf: "center",
+    textAlign: "center",
+    marginLeft: 50,
   },
 });
 

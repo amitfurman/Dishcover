@@ -10,7 +10,6 @@ const {
 // get random 'count' restaurants in the given district
 router.get("/random-restaurants", async (req, res) => {
   const { district, count } = req.query;
-
   try {
     const data = await getRandomRestaurantsByDistrict(
       district,

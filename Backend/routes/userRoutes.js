@@ -287,6 +287,7 @@ router.post("/reviewByUser", async (req, res) => {
       comments: additionalComments || " ",
     };
 
+    // Add the new review to the restaurant's reviews array
     restaurantReviews.reviews.push(newReview);
     await restaurantReviews.save();
     res.status(201).send(restaurantReviews);

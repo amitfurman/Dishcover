@@ -68,7 +68,6 @@ export default function SigninScreen() {
       id: signinId,
       password: password,
     };
-    console.log(userData);
     if (signinId.length !== 0 && password.length !== 0) {
       axios
         .post(`${url}/api/users/signin`, userData)

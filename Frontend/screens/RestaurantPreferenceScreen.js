@@ -6,8 +6,8 @@ import {
   Modal,
   TouchableOpacity,
   Image,
-  ScrollView,
   SafeAreaView,
+  FlatList,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import OptionList from "../components/OptionList";
@@ -63,12 +63,10 @@ const RestaurantPreferenceScreen = () => {
     });
   };
 
-  return (
-    <SafeAreaView>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View style={styles.container}>
-          <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
-
+  const renderItem = ({ item }) => {
+    switch (item.type) {
+      case "picker":
+        return (
           <View style={styles.pickerContainer}>
             <TouchableOpacity
               style={[
@@ -127,31 +125,19 @@ const RestaurantPreferenceScreen = () => {
               </View>
             </Modal>
           </View>
-
+        );
+      case "optionList":
+        return (
           <OptionList
-            title="Type of Restaurant"
-            data={restaurantTypes}
-            selectedItems={selectedTypes}
-            onToggle={toggleType}
-            dataType="image"
+            title={item.title}
+            data={item.data}
+            selectedItems={item.selectedItems}
+            onToggle={item.onToggle}
+            dataType={item.dataType}
           />
-
-          <OptionList
-            title="Budget"
-            data={budgets}
-            selectedItems={[selectedBudget]}
-            onToggle={selectBudget}
-            dataType="text"
-          />
-
-          <OptionList
-            title="Atmosphere"
-            data={atmospheres}
-            selectedItems={[selectedAtmosphere]}
-            onToggle={selectAtmosphere}
-            dataType="image"
-          />
-
+        );
+      case "preferences":
+        return (
           <View style={styles.preferencesContainer}>
             <TouchableOpacity
               style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
@@ -189,23 +175,61 @@ const RestaurantPreferenceScreen = () => {
               />
             </TouchableOpacity>
           </View>
-          <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView>
-              <View style={styles.container}>
-                {/* Your existing content */}
-                <TouchableOpacity
-                  style={styles.generateButton}
-                  onPress={handleGenerateRestaurant}
-                >
-                  <Text style={styles.generateButtonText}>
-                    ✨ Let's Start the Magic! ✨
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-        </View>
-      </ScrollView>
+        );
+      case "button":
+        return (
+          <TouchableOpacity
+            style={styles.generateButton}
+            onPress={handleGenerateRestaurant}
+          >
+            <Text style={styles.generateButtonText}>
+              ✨ Let's Start the Magic! ✨
+            </Text>
+          </TouchableOpacity>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const data = [
+    { type: "picker" },
+    {
+      type: "optionList",
+      title: "Type of Restaurant",
+      data: restaurantTypes,
+      selectedItems: selectedTypes,
+      onToggle: toggleType,
+      dataType: "image",
+    },
+    {
+      type: "optionList",
+      title: "Budget",
+      data: budgets,
+      selectedItems: [selectedBudget],
+      onToggle: selectBudget,
+      dataType: "text",
+    },
+    {
+      type: "optionList",
+      title: "Atmosphere",
+      data: atmospheres,
+      selectedItems: [selectedAtmosphere],
+      onToggle: selectAtmosphere,
+      dataType: "image",
+    },
+    { type: "preferences" },
+    { type: "button" },
+  ];
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.beige }}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{ flexGrow: 1 }}
+      />
     </SafeAreaView>
   );
 };
@@ -234,8 +258,6 @@ const styles = StyleSheet.create({
   customPicker: {
     height: 50,
     justifyContent: "center",
-    // backgroundColor: "#f9f9f9",
-    // borderColor: COLORS.blue,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
@@ -248,7 +270,6 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: "center",
-    // backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   pickerWrapper: {
     backgroundColor: "#fff",
@@ -258,7 +279,6 @@ const styles = StyleSheet.create({
   },
   preferencesContainer: {
     flexDirection: "row",
-    // justifyContent: "space-between",
     marginTop: 10,
     justifyContent: "center",
   },
@@ -293,4 +313,5 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_700Bold",
   },
 });
+
 export default RestaurantPreferenceScreen;

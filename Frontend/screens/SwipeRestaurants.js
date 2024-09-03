@@ -10,7 +10,6 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { restaurants as restaurantsArray } from "../data";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,14 +19,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS } from "../constants";
 import { url } from "../constants";
-const numberOfCards = 50;
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
   const navigation = useNavigation();
-
-  const [restaurants, setRestaurants] = useState(restaurantsArray);
+  const [loading, setLoading] = useState(true);
+  const [restaurants, setRestaurants] = useState([]);
   const [swipedLeft, setSwipedLeft] = useState([]);
   const [swipedRight, setSwipedRight] = useState([]);
   const [flipped, setFlipped] = useState(false); // State to track if the card is flipped
@@ -36,6 +34,29 @@ export default function SwipeRestaurants() {
   const swipe = useRef(new Animated.ValueXY()).current;
   const titleSign = useRef(new Animated.Value(1)).current;
   const flipAnim = useRef(new Animated.Value(0)).current; // Animated value for flipping
+
+  useEffect(() => {
+    const fetchRandomRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/restaurants/user-random-restaurants`,
+          {
+            params: {
+              userId: userId,
+            },
+          }
+        );
+        console.log(response.data);
+        setRestaurants(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching random restaurants:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchRandomRestaurants(); // Fetch data when the component mounts
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   // Animated value to control flip button opacity
   const flipButtonOpacity = useRef(new Animated.Value(1)).current;
@@ -137,35 +158,6 @@ export default function SwipeRestaurants() {
     setFlipped(!flipped);
   }, [flipped, flipAnim]);
 
-  useEffect(() => {
-    if (!restaurants.length) {
-      setRestaurants(restaurantsArray);
-    }
-  }, [restaurants.length]);
-
-  /*
-  useEffect(() => {
-    const fetchRandomRestaurants = async () => {
-      try {
-        const response = await axios.get(
-          `${url}/api/restaurants/user-random-restaurants`,
-          {
-            params: {
-              userId: username,
-              count: numberOfCards,
-            },
-          }
-        );
-        setRestaurants(response.data); // Set the fetched data to the state
-      } catch (error) {
-        console.error("Error fetching random restaurants:", error);
-      }
-    };
-
-    fetchRandomRestaurants(); // Fetch data when the component mounts
-  }, []); // Empty dependency array means this runs once when the component mounts
-*/
-
   // Interpolate the animated value to get rotation in degrees
   const frontInterpolate = flipAnim.interpolate({
     inputRange: [0, 1],
@@ -186,7 +178,7 @@ export default function SwipeRestaurants() {
       const response = await axios.post(
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          username: username,
+          userName: userName,
           placesToVisit: [...new Set(swipedRight)],
         }
       );
@@ -194,7 +186,7 @@ export default function SwipeRestaurants() {
       const { status } = response.data;
 
       if (status === "ok") {
-        navigation.navigate("BottomTabs", { username: username });
+        navigation.navigate("BottomTabs", { userId, userName });
       } else {
         console.error("Error from server:", data);
       }
@@ -215,86 +207,98 @@ export default function SwipeRestaurants() {
 
   return (
     <LinearGradient colors={["white", "white"]} style={styles.background}>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Text style={styles.title}>Swipe as much as you want!</Text>
-        <TouchableOpacity style={styles.homeButton} onPress={handleStopSwiping}>
-          <Text style={styles.homeButtonText}>Stop Swiping</Text>
-        </TouchableOpacity>
-        {restaurants
-          .map((restaurant, index) => {
-            const isFirst = index === 0;
-            const dragHandlers = isFirst ? panResponder.panHandlers : {};
-            return (
-              <View key={restaurant.name} style={styles.cardWrapper}>
-                <Animated.View
-                  style={{ ...styles.flipButton, opacity: flipButtonOpacity }}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <Text style={styles.title}>Swipe as much as you want!</Text>
+          <TouchableOpacity
+            style={styles.homeButton}
+            onPress={handleStopSwiping}
+          >
+            <Text style={styles.homeButtonText}>Stop Swiping</Text>
+          </TouchableOpacity>
+          {restaurants
+            .map((restaurant, index) => {
+              const isFirst = index === 0;
+              const dragHandlers = isFirst ? panResponder.panHandlers : {};
+              return (
+                <View
+                  key={`${restaurant.name}-${index}`}
+                  style={styles.cardWrapper}
                 >
-                  <TouchableOpacity onPress={flipCard}>
-                    <MaterialCommunityIcons
-                      name="swap-horizontal"
-                      size={32}
-                      color={COLORS.beige}
+                  <Animated.View
+                    style={{ ...styles.flipButton, opacity: flipButtonOpacity }}
+                  >
+                    <TouchableOpacity onPress={flipCard}>
+                      <MaterialCommunityIcons
+                        name="swap-horizontal"
+                        size={32}
+                        color={COLORS.beige}
+                      />
+                    </TouchableOpacity>
+                  </Animated.View>
+                  <Animated.View
+                    style={{
+                      transform: [{ rotateY: frontInterpolate }],
+                      backfaceVisibility: "hidden",
+                      // position: 'absolute',
+                      // width: '100%',
+                      // height: '100%',
+                    }}
+                  >
+                    <Card
+                      name={restaurant.name}
+                      rating={restaurant.rating}
+                      location={restaurant.city}
+                      priceLevel={restaurant.priceLevel}
+                      image={restaurant.mainImage}
+                      isFirst={isFirst}
+                      swipe={swipe}
+                      titleSign={titleSign}
+                      isVeganFriendly={restaurant.isVeganFriendly}
+                      isWheelchairAccessible={restaurant.isWheelchairAccessible}
+                      isGlutenFree={restaurant.isGlutenFree}
+                      type={restaurant.type}
+                      {...dragHandlers}
                     />
-                  </TouchableOpacity>
-                </Animated.View>
-                <Animated.View
-                  style={{
-                    transform: [{ rotateY: frontInterpolate }],
-                    backfaceVisibility: "hidden",
-                    // position: 'absolute',
-                    // width: '100%',
-                    // height: '100%',
-                  }}
-                >
-                  <Card
-                    name={restaurant.name}
-                    rating={restaurant.rating}
-                    location={restaurant.city}
-                    priceLevel={restaurant.priceLevel}
-                    image={restaurant.image}
-                    isFirst={isFirst}
-                    swipe={swipe}
-                    titleSign={titleSign}
-                    isVeganFriendly={restaurant.isVeganFriendly}
-                    isWheelchairAccessible={restaurant.isWheelchairAccessible}
-                    isGlutenFree={restaurant.isGlutenFree}
-                    type={restaurant.type}
-                    {...dragHandlers}
-                  />
-                </Animated.View>
-                <Animated.View
-                  style={{
-                    transform: [{ rotateY: backInterpolate }],
-                    backfaceVisibility: "hidden",
-                    position: "absolute",
-                    // width: '100%',
-                    // height: '100%',
-                  }}
-                >
-                  <CardBack
-                    name={restaurant.name}
-                    rating={restaurant.rating}
-                    location={restaurant.location}
-                    priceLevel={restaurant.priceLevel}
-                    images={restaurant.images}
-                    menuLink={restaurant.menuLink}
-                    description={restaurant.description}
-                    openingHours={restaurant.openingHours}
-                    rankingString={restaurant.rankingString}
-                    isFirst={isFirst}
-                    swipe={swipe}
-                    titleSign={titleSign}
-                    type={restaurant.type}
-                    {...dragHandlers}
-                  />
-                </Animated.View>
-              </View>
-            );
-          })
-          .reverse()}
-        <Footer handleChoice={handleChoice} />
-      </View>
+                  </Animated.View>
+                  <Animated.View
+                    style={{
+                      transform: [{ rotateY: backInterpolate }],
+                      backfaceVisibility: "hidden",
+                      position: "absolute",
+                      // width: '100%',
+                      // height: '100%',
+                    }}
+                  >
+                    <CardBack
+                      name={restaurant.name}
+                      rating={restaurant.rating}
+                      location={restaurant.location}
+                      priceLevel={restaurant.priceLevel}
+                      images={restaurant.images}
+                      menuLink={restaurant.menuLink}
+                      description={restaurant.description}
+                      openingHours={restaurant.openingHours}
+                      rankingString={restaurant.rankingString}
+                      isFirst={isFirst}
+                      swipe={swipe}
+                      titleSign={titleSign}
+                      type={restaurant.type}
+                      {...dragHandlers}
+                    />
+                  </Animated.View>
+                </View>
+              );
+            })
+            .reverse()}
+          <Footer handleChoice={handleChoice} />
+        </View>
+      )}
     </LinearGradient>
   );
 }
@@ -341,5 +345,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 89, 89, 0.9)",
     borderRadius: 20,
     padding: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: COLORS.pink,
+    textAlign: "center",
   },
 });

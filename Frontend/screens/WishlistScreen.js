@@ -142,30 +142,37 @@ function WishlistScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.formTitle}>Your Wishlist</Text>
-      <FlatList
-        data={restaurants}
-        renderItem={({ item }) => (
-          <View style={styles.cardWrapper}>
-            <WishlistCard
-              name={item.name}
-              image={item.mainImage}
-              onPress={() => handlePressOnCard(item)}
-            />
-            <TouchableOpacity
-              onPress={() => onTrashPress(item)}
-              style={styles.trashIcon}
-            >
-              <MaterialCommunityIcons
-                name="trash-can"
-                size={28}
-                color={COLORS.pink}
+      {restaurants.length === 0 ? (
+        <Text style={styles.emptyMessage}>
+          Your wishlist is currently empty. {"\n"} Start exploring and add some
+          places you want to visit!
+        </Text>
+      ) : (
+        <FlatList
+          data={restaurants}
+          renderItem={({ item }) => (
+            <View style={styles.cardWrapper}>
+              <WishlistCard
+                name={item.name}
+                image={item.mainImage}
+                onPress={() => handlePressOnCard(item)}
               />
-            </TouchableOpacity>
-          </View>
-        )}
-        numColumns={2}
-        contentContainerStyle={styles.flatListContent}
-      />
+              <TouchableOpacity
+                onPress={() => onTrashPress(item)}
+                style={styles.trashIcon}
+              >
+                <MaterialCommunityIcons
+                  name="trash-can"
+                  size={28}
+                  color={COLORS.pink}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          numColumns={2}
+          contentContainerStyle={styles.flatListContent}
+        />
+      )}
       <WishlistCardBack
         visible={isCardModalVisible}
         onClose={closeCardModal}
@@ -302,5 +309,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
+  },
+  emptyMessage: {
+    textAlign: "center",
+    color: COLORS.blue,
+    fontSize: 18,
+    marginTop: 20,
+    fontFamily: "Poppins_500Medium_Italic",
   },
 });

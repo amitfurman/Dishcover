@@ -171,6 +171,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        //initialRouteName="RecommendationsScreen"
         //initialRouteName="MainScreen"
         initialRouteName="Home"
         screenOptions={{ headerShown: false }}

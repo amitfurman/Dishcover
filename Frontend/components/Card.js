@@ -159,11 +159,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 10,
+      width: 2,
+      height: 8,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
     elevation: 5,
   },
   imageContainer: {
@@ -221,12 +221,12 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: "Poppins_700Bold",
     color: "#010057",
-    fontSize: 18,
+    fontSize: 15,
   },
   separator: {
     fontFamily: "Poppins_700Bold",
     color: "#010057",
-    fontSize: 18,
+    fontSize: 15,
     marginHorizontal: 5,
   },
   priceLevel: {

@@ -3,13 +3,15 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { COLORS } from "../constants";
 
 const TopRatedRestaurantCard = ({ restaurant, index }) => {
+  const rankStyle = index + 1 === 10 ? styles.rankTen : styles.rank;
+
   return (
     <View style={styles.cardContainer}>
-      <Text style={styles.rank}>{index + 1}</Text>
+      <Text style={rankStyle}>{index + 1}</Text>
       <View style={styles.card}>
         <Image source={{ uri: restaurant.image }} style={styles.image} />
         <Text style={styles.name}>{restaurant.name}</Text>
-        <Text style={styles.score}>Score: {restaurant.score}</Text>
+        <Text style={styles.score}>{restaurant.score}</Text>
       </View>
     </View>
   );
@@ -30,13 +32,26 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
     position: "absolute",
-    left: -40, // Adjust this value to position the rank number slightly to the left
+    left: -40,
     zIndex: 1,
     top: 10,
   },
+  rankTen: {
+    fontSize: 65,
+    fontWeight: "bold",
+    color: COLORS.pink + "70",
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 1,
+    position: "absolute",
+    left: -50,
+    zIndex: 1,
+    top: 20,
+    letterSpacing: -7,
+  },
   card: {
     width: 200,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: "hidden",
     backgroundColor: "#fff",
     elevation: 3,
@@ -52,10 +67,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   score: {
-    fontSize: 16,
+    fontSize: 15,
     marginHorizontal: 10,
-    marginBottom: 13,
+    marginBottom: 30,
   },
 });
-
 export default TopRatedRestaurantCard;

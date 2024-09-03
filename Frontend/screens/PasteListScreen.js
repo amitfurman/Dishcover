@@ -24,7 +24,7 @@ const PasteListScreen = ({ route }) => {
     console.log("Review button pressed for:", restaurant);
     navigation.navigate("ReviewPlaceScreen", {
       userId: userId,
-      username: userName,
+      userName: userName,
       restaurantName: restaurant.name,
     });
   };

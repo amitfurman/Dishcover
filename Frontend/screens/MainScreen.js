@@ -17,137 +17,89 @@ import VisitedRestaurantCard from "../components/VisitedRestaurantCard";
 import { url, COLORS } from "../constants";
 import axios from "axios";
 
-const top10Restaurants = [
-  {
-    name: "Restaurant 1",
-    image: "https://via.placeholder.com/150",
-    score: 9.5,
-  },
-  {
-    name: "Restaurant 2",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 3",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 4",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 5",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 6",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 7",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 8",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  {
-    name: "Restaurant 9",
-    image: "https://via.placeholder.com/150",
-    score: 8.7,
-  },
-  // Add more restaurants here
-];
-
 const MainScreen = () => {
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
   const navigation = useNavigation();
-  const [topRestaurants, setTopRestaurants] = useState(top10Restaurants);
+  const [topRestaurants, setTopRestaurants] = useState([]);
   const [visitedRestaurants, setVisitedRestaurants] = useState([]);
 
-  //TODO: implement the TopRestaurants api in the backend
-  /* const fetchTop10Restaurants  = useCallback(async () => {
+  const fetchTop10Restaurants = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${url}/api/restaurant/TopRestaurants`,
-        { params: { username: username } } 
+        `${url}/api/restaurants/user-random-restaurants`,
+        { userId: userId }
       );
-        setTopRestaurants(response.data);
+      setTopRestaurants(response.data);
     } catch (error) {
-        console.error("Error fetching top 10 restaurants:", error.message);
       Alert.alert(
-          "An error occurred while fetching top 10 restaurants. Please try again."
+        "An error occurred while fetching top 10 restaurants. Please try again."
       );
     }
-  }, [username]);
-*/
+  }, []);
 
   const fetchVisitedRestaurants = useCallback(async () => {
     try {
       const response = await axios.get(
         `${url}/api/users/getPlacesUserVisited`,
-        { params: { username: username } }
+        { params: { userName } }
       );
       setVisitedRestaurants(response.data.placesVisited);
     } catch (error) {
-      console.error("Error fetching visited restaurants:", error.message);
       Alert.alert(
         "An error occurred while fetching visited restaurants. Please try again."
       );
     }
-  }, [username]);
+  }, [userName]);
 
   // Use useFocusEffect to call fetchVisitedRestaurants when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchVisitedRestaurants();
-    }, [fetchVisitedRestaurants]) // Dependency array includes fetchVisitedRestaurants
+      fetchTop10Restaurants();
+    }, [fetchVisitedRestaurants, fetchTop10Restaurants]) // Dependency array includes fetchVisitedRestaurants
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Top 10 Restaurants of the Week</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollContainer}
-      >
-        {topRestaurants.map((restaurant, index) => (
-          <TopRatedRestaurantCard
-            key={index}
-            restaurant={restaurant}
-            index={index}
-          />
-        ))}
-      </ScrollView>
-      <Text style={styles.title}>Restaurants You've Been To</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.scrollContainer}
-      >
-        {visitedRestaurants.map((restaurant, index) => (
-          <VisitedRestaurantCard
-            key={index}
-            userName={username}
-            restaurantName={restaurant.name}
-            image={restaurant.mainImage}
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.top10Container}>
+        <Text style={styles.title}>Top 10 Restaurants of the Week</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.scrollContainer}
+        >
+          {topRestaurants.map((restaurant, index) => (
+            <TopRatedRestaurantCard
+              key={index}
+              restaurant={restaurant}
+              index={index}
+            />
+          ))}
+        </ScrollView>
+      </View>
+      <View style={styles.recentContainer}>
+        <Text style={styles.title}>Your Recent Restaurant Visits</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.scrollContainer}
+        >
+          {visitedRestaurants.map((restaurant) => (
+            <VisitedRestaurantCard
+              key={restaurant._id}
+              userName={userName}
+              restaurantName={restaurant.name}
+              image={restaurant.mainImage}
+            />
+          ))}
+        </ScrollView>
+      </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
           navigation.navigate("RestaurantPreferenceScreen", {
-            username: username,
+            username: userName,
           })
         }
       >
@@ -160,10 +112,15 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: COLORS.beige,
   },
-
+  top10Container: {
+    marginTop: 20,
+  },
+  recentContainer: {
+    bottom: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -187,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: COLORS.blue,
     borderWidth: 2,
-    marginTop: 25,
+    Bottom: 20,
   },
   buttonText: {
     color: COLORS.beige,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -6,33 +6,68 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { COLORS, url } from "../constants";
 import RecommendationsCard from "../components/RecommendationsCard";
 import WishlistCardBack from "../components/WishlistCardBack";
-import { restaurants } from "../data";
 
 const RecommendationsScreen = () => {
-  //const route = useRoute();
-  //const { username } = route.params;
-  //const username = "Eden";
+  const route = useRoute();
+  const {
+    userId,
+    userName,
+    selectedDistrict,
+    selectedTypes,
+    selectedBudget,
+    selectedAtmosphere,
+    isVegan,
+    isGlutenFree,
+    isWheelchairAccessible,
+  } = route.params;
   const navigation = useNavigation();
 
-  const [restaurantsArray, setRestaurantArray] = useState(restaurants);
+  const [restaurantsArray, setRestaurantsArray] = useState([]);
   const [selectedRestaurants, setSelectedRestaurants] = useState([]);
   const [isCardModalVisible, setCardModalVisible] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Function to handle the selection of a restaurant
+  useEffect(() => {
+    axios
+      .get(`${url}/api/user/restaurantsRecommendations`, {
+        params: {
+          userId,
+          selectedDistrict,
+          selectedTypes,
+          selectedBudget,
+          selectedAtmosphere,
+          isVegan,
+          isGlutenFree,
+          isWheelchairAccessible,
+        },
+      })
+      .then((response) => {
+        setRestaurantsArray(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching restaurants:", error.message);
+        Alert.alert(
+          "Error",
+          "Could not retrieve recommendations. Please try again later."
+        );
+        setLoading(false);
+      });
+  }, []);
+
   const handleSelectRestaurant = (restaurant) => {
     setSelectedRestaurants((prevSelected) => {
       if (prevSelected.some((item) => item.name === restaurant.name)) {
-        // If the restaurant is already selected, remove it
         return prevSelected.filter((item) => item.name !== restaurant.name);
       }
-      // Otherwise, add it to the selected list
       return [...prevSelected, restaurant.name];
     });
   };
@@ -42,13 +77,14 @@ const RecommendationsScreen = () => {
       const response = await axios.post(
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
-          username: username,
+          userName: userName,
           placesToVisit: [...new Set(selectedRestaurants)],
         }
       );
       if (response.data && response.data.status === "ok") {
         navigation.navigate("MainScreen", {
-          username: username,
+          userId: userId,
+          userName: userName,
         });
       } else {
         console.error("Error from server:", response.data);
@@ -80,6 +116,17 @@ const RecommendationsScreen = () => {
     setSelectedCard(null);
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.blue} />
+        <Text style={styles.loadingText}>
+          Collecting the best options for you...
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.titleTextContainer}>
@@ -94,7 +141,7 @@ const RecommendationsScreen = () => {
             type={item.type}
             city={item.city}
             matchingPercentage={item.matchingPercentage}
-            onHeartPress={() => handleSelectRestaurant(item)} // Pass the handler to the card
+            onHeartPress={() => handleSelectRestaurant(item)}
             onCardPress={() => handleClickOnCard(item)}
           />
         ))}
@@ -115,6 +162,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.beige,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.beige,
+  },
+  loadingText: {
+    fontSize: 18,
+    color: COLORS.blue,
+    marginTop: 15,
   },
   titleTextContainer: {
     backgroundColor: COLORS.blue,

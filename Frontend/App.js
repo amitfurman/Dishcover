@@ -172,8 +172,6 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator
         //initialRouteName="MainScreen"
-        //initialRouteName="SwipeRestaurants"
-        //initialRouteName="RecommendationsScreen"
         initialRouteName="Home"
         screenOptions={{ headerShown: false }}
       >

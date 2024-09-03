@@ -11,41 +11,19 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import OptionList from "../components/OptionList";
-import { url, COLORS } from "../constants";
+import {
+  url,
+  COLORS,
+  restaurantTypes,
+  budgets,
+  atmospheres,
+} from "../constants";
 import { Picker } from "@react-native-picker/picker";
-//import { ScrollView } from "react-native-gesture-handler";
-import axios from "axios";
-
-const restaurantTypes = [
-  { name: "Israeli", image: require("../assets/symbols/falafel.png") },
-  { name: "Italian", image: require("../assets/symbols/spaghetti.png") },
-  { name: "Bar", image: require("../assets/symbols/beer.png") },
-  { name: "Greek", image: require("../assets/symbols/greek.png") },
-  { name: "Cafe", image: require("../assets/symbols/coffee.png") },
-  { name: "Asian", image: require("../assets/symbols/sushi.png") },
-  { name: "Mexican", image: require("../assets/symbols/taco.png") },
-  { name: "American", image: require("../assets/symbols/burgerFull.png") },
-  { name: "Pizza", image: require("../assets/symbols/pizza.png") },
-  { name: "Indian", image: require("../assets/symbols/indian.png") },
-  { name: "Street Food", image: require("../assets/symbols/noodle.png") },
-  { name: "Seafood", image: require("../assets/symbols/shrimp.png") },
-  { name: "Dessert", image: require("../assets/symbols/donut.png") },
-  { name: "Steakhouse", image: require("../assets/symbols/steak.png") },
-  { name: "Georgian", image: require("../assets/symbols/khachapuri.png") },
-];
-
-const budgets = ["$-$$", "$$-$$$", "$$$-$$$$"];
-
-const atmospheres = [
-  { name: "Romantic", image: require("../assets/symbols/in-love.png") },
-  { name: "Family", image: require("../assets/symbols/family.png") },
-  { name: "Friends", image: require("../assets/symbols/drinking.png") },
-  { name: "Work", image: require("../assets/symbols/suitcase.png") },
-];
 
 const RestaurantPreferenceScreen = () => {
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
+  const navigation = useNavigation();
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedBudget, setSelectedBudget] = useState("");
   const [selectedAtmosphere, setSelectedAtmosphere] = useState("");
@@ -72,181 +50,163 @@ const RestaurantPreferenceScreen = () => {
   };
 
   const handleGenerateRestaurant = () => {
-    console.log("Generating restaurant...");
-    console.log("District:", selectedDistrict);
-    console.log("Types:", selectedTypes);
-    console.log("Budget:", selectedBudget);
-    console.log("Atmosphere:", selectedAtmosphere);
-    console.log("Vegan:", isVegan);
-    console.log("Gluten Free:", isGlutenFree);
-    console.log("Wheelchair Accessible:", isWheelchairAccessible);
-
-    // Generate restaurant based on preferences
-    axios
-      .get(`${url}/api/user/restaurantsRecommendations`, {
-        params: {
-          username,
-          selectedDistrict,
-          selectedTypes,
-          selectedBudget,
-          selectedAtmosphere,
-          isVegan,
-          isGlutenFree,
-          isWheelchairAccessible,
-        },
-      })
-      .then((response) => {
-        console.log("Generated restaurant:", response.data);
-        // TODO: Show the generated restaurant to the user
-        //       and go to the RecommendationsScreen and pass username:
-      })
-      .catch((error) => {
-        console.error("Error generating restaurant:", error.message);
-        Alert.alert(
-          "Error",
-          "Could not generate a recommendation. Please try again later."
-        ); // Provide user feedback
-      });
+    navigation.replace("RecommendationsScreen", {
+      userId,
+      userName,
+      selectedDistrict,
+      selectedTypes,
+      selectedBudget,
+      selectedAtmosphere,
+      isVegan,
+      isGlutenFree,
+      isWheelchairAccessible,
+    });
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
-        <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={styles.container}>
+          <Text style={styles.formTitle}>Choose Your Dining Adventure!</Text>
 
-        <View style={styles.pickerContainer}>
-          <TouchableOpacity
-            style={[
-              styles.customPicker,
-              selectedDistrict
-                ? {
-                    backgroundColor: COLORS.pink + "20",
-                    borderColor: COLORS.pink,
-                  }
-                : { backgroundColor: "#fff", borderColor: COLORS.blue },
-            ]}
-            onPress={() => setModalVisible(true)}
-          >
-            <Text style={styles.selectedText}>
-              {selectedDistrict || "Select District"}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.pickerContainer}>
+            <TouchableOpacity
+              style={[
+                styles.customPicker,
+                selectedDistrict
+                  ? {
+                      backgroundColor: COLORS.pink + "20",
+                      borderColor: COLORS.pink,
+                    }
+                  : { backgroundColor: "#fff", borderColor: COLORS.blue },
+              ]}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.selectedText}>
+                {selectedDistrict || "Select District"}
+              </Text>
+            </TouchableOpacity>
 
-          <Modal visible={modalVisible} transparent={true} animationType="fade">
-            <View style={styles.modalContainer}>
-              <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={selectedDistrict}
-                  onValueChange={(itemValue) => {
-                    setSelectedDistrict(itemValue);
-                    setModalVisible(false);
-                  }}
-                >
-                  <Picker.Item label="Select District" value="" />
-                  <Picker.Item
-                    label="Southern District"
-                    value="Southern District"
-                  />
-                  <Picker.Item
-                    label="Tel Aviv District"
-                    value="Tel Aviv District"
-                  />
-                  <Picker.Item
-                    label="Jerusalem District"
-                    value="Jerusalem District"
-                  />
-                  <Picker.Item
-                    label="Central District"
-                    value="Central District"
-                  />
-                  <Picker.Item
-                    label="Northern District"
-                    value="Northern District"
-                  />
-                </Picker>
+            <Modal
+              visible={modalVisible}
+              transparent={true}
+              animationType="fade"
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.pickerWrapper}>
+                  <Picker
+                    selectedValue={selectedDistrict}
+                    onValueChange={(itemValue) => {
+                      setSelectedDistrict(itemValue);
+                      setModalVisible(false);
+                    }}
+                  >
+                    <Picker.Item label="Select District" value="" />
+                    <Picker.Item
+                      label="Southern District"
+                      value="Southern District"
+                    />
+                    <Picker.Item
+                      label="Tel Aviv District"
+                      value="Tel Aviv District"
+                    />
+                    <Picker.Item
+                      label="Jerusalem District"
+                      value="Jerusalem District"
+                    />
+                    <Picker.Item
+                      label="Central District"
+                      value="Central District"
+                    />
+                    <Picker.Item
+                      label="Northern District"
+                      value="Northern District"
+                    />
+                  </Picker>
+                </View>
               </View>
-            </View>
-          </Modal>
+            </Modal>
+          </View>
+
+          <OptionList
+            title="Type of Restaurant"
+            data={restaurantTypes}
+            selectedItems={selectedTypes}
+            onToggle={toggleType}
+            dataType="image"
+          />
+
+          <OptionList
+            title="Budget"
+            data={budgets}
+            selectedItems={[selectedBudget]}
+            onToggle={selectBudget}
+            dataType="text"
+          />
+
+          <OptionList
+            title="Atmosphere"
+            data={atmospheres}
+            selectedItems={[selectedAtmosphere]}
+            onToggle={selectAtmosphere}
+            dataType="image"
+          />
+
+          <View style={styles.preferencesContainer}>
+            <TouchableOpacity
+              style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
+              onPress={() => setIsVegan(!isVegan)}
+            >
+              <Image
+                source={require("../assets/symbols/veganfriendly.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.symbolContainer,
+                isGlutenFree && styles.selectedSymbol,
+              ]}
+              onPress={() => setIsGlutenFree(!isGlutenFree)}
+            >
+              <Image
+                source={require("../assets/symbols/glutenfree.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.symbolContainer,
+                isWheelchairAccessible && styles.selectedSymbol,
+              ]}
+              onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
+            >
+              <Image
+                source={require("../assets/symbols/wheelchairaccessibility.png")}
+                style={styles.symbolImage}
+              />
+            </TouchableOpacity>
+          </View>
+          <SafeAreaView style={{ flex: 1 }}>
+            <ScrollView>
+              <View style={styles.container}>
+                {/* Your existing content */}
+                <TouchableOpacity
+                  style={styles.generateButton}
+                  onPress={handleGenerateRestaurant}
+                >
+                  <Text style={styles.generateButtonText}>
+                    ✨ Let's Start the Magic! ✨
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
         </View>
-
-        <OptionList
-          title="Type of Restaurant"
-          data={restaurantTypes}
-          selectedItems={selectedTypes}
-          onToggle={toggleType}
-          dataType="image"
-        />
-
-        <OptionList
-          title="Budget"
-          data={budgets}
-          selectedItems={[selectedBudget]}
-          onToggle={selectBudget}
-          dataType="text"
-        />
-
-        <OptionList
-          title="Atmosphere"
-          data={atmospheres}
-          selectedItems={[selectedAtmosphere]}
-          onToggle={selectAtmosphere}
-          dataType="image"
-        />
-
-        <View style={styles.preferencesContainer}>
-          <TouchableOpacity
-            style={[styles.symbolContainer, isVegan && styles.selectedSymbol]}
-            onPress={() => setIsVegan(!isVegan)}
-          >
-            <Image
-              source={require("../assets/symbols/veganfriendly.png")}
-              style={styles.symbolImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.symbolContainer,
-              isGlutenFree && styles.selectedSymbol,
-            ]}
-            onPress={() => setIsGlutenFree(!isGlutenFree)}
-          >
-            <Image
-              source={require("../assets/symbols/glutenfree.png")}
-              style={styles.symbolImage}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.symbolContainer,
-              isWheelchairAccessible && styles.selectedSymbol,
-            ]}
-            onPress={() => setIsWheelchairAccessible(!isWheelchairAccessible)}
-          >
-            <Image
-              source={require("../assets/symbols/wheelchairaccessibility.png")}
-              style={styles.symbolImage}
-            />
-          </TouchableOpacity>
-        </View>
-        <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView>
-            <View style={styles.container}>
-              {/* Your existing content */}
-              <TouchableOpacity
-                style={styles.generateButton}
-                onPress={handleGenerateRestaurant}
-              >
-                <Text style={styles.generateButtonText}>
-                  ✨ Let's Start the Magic! ✨
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

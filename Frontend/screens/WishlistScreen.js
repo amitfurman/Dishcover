@@ -23,7 +23,7 @@ import { url } from "../constants";
 function WishlistScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { username } = route.params;
+  const { userId, userName } = route.params;
   const [restaurants, setRestaurants] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [isCardModalVisible, setCardModalVisible] = useState(false);
@@ -35,7 +35,7 @@ function WishlistScreen() {
   const fetchRestaurants = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${url}/api/users/getPlacesUserWantToVisit?username=${username}`
+        `${url}/api/users/getPlacesUserWantToVisit?userName=${userName}`
       );
       setRestaurants(response.data.placesToVisit);
     } catch (error) {
@@ -44,7 +44,7 @@ function WishlistScreen() {
         "An error occurred while fetching your wishlist. Please try again."
       );
     }
-  }, [username]);
+  }, [userName]);
 
   useFocusEffect(
     useCallback(() => {
@@ -88,7 +88,7 @@ function WishlistScreen() {
     try {
       // Prepare data for backend
       const reviewData = {
-        username,
+        userName: userName,
         restaurantName: currentRestaurant.name,
       };
 
@@ -117,15 +117,16 @@ function WishlistScreen() {
     if (response) {
       // Only proceed if the user has visited the restaurant
       try {
-        await axios.post(`${url}/api/users/placesUserVisit`, {
-          username: username,
+        await axios.post(`${url}/api/users/placesUserVisited`, {
+          userName: userName,
           placesVisited: [currentRestaurant.name],
         });
 
         // Navigate to the review screen if the user wants to leave a review
         navigation.navigate("ReviewPlaceScreen", {
-          username: username,
-          restaurantName: [currentRestaurant.name],
+          userId: userId,
+          userName: userName,
+          restaurantName: currentRestaurant.name,
         });
       } catch (error) {
         console.error("Error submitting review:", error.message);

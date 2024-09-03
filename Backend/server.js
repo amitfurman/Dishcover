@@ -5,12 +5,12 @@ const app = express();
 //const routes = require("./routes");
 const userRoutes = require("./routes/userRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
-
+/*
 app.use(express.json());
 
 //app.use("/api", routes);
 app.use("/api/users", userRoutes); // Prefix routes
-//app.use("/api/restaurants", restaurantRoutes); // Prefix routes
+app.use("/api/restaurants", restaurantRoutes); // Prefix routes
 
 // Start the server on port 3000
 const port = 3000;
@@ -22,6 +22,30 @@ app.listen(port, () => {
 app.use((req, res, next) => {
   res.status(404).send("Route not found");
 });
+*/
+
+const mongoose = require("mongoose");
+const mongoURI = process.env.MONGODB_URI;
+// Connect to MongoDB using Mongoose
+mongoose
+  .connect(mongoURI)
+  .then(() => {
+    console.log("MongoDB connected");
+
+    app.use(express.json());
+    // Use routes only after successful connection
+    app.use("/api/restaurants", restaurantRoutes); // Prefix routes
+    app.use("/api/users", userRoutes); // Prefix routes
+
+    // Start the server after successful connection and route setup
+    const port = 3000;
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
 // // Define API routes
 // app.get('/api/transform', async (req, res) => {

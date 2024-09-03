@@ -23,7 +23,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function SigninScreen() {
   const navigation = useNavigation(); // useNavigation hook here
-  const [id, setId] = useState("");
+  const [signinId, setSigninId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,18 +65,25 @@ export default function SigninScreen() {
 
   function handleSignin() {
     const userData = {
-      id: id,
+      id: signinId,
       password: password,
     };
-
-    if (id.length !== 0 && password.length !== 0) {
+    console.log(userData);
+    if (signinId.length !== 0 && password.length !== 0) {
       axios
         .post(`${url}/api/users/signin`, userData)
         .then((res) => {
           if (res.data.status === "ok") {
-            setModalMessage("User logged in successfully");
+            //setModalMessage("User logged in successfully");
+            setModalMessage(
+              res.data.data.userName +
+                " It's good to see you again, welcome back :)"
+            );
             setModalVisible(true);
-            navigation.navigate("BottomTabs", { username: id });
+            navigation.navigate("BottomTabs", {
+              userId: res.data.data.userId,
+              userName: res.data.data.userName,
+            });
           } else if (res.data.status === "error") {
             setModalMessage(res.data.data);
             setModalVisible(true);
@@ -116,7 +123,7 @@ export default function SigninScreen() {
               placeholder="Email or username"
               placeholderTextColor={"gray"}
               style={styles.input}
-              onChange={(e) => setId(e.nativeEvent.text)}
+              onChange={(e) => setSigninId(e.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputContainer}>

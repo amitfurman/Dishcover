@@ -1,3 +1,6 @@
+//const userId = "66c58cba7765c68664b0654b";
+//const userName = "Eden";
+
 export const restaurants = [
   {
     name: "Mojo Asian Foodbar",
@@ -136,4 +139,59 @@ export const restaurants = [
     isGlutenFree: false,
     matchingPercentage: "50%",
   },
+];
+
+export const top10Restaurants = [
+  {
+    name: "Restaurant 1",
+    image: "https://via.placeholder.com/150",
+    score: 9.5,
+  },
+  {
+    name: "Restaurant 2",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 3",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 4",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 5",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 6",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 7",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 8",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 9",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+  {
+    name: "Restaurant 10",
+    image: "https://via.placeholder.com/150",
+    score: 8.7,
+  },
+
+  // Add more restaurants here
 ];

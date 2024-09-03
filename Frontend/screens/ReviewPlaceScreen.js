@@ -36,7 +36,7 @@ import { url } from "../constants";
 
 function ReviewPlaceScreen({ route }) {
   const navigation = useNavigation();
-  const { username, restaurantName } = route.params;
+  const { userId, userName, restaurantName } = route.params;
 
   const [foodRating, setFoodRating] = useState(0);
   const [serviceRating, setServiceRating] = useState(0);
@@ -46,21 +46,21 @@ function ReviewPlaceScreen({ route }) {
 
   const handleSubmitButton = async () => {
     const reviewData = {
-      username,
-      restaurantName,
+      //userId,
+      userName,
+      restaurantName: restaurantName[0],
       foodRating,
       serviceRating,
       cleanlinessRating,
       vibesRating,
       additionalComments,
     };
-
+    console.log(reviewData);
     try {
       const response = await axios.post(
         `${url}/api/users/reviewByUser`,
         reviewData
       );
-      console.log("Review submitted successfully:", response.data);
       Alert.alert("Thank you for your review!");
       navigation.goBack();
     } catch (error) {

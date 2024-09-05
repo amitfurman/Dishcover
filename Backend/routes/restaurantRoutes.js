@@ -52,31 +52,3 @@ router.get("/top-restaurants", async (req, res) => {
 
 module.exports = router;
 
-//----------------
-// // Basic test route to check database connection
-// router.get("/test-restaurant-query", async (req, res) => {
-//   try {
-//     // Perform a basic query, e.g., find the first restaurant in the collection
-//     const restaurant = await Restaurant.findOne();
-//     if (restaurant) {
-//       res.json({ success: true, message: "Successfully queried the restaurant collection", restaurant });
-//     } else {
-//       res.json({ success: false, message: "No restaurants found in the collection" });
-//     }
-//   } catch (error) {
-//     console.error("Error querying restaurant collection:", error);
-//     res.status(500).json({ success: false, error: "Internal server error" });
-//   }
-// });
-// // get the top 10 restaurants
-// router.get("/TopRestaurants", async (req, res) => {
-//   //TODO: Implement this function
-//   //return restaurants data like this:
-//   /*
-//   {
-//     name: "Restaurant 1",
-//     image: "https://via.placeholder.com/150",
-//     score: 9.5,
-//   },
-//   */
-// });

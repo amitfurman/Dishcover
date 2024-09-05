@@ -379,7 +379,7 @@ router.get("/getPlacesUserVisited", async (req, res) => {
 // Fetch user's restaurants recommendations
 router.get("/restaurantsRecommendations", async (req, res) => {
   const {
-    userName,
+    userId,
     selectedDistrict,
     selectedTypes,
     selectedBudget,
@@ -389,7 +389,56 @@ router.get("/restaurantsRecommendations", async (req, res) => {
     isWheelchairAccessible,
   } = req.query;
 
-  //TODO: Implement this function
+  try {
+    // Fetch user details
+    const user = await User.findById(userId).exec();
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Fetch user reviews
+    const reviews = await Review.find({ customerId: userId }).exec();
+
+  // TODO: vw_restaurants_no_null as const
+  // Fetch all restaurant data from the "vw_restaurants_no_null" view
+  //  const restaurantsData  = await mongoose.connection.db.collection('vw_restaurants_no_null').find({}).toArray();
+
+  // Prepare the user query data
+  const userQuery = {
+    filters: {
+      types: selectedTypes,
+      budget: selectedBudget,
+      atmosphere: selectedAtmosphere,
+      dietary: {
+        vegan: isVegan,
+        gluten_free: isGlutenFree,
+      },
+      accessibility: {
+        wheelchair_accessible: isWheelchairAccessible,
+      },
+      district: selectedDistrict, 
+    },
+    reviews: reviews, 
+  };
+
+  // Prepare the request payload for the Python server
+  const requestData = {
+    user_query_json: JSON.stringify(userQuery),
+    restaurant_json: JSON.stringify(await mongoose.connection.db.collection('vw_restaurants_no_null').find({}).toArray())
+  };
+
+    // Send a POST request to the Python server
+    const response = await axios.post('localhost:5000/recommend', requestData); // http://127.0.0.1:5000
+
+     // Check if the Python server response is successful
+     if (response.status === 200) {
+       // Send the recommendations back to the client
+       res.status(200).json(response.data);
+     } else {
+       res.status(response.status).json({ error: 'Failed to get recommendations from Python server' });
+     }
+   } catch (error) {
+     console.error("Error fetching recommendations:", error);
+     res.status(500).json({ error: 'Internal server error' });
+   }
 });
 
 module.exports = router;

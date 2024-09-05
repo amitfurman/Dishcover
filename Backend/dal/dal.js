@@ -38,6 +38,3 @@ module.exports = {
   closeMongoDBConnection,
   withDatabaseConnection,
 };
-
-//'mongodb://localhost:27017/'
-//'mongodb://localhost:27017/my_database';

@@ -1,7 +1,106 @@
-// Utility functions
-const { ObjectId } = require('mongodb');
+//const { ObjectId } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const { DATABASE_NAME, COLLECTIONS } = require('../dal/constants');
 const { withDatabaseConnection } = require('../dal/dal');
+const Restaurant = require('../models/Restaurant');
+const RestaurantReviews = require('../models/Review');
+
+// Load environment variables
+require('dotenv').config();
+const mongoURI = process.env.MONGODB_URI;
+
+async function connectToMongoDB() {
+  const client = new MongoClient(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  await client.connect();
+  console.log('MongoDB connected...');
+  return client;
+}
+
+async function closeMongoDBConnection(client) {
+  await client.close();
+  console.log('MongoDB connection closed...');
+}
+
+async function updateRestaurantScores() {
+  const client = await connectToMongoDB();
+  try {
+    console.log('Starting restaurant scores update...');
+
+    // Access the database and collections
+    const db = client.db(DATABASE_NAME);
+    const restaurantsCollection = db.collection(COLLECTIONS.RESTAURANTS);
+    const reviewsCollection = db.collection(COLLECTIONS.RESTAURANTS_REVIEW);
+
+    // Get all restaurants
+    const restaurants = await restaurantsCollection.find().toArray();
+    console.log(`Found ${restaurants.length} restaurants`);
+
+    for (const restaurant of restaurants) {
+      const restaurantId = restaurant._id.toString();
+      console.log(`Processing restaurant ${restaurantId}`);
+
+      // Get reviews for the restaurant
+      const reviews = await reviewsCollection.find({ restaurantId }).toArray();
+      console.log(`Found ${reviews.length} reviews for restaurant ${restaurantId}`);
+
+      // Calculate averages
+      const reviewCount = reviews.length;
+
+      const scores = {
+        foodQuality: 3,
+        cleanliness: 3,
+        serviceQuality: 3,
+        atmosphereQuality: 3
+      };
+
+      if (reviewCount > 0) {
+        const totals = { foodQuality: 0, cleanliness: 0, serviceQuality: 0, atmosphereQuality: 0 };
+
+        for (const review of reviews) {
+          totals.foodQuality += review.foodScore;
+          totals.cleanliness += review.cleanlinessScore;
+          totals.serviceQuality += review.serviceScore;
+          totals.atmosphereQuality += review.atmosphereScore;
+        }
+
+        scores.foodQuality = totals.foodQuality / reviewCount;
+        scores.cleanliness = totals.cleanliness / reviewCount;
+        scores.serviceQuality = totals.serviceQuality / reviewCount;
+        scores.atmosphereQuality = totals.atmosphereQuality / reviewCount;
+      }
+
+      // Update the restaurant document
+      await restaurantsCollection.updateOne(
+        { _id: restaurant._id },
+        { $set: { restaurantScores: scores } }
+      );
+
+      console.log(`Updated scores for restaurant ${restaurantId}`);
+    }
+
+    console.log('Restaurant scores update completed');
+  } catch (error) {
+    console.error('Error updating restaurant scores:', error);
+  } finally {
+    await closeMongoDBConnection(client);
+  }
+}
+
+// Usage
+async function main() {
+  try {
+    await updateRestaurantScores();
+  } catch (error) {
+    console.error('Error during restaurant scores update:', error);
+  }
+}
+
+main();
+///----------------------------------------------
+
 
 // Function to get the first two sentences from a description
 const getFirstTwoSentences = (description) => {
@@ -143,14 +242,6 @@ const getFirstTwoSentences = (description) => {
     const db = client.db(DATABASE_NAME); 
     const collection = db.collection(COLLECTIONS.RESTAURANTS); 
   
-   // const currentTime = new Date();
- 
-    // Update all documents by setting 'createdAt' and 'updatedAt' fields
-    // const result = await collection.updateMany(
-    //   { createdAt: { $exists: false } }, // Update only if 'createdAt' doesn't already exist
-    //   { $set: { createdAt: currentTime, updatedAt: currentTime } }
-    // );
-  
     const result = await collection.updateMany(
       {}, // Empty filter to select all documents
       {
@@ -229,16 +320,6 @@ const getFirstTwoSentences = (description) => {
   });
 
 
-  // Usage
-  async function main() {
-    try {
-      await resetMenuLinks();
-    } catch (error) {
-      console.error('Error during menu link reset:', error);
-    }
-  }
-  main();
-  
   module.exports = { transformAndUploadData };
   
 

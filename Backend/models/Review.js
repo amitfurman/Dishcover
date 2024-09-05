@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const { COLLECTIONS } = require("../dal/constants");
 
 const reviewSchema = new mongoose.Schema({
-  //customerName: { type: String, required: true },
   customerId: { type: String, required: true },
   foodScore: { type: Number, required: true, min: 0, max: 5 },
   cleanlinessScore: { type: Number, required: true, min: 0, max: 5 },

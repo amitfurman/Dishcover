@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,8 +8,10 @@ const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed secur
 const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
 const { User } = require("../models/User.js");
 const Restaurant = require("../models/Restaurant.js");
-const Reviews = require("../models/Review.js");
-// const mongoURI = process.env.MONGODB_URI; // TODO: remove. not needed
+const  RestaurantsReviews  = require("../models/Review.js");
+
+//restaurantReviewsSchema
+const axios = require('axios');
 
 // Check if user exists by name
 router.get("/checkUserByName", async (req, res) => {
@@ -256,12 +259,12 @@ router.post("/reviewByUser", async (req, res) => {
     const restaurantId = restaurant._id;
 
     // Check if the restaurant exists in the Reviews collection
-    let restaurantReviews = await Reviews.findOne({
+    let restaurantReviews = await Review.findOne({
       restaurantId: restaurantId,
     });
 
     if (!restaurantReviews) {
-      restaurantReviews = new Reviews({
+      restaurantReviews = new Review({
         name: restaurantName,
         restaurantId: restaurantId,
         reviews: [],
@@ -379,7 +382,7 @@ router.get("/getPlacesUserVisited", async (req, res) => {
 // Fetch user's restaurants recommendations
 router.get("/restaurantsRecommendations", async (req, res) => {
   const {
-    userId,
+    userId, //str
     selectedDistrict,
     selectedTypes,
     selectedBudget,
@@ -387,19 +390,21 @@ router.get("/restaurantsRecommendations", async (req, res) => {
     isVegan,
     isGlutenFree,
     isWheelchairAccessible,
-  } = req.query;
+  } = req.body;
 
   try {
     // Fetch user details
     const user = await User.findById(userId).exec();
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    // Fetch user reviews
-    const reviews = await Review.find({ customerId: userId }).exec();
 
-  // TODO: vw_restaurants_no_null as const
-  // Fetch all restaurant data from the "vw_restaurants_no_null" view
-  //  const restaurantsData  = await mongoose.connection.db.collection('vw_restaurants_no_null').find({}).toArray();
+   // Fetch user reviews from the "restaurants_review" collection
+   const reviews = await RestaurantsReviews.aggregate([
+    { $unwind: "$reviews" }, // Unwind the reviews array
+    { $match: { "reviews.customerId": userId } }, // Match reviews by customerId
+    { $replaceRoot: { newRoot: "$reviews" } } // Return the matching reviews
+  ]);
+
 
   // Prepare the user query data
   const userQuery = {
@@ -419,14 +424,17 @@ router.get("/restaurantsRecommendations", async (req, res) => {
     reviews: reviews, 
   };
 
-  // Prepare the request payload for the Python server
-  const requestData = {
-    user_query_json: JSON.stringify(userQuery),
-    restaurant_json: JSON.stringify(await mongoose.connection.db.collection('vw_restaurants_no_null').find({}).toArray())
-  };
 
+  const requestData = {
+    user_query_json: userQuery, // Send as an object, not stringified
+    restaurant_json: await mongoose.connection.db.collection('vw_restauranta_no_null').find({}) // .toArray()
+  };
+  
+
+  console.log('Request Data:', requestData);
+  
     // Send a POST request to the Python server
-    const response = await axios.post('localhost:5000/recommend', requestData); // http://127.0.0.1:5000
+    const response = await axios.post('http://localhost:5000/recommend', requestData); 
 
      // Check if the Python server response is successful
      if (response.status === 200) {
@@ -442,3 +450,9 @@ router.get("/restaurantsRecommendations", async (req, res) => {
 });
 
 module.exports = router;
+
+  // Prepare the request payload for the Python server
+  // const requestData = {
+  //   user_query_json: JSON.stringify(userQuery),
+  //   restaurant_json: JSON.stringify(await mongoose.connection.db.collection('vw_restauranta_no_null').find({}).toArray())
+  // };

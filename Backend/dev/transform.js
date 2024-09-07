@@ -89,16 +89,16 @@ async function updateRestaurantScores() {
   }
 }
 
-// Usage
-async function main() {
-  try {
-    await updateRestaurantScores();
-  } catch (error) {
-    console.error('Error during restaurant scores update:', error);
-  }
-}
 
-main();
+// async function main() {
+//   try {
+//     await updateRestaurantScores();
+//   } catch (error) {
+//     console.error('Error during restaurant scores update:', error);
+//   }
+// }
+
+// main();
 ///----------------------------------------------
 
 

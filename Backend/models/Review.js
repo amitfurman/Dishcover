@@ -22,4 +22,6 @@ const restaurantReviewsSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("restaurants_reviews", restaurantReviewsSchema);
+const RestaurantsReviews = mongoose.model("RestaurantsReviews", restaurantReviewsSchema);
+module.exports = RestaurantsReviews;
+

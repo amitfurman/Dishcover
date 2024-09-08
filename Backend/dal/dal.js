@@ -1,5 +1,8 @@
 const { MongoClient } = require("mongodb");
-const { DATABASE_NAME } = require("./constants");
+//const mongoose = require("mongoose");
+require("dotenv").config();
+const mongoURI = process.env.MONGODB_URI;
+
 
 async function connectToMongoDB() {
   const client = new MongoClient(mongoURI, {
@@ -15,6 +18,7 @@ async function closeMongoDBConnection(client) {
   await client.close();
   console.log("MongoDB connection closed...");
 }
+
 
 /**
  * Decorator function to manage MongoDB connections for a given function.
@@ -38,6 +42,3 @@ module.exports = {
   closeMongoDBConnection,
   withDatabaseConnection,
 };
-
-//'mongodb://localhost:27017/'
-//'mongodb://localhost:27017/my_database';

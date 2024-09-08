@@ -107,6 +107,7 @@ const MainScreen = () => {
         onPress={() =>
           navigation.navigate("RestaurantPreferenceScreen", {
             userName: userName,
+            userId: userId,
           })
         }
       >

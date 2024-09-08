@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -7,8 +8,10 @@ const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed secur
 const { getMostVisitedDistrict } = require("../utils/helpers"); // Import the helper function
 const { User } = require("../models/User.js");
 const Restaurant = require("../models/Restaurant.js");
-const Reviews = require("../models/Review.js");
-// const mongoURI = process.env.MONGODB_URI; // TODO: remove. not needed
+const RestaurantsReviews = require("../models/Review.js");
+
+//restaurantReviewsSchema
+const axios = require("axios");
 
 // Check if user exists by name
 router.get("/checkUserByName", async (req, res) => {
@@ -225,6 +228,7 @@ router.post("/updatePlacesUserWantToVisit", async (req, res) => {
 });
 
 // Add a review to restaurant by user
+/*
 router.post("/reviewByUser", async (req, res) => {
   const {
     //userId,
@@ -242,15 +246,6 @@ router.post("/reviewByUser", async (req, res) => {
   }
 
   try {
-    /*
-    // Convert userId to ObjectId
-    let userObjectId;
-    try {
-      userObjectId = mongoose.Types.ObjectId(userId); // Correct usage
-    } catch (error) {
-      console.error("Invalid userId format:", userId, error);
-      return res.status(400).send({ message: "Invalid userId format" });
-    }*/
     // Find the user's ID
     const user = await User.findOne({ name: userName });
     if (!user) {
@@ -266,12 +261,12 @@ router.post("/reviewByUser", async (req, res) => {
     const restaurantId = restaurant._id;
 
     // Check if the restaurant exists in the Reviews collection
-    let restaurantReviews = await Reviews.findOne({
+    let restaurantReviews = await RestaurantsReviews.findOne({
       restaurantId: restaurantId,
     });
 
     if (!restaurantReviews) {
-      restaurantReviews = new Reviews({
+      restaurantReviews = new Review({
         name: restaurantName,
         restaurantId: restaurantId,
         reviews: [],
@@ -291,6 +286,75 @@ router.post("/reviewByUser", async (req, res) => {
     restaurantReviews.reviews.push(newReview);
     await restaurantReviews.save();
     res.status(201).send(restaurantReviews);
+  } catch (error) {
+    console.error("Error processing review:", error);
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+*/
+
+router.post("/reviewByUser", async (req, res) => {
+  const {
+    userName,
+    restaurantName,
+    foodRating,
+    serviceRating,
+    cleanlinessRating,
+    vibesRating,
+    additionalComments,
+  } = req.body;
+
+  // Validate required fields
+  if (!userName || !restaurantName) {
+    return res.status(400).send({ message: "Missing required fields" });
+  }
+
+  try {
+    // Find the user by name
+    const user = await User.findOne({ name: userName });
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    const userId = user._id;
+
+    // Find the restaurant by name
+    const restaurant = await Restaurant.findOne({ name: restaurantName });
+    if (!restaurant) {
+      return res.status(404).send({ message: "Restaurant not found" });
+    }
+    const restaurantId = restaurant._id;
+
+    // Check if the restaurant exists in the Reviews collection
+    let restaurantReviews = await RestaurantsReviews.findOne({
+      restaurantId: restaurantId,
+    });
+
+    // If the restaurant does not have reviews yet, create a new entry
+    if (!restaurantReviews) {
+      restaurantReviews = new RestaurantsReviews({
+        name: restaurantName,
+        restaurantId: restaurantId,
+        reviews: [],
+      });
+    }
+
+    // Create a new review
+    const newReview = {
+      customerId: userId.toString(), // Ensure userId is a string
+      foodScore: foodRating,
+      cleanlinessScore: cleanlinessRating,
+      serviceScore: serviceRating,
+      atmosphereScore: vibesRating,
+      comments: additionalComments || "No additional comments",
+    };
+
+    // Add the new review to the restaurant's reviews array
+    restaurantReviews.reviews.push(newReview);
+    await restaurantReviews.save();
+
+    res
+      .status(201)
+      .send({ message: "Review added successfully", restaurantReviews });
   } catch (error) {
     console.error("Error processing review:", error);
     res.status(500).send({ message: "Internal Server Error" });
@@ -391,11 +455,22 @@ router.get("/getPlacesUserVisited", async (req, res) => {
       },
     ]);
 
+    // Create a map for quick lookups
+    const restaurantMap = new Map(
+      restaurants.map((restaurant) => [restaurant.name, restaurant])
+    );
+
+    // Filter out any places that don't exist in the restaurantMap
+    const orderedRestaurants = placesVisited
+      .map((name) => restaurantMap.get(name))
+      .filter((restaurant) => restaurant !== undefined);
+    /*
+          
     // Send the response in the order specified by user.placesVisited
     const orderedRestaurants = placesVisited.map((name) =>
       restaurants.find((restaurant) => restaurant.name === name)
     );
-
+*/
     res.status(200).send({ placesVisited: orderedRestaurants });
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error" });
@@ -405,17 +480,90 @@ router.get("/getPlacesUserVisited", async (req, res) => {
 // Fetch user's restaurants recommendations
 router.get("/restaurantsRecommendations", async (req, res) => {
   const {
-    userId,
-    selectedDistrict,
-    selectedTypes,
-    selectedBudget,
-    selectedAtmosphere,
-    isVegan,
-    isGlutenFree,
-    isWheelchairAccessible,
+    userId = "",
+    selectedDistrict = "",
+    selectedTypes = "",
+    selectedBudget = "",
+    selectedAtmosphere = "",
+    isVegan = "",
+    isGlutenFree = "",
+    isWheelchairAccessible = "",
   } = req.query;
 
-  //TODO: Implement this function
+  try {
+    // Fetch user details
+    const user = await User.findById(userId).exec();
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // Fetch user reviews from the "restaurants_review" collection
+    const reviews = await RestaurantsReviews.aggregate([
+      { $unwind: "$reviews" },
+      { $match: { "reviews.customerId": userId } },
+      { $replaceRoot: { newRoot: "$reviews" } },
+    ]);
+
+    // Prepare the user query data
+    const userQuery = {
+      filters: {
+        types: selectedTypes,
+        budget: selectedBudget,
+        atmosphere: selectedAtmosphere,
+        dietary: {
+          vegan: isVegan,
+          gluten_free: isGlutenFree,
+        },
+        accessibility: {
+          wheelchair_accessible: isWheelchairAccessible,
+        },
+        district: selectedDistrict,
+      },
+      reviews: reviews,
+    };
+
+    // Prepare request data for Python server
+    const requestData = {
+      user_query_json: JSON.stringify(userQuery), // Ensure JSON string for Python
+    };
+
+    // Send a POST request to the Python server
+    // const response = await axios.post('http://localhost:5000/recommend', requestData);
+    const response = await axios.post(
+      "http://localhost:5000/recommend",
+      requestData
+      /* {
+        timeout: 0, // This disables the timeout
+      }*/
+    );
+
+    if (response.status === 200) {
+      // Send the recommendations back to the client
+      /*
+      const responseData = Array.isArray(response.data) ? response.data : [];
+
+    // Send the recommendations back to the client
+    console.log("Python res: ", responseData);
+    res.status(200).json(responseData);
+
+*/
+      /*
+      console.log("Python res: ", response.data);
+      res.status(200).json(response.data);
+      */
+      let data = response.data;
+
+      // Replace NaN with null in the response data
+      data = JSON.parse(JSON.stringify(data).replace(/NaN/g, "null"));
+
+      res.json(data);
+    } else {
+      res
+        .status(response.status)
+        .json({ error: "Failed to get recommendations from Python server" });
+    }
+  } catch (error) {
+    console.error("Error fetching recommendations:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 module.exports = router;

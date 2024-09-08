@@ -1,12 +1,14 @@
 const DATABASE_NAME = "dishcover_db";
 const COLLECTIONS = {
   RESTAURANTS_RAW: "restaurants_raw",
-  RESTAURANTS: "restaurants",
+  //RESTAURANTS: "restaurants",
+  RESTAURANTS: "vw_restauranta_no_null",
   RESTAURANTS_REVIEW: "restaurants_review",
   USER_INFO: "user_info",
 };
 
-const DEFAULT_MAIN_IMAGE = "https://cdn-icons-png.freepik.com/512/948/948149.png?ga=GA1.1.1081896475.1709744900";
+const DEFAULT_MAIN_IMAGE =
+  "https://cdn-icons-png.freepik.com/512/948/948149.png?ga=GA1.1.1081896475.1709744900";
 
 const cuisines = [
   "Israeli",

@@ -36,39 +36,64 @@ const RecommendationsScreen = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const params = {
+      userId: userId,
+      selectedDistrict: selectedDistrict,
+      selectedTypes: selectedTypes,
+      selectedBudget: selectedBudget,
+      selectedAtmosphere: selectedAtmosphere,
+      isVegan: isVegan,
+      isGlutenFree: isGlutenFree,
+      isWheelchairAccessible: isWheelchairAccessible,
+    };
+
     axios
-      .get(`${url}/api/user/restaurantsRecommendations`, {
-        params: {
-          userId,
-          selectedDistrict,
-          selectedTypes,
-          selectedBudget,
-          selectedAtmosphere,
-          isVegan,
-          isGlutenFree,
-          isWheelchairAccessible,
-        },
-      })
+      .get(`${url}/api/users/restaurantsRecommendations`, { params })
       .then((response) => {
-        setRestaurantsArray(response.data);
+        // Replace NaN with null or omit it
+        const dataString = response.data
+          .replace(/NaN/g, "null") // Replace NaN with null
+          .replace(/"NaN"/g, '"null"'); // Replace "NaN" strings with "null"
+
+        // If response.data is a string, parse it
+        let data;
+        try {
+          data = JSON.parse(dataString);
+        } catch (e) {
+          console.error("Error parsing JSON:", e);
+          return;
+        }
+
+        console.log(data);
+        if (Array.isArray(data)) {
+          setRestaurantsArray(data);
+        } else {
+          console.error("Unexpected data format:", data);
+        }
+
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching restaurants:", error.message);
-        Alert.alert(
-          "Error",
-          "Could not retrieve recommendations. Please try again later."
-        );
+        console.error("API request error:", error);
         setLoading(false);
       });
-  }, []);
+  }, [
+    userId,
+    selectedDistrict,
+    selectedTypes,
+    selectedBudget,
+    selectedAtmosphere,
+    isVegan,
+    isGlutenFree,
+    isWheelchairAccessible,
+  ]);
 
   const handleSelectRestaurant = (restaurant) => {
     setSelectedRestaurants((prevSelected) => {
-      if (prevSelected.some((item) => item.name === restaurant.name)) {
-        return prevSelected.filter((item) => item.name !== restaurant.name);
+      if (prevSelected.some((item) => item._id === restaurant._id)) {
+        return prevSelected.filter((item) => item._id !== restaurant._id);
       }
-      return [...prevSelected, restaurant.name];
+      return [...prevSelected, restaurant];
     });
   };
 
@@ -78,11 +103,11 @@ const RecommendationsScreen = () => {
         `${url}/api/users/updatePlacesUserWantToVisit`,
         {
           userName: userName,
-          placesToVisit: [...new Set(selectedRestaurants)],
+          placesToVisit: [...new Set(selectedRestaurants.map((r) => r.name))],
         }
       );
       if (response.data && response.data.status === "ok") {
-        navigation.navigate("MainScreen", {
+        navigation.navigate("BottomTabs", {
           userId: userId,
           userName: userName,
         });
@@ -119,7 +144,7 @@ const RecommendationsScreen = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={COLORS.blue} />
+        <ActivityIndicator size="large" color={COLORS.pink} />
         <Text style={styles.loadingText}>
           Collecting the best options for you...
         </Text>
@@ -133,18 +158,20 @@ const RecommendationsScreen = () => {
         <Text style={styles.titleText}>Restaurant Recommendations</Text>
       </View>
       <View style={styles.cardsContainer}>
-        {restaurantsArray.map((item, index) => (
-          <RecommendationsCard
-            key={index}
-            name={item.name}
-            image={item.image}
-            type={item.type}
-            city={item.city}
-            matchingPercentage={item.matchingPercentage}
-            onHeartPress={() => handleSelectRestaurant(item)}
-            onCardPress={() => handleClickOnCard(item)}
-          />
-        ))}
+        {restaurantsArray
+          .sort((a, b) => b.score - a.score) // Sort by score from high to low
+          .map((item) => (
+            <RecommendationsCard
+              key={item._id}
+              name={item.name}
+              image={item.mainImage}
+              type={item.type}
+              city={item.city}
+              matchingPercentage={item.score}
+              onHeartPress={() => handleSelectRestaurant(item)}
+              onCardPress={() => handleClickOnCard(item)}
+            />
+          ))}
       </View>
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Update Wishlist</Text>
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 18,
-    color: COLORS.blue,
+    color: COLORS.pink,
     marginTop: 15,
   },
   titleTextContainer: {

@@ -37,37 +37,6 @@ process.on("SIGINT", () => {
   });
 });
 
-//-------------------------------------------------
-// // Test -  Connect to MongoDB using Mongoose
-// mongoose
-//   .connect(mongoURI)
-//   .then(() => {
-//     console.log("MongoDB connected");
-
-//     // Use the native MongoDB driver to perform a test query
-//     const db = mongoose.connection.db;
-//     return db.collection('restaurants').findOne({});
-//   })
-//   .then((restaurant) => {
-//     console.log('Test query result:', restaurant);
-//   })
-//   .catch((err) => {
-//     console.error("MongoDB connection error or query error:", err);
-//   });
-
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-// const Restaurant = require("../models/Restaurant");
-// const Reviews = require("../models/Review.js");
-//const JWT_SECRET = process.env.JWT_SECRET; // Ensure JWT_SECRET is managed securely
-
-// mongoose.connection.once('open', async () => {
-//   console.log('MongoDB connected');
-//   const restaurant = await Restaurant.findOne({}); // Retrieve one restaurant for testing
-//   console.log('Test query result:', restaurant);
-//   mongoose.connection.close();
-// });
-
 // Handle 404 errors
 // app.use((req, res, next) => {
 //   res.status(404).send("Route not found");

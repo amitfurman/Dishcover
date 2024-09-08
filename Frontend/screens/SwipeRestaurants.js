@@ -22,7 +22,10 @@ import { url } from "../constants";
 
 export default function SwipeRestaurants() {
   const route = useRoute();
-  const { userId, userName } = route.params;
+  // const { userId, userName } = route.params;
+  const userId = "66d9b24a9f2b3f6b22575c3f";
+  const userName = "Edenim";
+
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [restaurants, setRestaurants] = useState([]);

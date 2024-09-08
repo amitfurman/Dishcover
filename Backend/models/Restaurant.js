@@ -18,11 +18,17 @@ const restaurantSchema = new mongoose.Schema({
   isVeganFriendly: { type: Boolean, default: false },
   isWheelchairAccessible: { type: Boolean, default: false },
   isGlutenFree: { type: Boolean, default: false },
+  restaurantScores: {
+    foodQuality: { type: Number, default: 3 },
+    cleanliness: { type: Number, default: 3 },
+    serviceQuality: { type: Number, default: 3 },
+    atmosphereQuality: { type: Number, default: 3 }
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 }, {
-  timestamps: true, // Automatically manages createdAt and updatedAt fields
-  collection: COLLECTIONS.RESTAURANTS // Specify your collection name
+  timestamps: true, 
+  collection: COLLECTIONS.RESTAURANTS 
 });
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema);

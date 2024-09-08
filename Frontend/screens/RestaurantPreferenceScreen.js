@@ -25,9 +25,9 @@ const RestaurantPreferenceScreen = () => {
   const { userId, userName } = route.params;
   const navigation = useNavigation();
   const [selectedTypes, setSelectedTypes] = useState([]);
-  const [selectedBudget, setSelectedBudget] = useState("");
-  const [selectedAtmosphere, setSelectedAtmosphere] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedBudget, setSelectedBudget] = useState(" ");
+  const [selectedAtmosphere, setSelectedAtmosphere] = useState(" ");
+  const [selectedDistrict, setSelectedDistrict] = useState(" ");
   const [modalVisible, setModalVisible] = useState(false);
   const [isVegan, setIsVegan] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
@@ -50,13 +50,16 @@ const RestaurantPreferenceScreen = () => {
   };
 
   const handleGenerateRestaurant = () => {
+    const types = selectedTypes.map((item) => item.name);
+    const atmosphere = selectedAtmosphere.name;
+
     navigation.replace("RecommendationsScreen", {
       userId,
       userName,
       selectedDistrict,
-      selectedTypes,
+      selectedTypes: types,
       selectedBudget,
-      selectedAtmosphere,
+      selectedAtmosphere: atmosphere,
       isVegan,
       isGlutenFree,
       isWheelchairAccessible,

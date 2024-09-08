@@ -115,7 +115,13 @@ const CardBack = ({
                   renderItem={renderItem}
                 />
               </View>
-              <Text style={styles.description}>{description}</Text>
+              <Text
+                style={styles.description}
+                numberOfLines={4}
+                ellipsizeMode="tail"
+              >
+                {description}
+              </Text>
             </View>
             <View style={styles.openingHoursContainer}>
               <Text style={styles.openingHoursTitle}>Opening Hours</Text>

@@ -400,9 +400,9 @@ router.get("/restaurantsRecommendations", async (req, res) => {
 
    // Fetch user reviews from the "restaurants_review" collection
    const reviews = await RestaurantsReviews.aggregate([
-    { $unwind: "$reviews" }, // Unwind the reviews array
-    { $match: { "reviews.customerId": userId } }, // Match reviews by customerId
-    { $replaceRoot: { newRoot: "$reviews" } } // Return the matching reviews
+    { $unwind: "$reviews" }, 
+    { $match: { "reviews.customerId": userId } }, 
+    { $replaceRoot: { newRoot: "$reviews" } } 
   ]);
 
 
@@ -424,19 +424,17 @@ router.get("/restaurantsRecommendations", async (req, res) => {
     reviews: reviews, 
   };
 
+ // Prepare request data for Python server
+ const requestData = {
+  user_query_json: JSON.stringify(userQuery), // Ensure JSON string for Python
+};
 
-  const requestData = {
-    user_query_json: userQuery, // Send as an object, not stringified
-    restaurant_json: await mongoose.connection.db.collection('vw_restauranta_no_null').find({}) // .toArray()
-  };
-  
+// Send a POST request to the Python server
+// const response = await axios.post('http://localhost:5000/recommend', requestData);
+const response = await axios.post('http://localhost:5000/recommend', requestData, {
+  timeout: 0  // This disables the timeout
+});
 
-  console.log('Request Data:', requestData);
-  
-    // Send a POST request to the Python server
-    const response = await axios.post('http://localhost:5000/recommend', requestData); 
-
-     // Check if the Python server response is successful
      if (response.status === 200) {
        // Send the recommendations back to the client
        res.status(200).json(response.data);
@@ -450,9 +448,3 @@ router.get("/restaurantsRecommendations", async (req, res) => {
 });
 
 module.exports = router;
-
-  // Prepare the request payload for the Python server
-  // const requestData = {
-  //   user_query_json: JSON.stringify(userQuery),
-  //   restaurant_json: JSON.stringify(await mongoose.connection.db.collection('vw_restauranta_no_null').find({}).toArray())
-  // };

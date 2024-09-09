@@ -168,8 +168,8 @@ Check out a live demo of the Dishcover app:
 [Live Demo](./assets/demo.mp4)
 
 ## Screenshots
-
 Here are some screenshots of the Dishcover app in action:
+
 <img src="./assets/screenshots/dishcover.png" alt="Dishcover Overview" width="300"/>
 
 ### Sign In
@@ -188,9 +188,13 @@ Here are some screenshots of the Dishcover app in action:
 <img src="./assets/screenshots/review_screen.png" alt="Review Screen" width="300"/>
 
 ### Restaurant Recommendation
-<img src="./assets/screenshots/recommendation_screen1.png" alt="Recommendation Screen 1" width="300"/>
-<img src="./assets/screenshots/recommendation_screen2.png" alt="Recommendation Screen 2" width="300"/>
+<div style="display: flex; gap: 10px;">
+  <img src="./assets/screenshots/recommendation_screen1.png" alt="Recommendation Screen 1" width="300"/>
+  <img src="./assets/screenshots/recommendation_screen2.png" alt="Recommendation Screen 2" width="300"/>
+</div>
 
 ### Swipe to Browse Restaurants
+<div style="display: flex; gap: 10px;">
 <img src="./assets/screenshots/swipe_screen1.png" alt="Swipe Screen 1" width="300"/>
 <img src="./assets/screenshots/swipe_screen2.png" alt="Swipe Screen 2" width="300"/>
+</div>

@@ -170,28 +170,27 @@ Check out a live demo of the Dishcover app:
 ## Screenshots
 
 Here are some screenshots of the Dishcover app in action:
-!(./assets/screenshots/dishcover.png)
+<img src="./assets/screenshots/dishcover.png" alt="Dishcover Overview" width="300"/>
 
 ### Sign In
-![Sign In Screen](./assets/screenshots/signin_screen.png)
+<img src="./assets/screenshots/signin_screen.png" alt="Sign In Screen" width="300"/>
 
 ### Login
-![Login Screen](./assets/screenshots/login_screen.jpg)
+<img src="./assets/screenshots/login_screen.jpg" alt="Login Screen" width="300"/>
 
 ### Home Screen
-![Home Screen](./assets/screenshots/home_screen.png)
+<img src="./assets/screenshots/home_screen.png" alt="Home Screen" width="300"/>
 
 ### Wishlist
-![Wishlist Screen](./assets/screenshots/wishlist_screen.png)
+<img src="./assets/screenshots/wishlist_screen.png" alt="Wishlist Screen" width="300"/>
 
 ### Review and Rating
-![Review Screen](./assets/screenshots/review_screen.png)
+<img src="./assets/screenshots/review_screen.png" alt="Review Screen" width="300"/>
 
 ### Restaurant Recommendation
-![Recommendation Screen](./assets/screenshots/recommendation_screen1.png)
-![Recommendation Screen](./assets/screenshots/recommendation_screen2.png)
+<img src="./assets/screenshots/recommendation_screen1.png" alt="Recommendation Screen 1" width="300"/>
+<img src="./assets/screenshots/recommendation_screen2.png" alt="Recommendation Screen 2" width="300"/>
 
 ### Swipe to Browse Restaurants
-![Swipe Screen](./assets/screenshots/swipe_screen1.png)
-![Swipe Screen](./assets/screenshots/swipe_screen2.png)
-
+<img src="./assets/screenshots/swipe_screen1.png" alt="Swipe Screen 1" width="300"/>
+<img src="./assets/screenshots/swipe_screen2.png" alt="Swipe Screen 2" width="300"/>

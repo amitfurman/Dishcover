@@ -12,30 +12,32 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 - [Poster](#project-poster)
 - [Demo](#demo)
 - [Screenshots](#screenshots)
-  
+
 ## Features
 
 - **Personalized Recommendations:** The app provides a personalized feed of restaurant recommendations tailored to the user's preferences and history.
 - **Wishlist Management:** Users can add desired restaurants to a wishlist and manage their dining spots from their profile.
 - **Review and Feedback:** After visiting a recommended restaurant, users can leave reviews and ratings to refine future suggestions.
 - **AI-Powered Suggestions:** AI delivers restaurant suggestions with a matching percentage that aligns with the user's tastes and preferences.
-  
 
 ## Installation
 
 ### Backend Setup (Node.js)
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/yourusername/dishcover.git
    ```
 
 2. **Navigate to the backend directory:**
+
    ```bash
    cd dishcover/Backend
    ```
 
 3. **Install backend dependencies:**
+
    ```bash
    npm install
    ```
@@ -44,6 +46,7 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
    Create a `.env` file in the `backend` directory and add the required environment variables (e.g., database URL, API keys).
 
 5. **Run the backend server:**
+
    ```bash
    npm start
    ```
@@ -53,11 +56,13 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 ### Frontend Setup (React Native)
 
 1. **Navigate to the frontend directory:**
+
    ```bash
    cd ../Frontend
    ```
 
 2. **Install frontend dependencies:**
+
    ```bash
    npm install
    ```
@@ -66,6 +71,7 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
    Create a `.env` file in the `frontend` directory and configure it with the backend server URL and other necessary variables.
 
 4. **Run the frontend application:**
+
    ```bash
    npm start
    ```
@@ -76,16 +82,19 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 ### Python Server Setup (AI-Powered Recommendations)
 
 1. **Navigate to the Python server directory:**
+
    ```bash
    cd ../PythonServer
    ```
 
 2. **Ensure `virtualenv` is installed (if not already):**
+
    ```bash
    pip install virtualenv
    ```
 
 3. **Create a virtual environment using `venv`:**
+
    ```bash
    python -m venv venv
    ```
@@ -102,6 +111,7 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
      ```
 
 5. **Install Python dependencies from `requirements.txt`:**
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -110,6 +120,7 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
    Create a `.env` file in the `PythonServer` directory and add the necessary variables such as OpenAI API keys and any other required credentials.
 
 7. **Run the Python server:**
+
    ```bash
    python app.py
    ```
@@ -119,12 +130,14 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 ### Full Setup
 
 1. **Start the backend** (`http://localhost:3000`):
+
    ```bash
    cd Backend
    npm start
    ```
 
 2. **Start the frontend application** (`Expo Go` or your simulator):
+
    ```bash
    cd ../Frontend
    npm start
@@ -163,36 +176,43 @@ Once everything is running, the backend will serve data, the frontend will provi
 ![Dishcover Poster](./assets/dishcover_poster.png)
 
 ## Demo
+
 Check out a live demo of the Dishcover app:
 
 [Live Demo](./assets/demo.mp4)
 
 ## Screenshots
+
 Here are some screenshots of the Dishcover app in action:
 
-<img src="./assets/screenshots/dishcover.png" alt="Dishcover Overview" width="300"/>
+<img src="./assets/screenshots/dishcover.jpg" alt="Dishcover Overview" width="300"/>
 
 ### Sign In
-<img src="./assets/screenshots/signin_screen.png" alt="Sign In Screen" width="300"/>
+
+<img src="./assets/screenshots/signin_screen.jpg" alt="Sign In Screen" width="300"/>
 
 ### Login
+
 <img src="./assets/screenshots/login_screen.jpg" alt="Login Screen" width="300"/>
 
 ### Home Screen
-<img src="./assets/screenshots/home_screen.png" alt="Home Screen" width="300"/>
+
+<img src="./assets/screenshots/home_screen.jpg" alt="Home Screen" width="300"/>
 
 ### Wishlist
-<img src="./assets/screenshots/wishlist_screen.png" alt="Wishlist Screen" width="300"/>
+
+<img src="./assets/screenshots/wishlist_screen.jpg" alt="Wishlist Screen" width="300"/>
 
 ### Review and Rating
+
 <img src="./assets/screenshots/review_screen.png" alt="Review Screen" width="300"/>
 
 ### Restaurant Recommendation
-  <img src="./assets/screenshots/recommendation_screen1.png" alt="Recommendation Screen 1" width="300"/>
+
+  <img src="./assets/screenshots/recommendation_screen1.jpg" alt="Recommendation Screen 1" width="300"/>
   <img src="./assets/screenshots/recommendation_screen2.png" alt="Recommendation Screen 2" width="300"/>
 
 ### Swipe to Browse Restaurants
 
 <img src="./assets/screenshots/swipe_screen1.png" alt="Swipe Screen 1" width="300"/>
 <img src="./assets/screenshots/swipe_screen2.png" alt="Swipe Screen 2" width="300"/>
-

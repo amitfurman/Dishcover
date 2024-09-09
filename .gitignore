@@ -13,3 +13,5 @@ frontend/.env
 frontend/.env.local
 frontend/.env.*.local
 /.env
+
+llm_server/venv

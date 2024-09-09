@@ -187,11 +187,11 @@ Here are some screenshots of the Dishcover app in action:
 
 <img src="./assets/screenshots/dishcover.jpg" alt="Dishcover Overview" width="300"/>
 
-### Sign In
+### Sign Up
 
 <img src="./assets/screenshots/signin_screen.jpg" alt="Sign In Screen" width="300"/>
 
-### Login
+### Sign In
 
 <img src="./assets/screenshots/login_screen.jpg" alt="Login Screen" width="300"/>
 

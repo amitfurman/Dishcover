@@ -179,7 +179,7 @@ Once everything is running, the backend will serve data, the frontend will provi
 
 Check out a live demo of the Dishcover app:
 
-[Live Demo](./assets/demo.mp4)
+[View Demo on Google Drive](https://drive.google.com/file/d/1FCXeJbKPDNSN6I0cgEa5LiCVCSHwIBAw/view?usp=sharing)
 
 ## Screenshots
 

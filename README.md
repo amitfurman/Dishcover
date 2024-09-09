@@ -170,12 +170,13 @@ Check out a live demo of the Dishcover app:
 ## Screenshots
 
 Here are some screenshots of the Dishcover app in action:
+!(./assets/screenshots/dishcover.png)
 
 ### Sign In
 ![Sign In Screen](./assets/screenshots/signin_screen.png)
 
 ### Login
-![Login Screen](./assets/screenshots/login_screen.png)
+![Login Screen](./assets/screenshots/login_screen.jpg)
 
 ### Home Screen
 ![Home Screen](./assets/screenshots/home_screen.png)

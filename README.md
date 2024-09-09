@@ -9,7 +9,10 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 - [Usage](#usage)
 - [External Dependencies](#external-dependencies)
 - [Acknowledgments](#acknowledgments)
-
+- [Poster](#project-poster)
+- [Demo](#demo)
+- [Screenshots](#screenshots)
+  
 ## Features
 
 - **Personalized Recommendations:** The app provides a personalized feed of restaurant recommendations tailored to the user's preferences and history.
@@ -17,9 +20,10 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 - **Review and Feedback:** After visiting a recommended restaurant, users can leave reviews and ratings to refine future suggestions.
 - **AI-Powered Suggestions:** AI delivers restaurant suggestions with a matching percentage that aligns with the user's tastes and preferences.
   
+
 ## Installation
 
-### Backend Setup
+### Backend Setup (Node.js)
 
 1. **Clone the repository:**
    ```bash
@@ -46,7 +50,7 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 
    The backend will typically run on `http://localhost:3000` or a port specified in your environment variables.
 
-### Frontend Setup
+### Frontend Setup (React Native)
 
 1. **Navigate to the frontend directory:**
    ```bash
@@ -68,6 +72,72 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 
 5. **Access the app:**
    Open the app on your mobile device using Expo Go or a simulator/emulator.
+
+### Python Server Setup (AI-Powered Recommendations)
+
+1. **Navigate to the Python server directory:**
+   ```bash
+   cd ../PythonServer
+   ```
+
+2. **Ensure `virtualenv` is installed (if not already):**
+   ```bash
+   pip install virtualenv
+   ```
+
+3. **Create a virtual environment using `venv`:**
+   ```bash
+   python -m venv venv
+   ```
+
+4. **Activate the virtual environment:**
+
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+
+5. **Install Python dependencies from `requirements.txt`:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+6. **Set up environment variables:**
+   Create a `.env` file in the `PythonServer` directory and add the necessary variables such as OpenAI API keys and any other required credentials.
+
+7. **Run the Python server:**
+   ```bash
+   python app.py
+   ```
+
+   This Python server will typically run on a separate port (e.g., `http://localhost:5000`).
+
+### Full Setup
+
+1. **Start the backend** (`http://localhost:3000`):
+   ```bash
+   cd Backend
+   npm start
+   ```
+
+2. **Start the frontend application** (`Expo Go` or your simulator):
+   ```bash
+   cd ../Frontend
+   npm start
+   ```
+
+3. **Start the Python server for AI-powered recommendations**:
+   ```bash
+   cd ../PythonServer
+   source venv/bin/activate   # Activate the virtual environment
+   python app.py
+   ```
+
+Once everything is running, the backend will serve data, the frontend will provide the interface, and the Python server will handle AI-powered recommendations.
 
 ## Usage
 
@@ -91,4 +161,37 @@ Dishcover is a personalized restaurant recommendation app that helps users find 
 ## Project Poster
 
 ![Dishcover Poster](./assets/dishcover_poster.png)
+
+## Demo
+Check out a live demo of the Dishcover app:
+
+[Live Demo](./assets/demo.mp4)
+
+## Screenshots
+
+Here are some screenshots of the Dishcover app in action:
+!(./assets/screenshots/dishcover.png)
+
+### Sign In
+![Sign In Screen](./assets/screenshots/signin_screen.png)
+
+### Login
+![Login Screen](./assets/screenshots/login_screen.jpg)
+
+### Home Screen
+![Home Screen](./assets/screenshots/home_screen.png)
+
+### Wishlist
+![Wishlist Screen](./assets/screenshots/wishlist_screen.png)
+
+### Review and Rating
+![Review Screen](./assets/screenshots/review_screen.png)
+
+### Restaurant Recommendation
+![Recommendation Screen](./assets/screenshots/recommendation_screen1.png)
+![Recommendation Screen](./assets/screenshots/recommendation_screen2.png)
+
+### Swipe to Browse Restaurants
+![Swipe Screen](./assets/screenshots/swipe_screen1.png)
+![Swipe Screen](./assets/screenshots/swipe_screen2.png)
 
